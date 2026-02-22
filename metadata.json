@@ -1,0 +1,5 @@
+{
+  "name": "NUMU Landing Page",
+  "description": "A pixel-perfect recreation of the NUMU neumorphic landing page using React, TypeScript, and Tailwind CSS.",
+  "requestFramePermissions": []
+}
