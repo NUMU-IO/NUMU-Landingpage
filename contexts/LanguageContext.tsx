@@ -115,6 +115,50 @@ export const translations: Record<string, string> = {
   'preview.wed': 'WED',
   'preview.thu': 'THU',
   'preview.fri': 'FRI',
+  'preview.revenue': 'Revenue',
+  'preview.orders': 'Orders',
+  'preview.shipments': 'Shipments',
+  'preview.new_order': 'New Order!',
+  'preview.new_order_time': 'Just now • Cairo, EG',
+  'preview.amount': 'EGP 42,405',
+
+  // Import Showcase
+  'import.title': 'From Instagram to Your Store in Seconds',
+  'import.subtitle': 'Import your entire product catalog from social media with one click. No manual data entry, no hassle.',
+  'import.step1_title': 'Browse Your Feed',
+  'import.step1_desc': 'Connect your Instagram or Facebook shop and browse your products.',
+  'import.step2_title': 'One-Click Import',
+  'import.step2_desc': 'Select products and import them with photos, prices, and descriptions.',
+  'import.step3_title': 'Live & Selling',
+  'import.step3_desc': 'Products go live on your NUMU store instantly. Start selling!',
+
+  // AI Showcase
+  'ai.title': 'AI Writes Your Product Descriptions',
+  'ai.subtitle': 'Just upload a product photo. Our AI generates compelling descriptions in Arabic and English — optimized for search and conversions.',
+  'ai.step1_title': 'Select a Product',
+  'ai.step1_desc': 'Pick any product from your catalog that needs a description.',
+  'ai.step2_title': 'AI Generates Copy',
+  'ai.step2_desc': 'Our AI writes SEO-optimized descriptions in both Arabic and English.',
+  'ai.step3_title': 'Publish & Sell',
+  'ai.step3_desc': 'Review, edit if needed, and publish. SEO tags included automatically.',
+
+  // Multi-Channel Showcase
+  'multichannel.title': 'One Dashboard, Every Channel',
+  'multichannel.subtitle': 'Manage your website, WhatsApp, Instagram, and Facebook store from a single unified dashboard. No more switching tabs.',
+  'multichannel.step1_title': 'Unified Dashboard',
+  'multichannel.step1_desc': 'See all your channels, orders, and inventory in one place.',
+  'multichannel.step2_title': 'Publish Everywhere',
+  'multichannel.step2_desc': 'List products on all channels with one click. Sync inventory automatically.',
+  'multichannel.step3_title': 'Track Everything',
+  'multichannel.step3_desc': 'Unified analytics across all channels. Know where your sales come from.',
+
+  // New Features
+  'features.social.title': 'Social Import',
+  'features.social.desc': 'Import your product catalog directly from Instagram and Facebook. One click to sync your social storefront.',
+  'features.ai.title': 'AI Descriptions',
+  'features.ai.desc': 'Generate compelling product descriptions in Arabic and English with AI. Optimized for search and conversions.',
+  'features.multichannel.title': 'Multi-Channel',
+  'features.multichannel.desc': 'Sell on your website, WhatsApp, Instagram, and Facebook from one unified dashboard.',
 };
 
 export const translationsAr: Record<string, string> = {
@@ -221,6 +265,50 @@ export const translationsAr: Record<string, string> = {
   'preview.wed': 'الأربعاء',
   'preview.thu': 'الخميس',
   'preview.fri': 'الجمعة',
+  'preview.revenue': 'الإيرادات',
+  'preview.orders': 'الطلبات',
+  'preview.shipments': 'الشحنات',
+  'preview.new_order': 'طلب جديد!',
+  'preview.new_order_time': 'دلوقتي • القاهرة',
+  'preview.amount': '٤٢,٤٠٥ ج.م',
+
+  // Import Showcase
+  'import.title': 'من إنستجرام لمتجرك في ثواني',
+  'import.subtitle': 'استورد كل منتجاتك من السوشيال ميديا بضغطة واحدة. من غير إدخال بيانات يدوي.',
+  'import.step1_title': 'تصفح البوستات',
+  'import.step1_desc': 'اربط حساب إنستجرام أو فيسبوك وتصفح منتجاتك.',
+  'import.step2_title': 'استورد بضغطة',
+  'import.step2_desc': 'اختار المنتجات واستوردهم بالصور والأسعار والوصف.',
+  'import.step3_title': 'في متجرك وجاهز للبيع',
+  'import.step3_desc': 'المنتجات بتظهر في متجرك على نمو فوراً. ابدأ بيع!',
+
+  // AI Showcase
+  'ai.title': 'الذكاء الاصطناعي بيكتب وصف منتجاتك',
+  'ai.subtitle': 'ارفع صورة المنتج وخلي الذكاء الاصطناعي يكتبلك وصف بالعربي والإنجليزي — مظبوط للسيرش والمبيعات.',
+  'ai.step1_title': 'اختار منتج',
+  'ai.step1_desc': 'اختار أي منتج من الكتالوج محتاج وصف.',
+  'ai.step2_title': 'الـ AI بيكتب',
+  'ai.step2_desc': 'الذكاء الاصطناعي بيكتب وصف مظبوط بالعربي والإنجليزي.',
+  'ai.step3_title': 'انشر وابدأ بيع',
+  'ai.step3_desc': 'راجع، عدل لو عايز، وانشر. الـ SEO tags بتتحط أوتوماتيك.',
+
+  // Multi-Channel Showcase
+  'multichannel.title': 'لوحة تحكم واحدة، كل القنوات',
+  'multichannel.subtitle': 'ادير موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة. مفيش تنقل بين تابات.',
+  'multichannel.step1_title': 'لوحة تحكم موحدة',
+  'multichannel.step1_desc': 'شوف كل القنوات، الطلبات، والمخزون في مكان واحد.',
+  'multichannel.step2_title': 'انشر في كل مكان',
+  'multichannel.step2_desc': 'اعرض منتجاتك في كل القنوات بضغطة. المخزون بيتزامن أوتوماتيك.',
+  'multichannel.step3_title': 'تابع كل حاجة',
+  'multichannel.step3_desc': 'تقارير موحدة من كل القنوات. اعرف مبيعاتك جاية منين.',
+
+  // New Features
+  'features.social.title': 'استيراد من السوشيال',
+  'features.social.desc': 'استورد منتجاتك من إنستجرام وفيسبوك مباشرة. ضغطة واحدة وكل حاجة تتنقل.',
+  'features.ai.title': 'وصف بالذكاء الاصطناعي',
+  'features.ai.desc': 'اكتب وصف منتجاتك بالعربي والإنجليزي بالذكاء الاصطناعي. مظبوط للسيرش والمبيعات.',
+  'features.multichannel.title': 'بيع متعدد القنوات',
+  'features.multichannel.desc': 'بيع من موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة.',
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

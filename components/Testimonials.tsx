@@ -33,12 +33,12 @@ const Testimonials: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto w-full px-4">
-      <h2 className="text-3xl font-bold text-text-main dark:text-white mb-8 md:mb-12 text-center">{t('testimonials.title')}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <h2 className="text-2xl sm:text-3xl font-bold text-text-main dark:text-white mb-6 sm:mb-8 md:mb-12 text-center">{t('testimonials.title')}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         {testimonials.map((t, i) => (
-          <div key={i} className="rounded-3xl shadow-neu-pressed p-8 bg-background-light">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="size-12 rounded-full shadow-neu-flat-sm bg-cover bg-center" style={{ backgroundImage: `url('${t.img}')` }}></div>
+          <div key={i} className="rounded-2xl sm:rounded-3xl shadow-neu-pressed p-5 sm:p-6 md:p-8 bg-background-light">
+            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+              <div className="size-10 sm:size-12 rounded-full shadow-neu-flat-sm bg-cover bg-center shrink-0" style={{ backgroundImage: `url('${t.img}')` }}></div>
               <div>
                 <p className="text-sm font-bold text-text-main dark:text-white">{t.name}</p>
                 <div className="flex flex-col">

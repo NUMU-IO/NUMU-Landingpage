@@ -8,9 +8,9 @@ const AuthLayout: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-background-light dark:bg-background-dark font-display" dir={dir}>
+    <div className="min-h-screen-safe flex flex-col lg:flex-row bg-background-light dark:bg-background-dark font-display" dir={dir}>
       {/* Image Section */}
-      <div className="lg:w-1/2 bg-[#02000a] relative overflow-hidden flex items-center justify-center p-6 pt-12 pb-24 md:p-12 lg:p-16 text-white min-h-[35vh] lg:min-h-screen order-1 lg:order-none z-0">
+      <div className="lg:w-1/2 bg-[#02000a] relative overflow-hidden flex items-center justify-center p-4 pt-10 pb-20 sm:p-6 sm:pt-12 sm:pb-24 md:p-12 lg:p-16 text-white min-h-[30vh] sm:min-h-[35vh] lg:min-h-screen order-1 lg:order-none z-0">
         <Suspense fallback={<div className="absolute inset-0 bg-[#02000a]" />}>
           <Ballpit
             count={120}
@@ -29,10 +29,10 @@ const AuthLayout: React.FC = () => {
                  <img src="/numu_logo.png" alt="NUMU" className="h-10 lg:h-12 w-auto object-contain brightness-0 invert" width="120" height="40" />
               </div>
             </Link>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-2 lg:mb-6 leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-2 lg:mb-6 leading-tight">
               {t('auth.hero_title')}
             </h1>
-            <p className="text-base sm:text-lg md:text-xl opacity-90 leading-relaxed max-w-md mx-auto lg:mx-0">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl opacity-90 leading-relaxed max-w-md mx-auto lg:mx-0">
               {t('auth.hero_subtitle')}
             </p>
             
@@ -54,7 +54,7 @@ const AuthLayout: React.FC = () => {
       </div>
 
       {/* Form Section */}
-      <div className="lg:w-1/2 flex items-center justify-center p-6 pt-24 md:p-12 lg:p-24 order-2 lg:order-none bg-[#E0E5EC] flex-1 -mt-20 rounded-t-[3rem] lg:mt-0 lg:rounded-none relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] lg:shadow-none min-h-[65vh] lg:min-h-0">
+      <div className="lg:w-1/2 flex items-center justify-center p-5 pt-10 sm:p-6 sm:pt-12 md:p-12 lg:p-24 order-2 lg:order-none bg-[#E0E5EC] flex-1 -mt-8 sm:-mt-12 md:-mt-20 rounded-t-[2rem] sm:rounded-t-[3rem] lg:mt-0 lg:rounded-none relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] lg:shadow-none">
         <div className="w-full max-w-md">
           <Outlet />
         </div>

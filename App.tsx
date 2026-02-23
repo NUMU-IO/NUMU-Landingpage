@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { LandingConfigProvider } from './contexts/LandingConfigContext';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -16,6 +17,7 @@ const LoadingFallback = () => (
 const App: React.FC = () => {
   return (
     <LanguageProvider>
+      <LandingConfigProvider>
       <Router>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -27,6 +29,7 @@ const App: React.FC = () => {
           </Routes>
         </Suspense>
       </Router>
+    </LandingConfigProvider>
     </LanguageProvider>
   );
 };
