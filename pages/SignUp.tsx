@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { register, storeTokens } from '../services/authApi';
-
-const DASHBOARD_URL = 'http://localhost:8080';
+import { register } from '../services/authApi';
 
 const SignUp: React.FC = () => {
   const { t } = useLanguage();
@@ -25,13 +23,8 @@ const SignUp: React.FC = () => {
     const last_name = spaceIdx > 0 ? trimmed.slice(spaceIdx + 1) : trimmed;
 
     try {
-      const result = await register({ email, password, first_name, last_name });
-      storeTokens(result.tokens);
-      const params = new URLSearchParams({
-        token: result.tokens.access_token,
-        refresh_token: result.tokens.refresh_token,
-      });
-      window.location.href = `${DASHBOARD_URL}?${params.toString()}`;
+      await register({ email, password, first_name, last_name });
+      window.location.href = import.meta.env.VITE_DASHBOARD_URL;
     } catch (err: any) {
       setError(err.message || 'Registration failed');
     } finally {

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { login, storeTokens } from '../services/authApi';
-
-const DASHBOARD_URL = 'http://localhost:8080';
+import { login } from '../services/authApi';
 
 const Login: React.FC = () => {
   const { t } = useLanguage();
@@ -18,13 +16,8 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const result = await login(email, password);
-      storeTokens(result.tokens);
-      const params = new URLSearchParams({
-        token: result.tokens.access_token,
-        refresh_token: result.tokens.refresh_token,
-      });
-      window.location.href = `${DASHBOARD_URL}?${params.toString()}`;
+      await login(email, password);
+      window.location.href = import.meta.env.VITE_DASHBOARD_URL;
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {

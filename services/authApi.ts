@@ -1,13 +1,9 @@
-const API_BASE = "http://localhost:8021/api/v1";
+/**
+ * Auth API service for the NUMU landing page.
+ * Authentication is handled via httpOnly cookies set by the backend.
+ */
 
-const TOKEN_KEY = "numu-token";
-const REFRESH_TOKEN_KEY = "numu-refresh-token";
-
-export interface AuthTokens {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-}
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8021/api/v1";
 
 export interface User {
   id: string;
@@ -27,7 +23,6 @@ export interface User {
 
 export interface AuthResponse {
   user: User;
-  tokens: AuthTokens;
 }
 
 export interface RegisterData {
@@ -38,17 +33,13 @@ export interface RegisterData {
   phone?: string;
 }
 
-export function storeTokens(tokens: AuthTokens) {
-  localStorage.setItem(TOKEN_KEY, tokens.access_token);
-  localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
-}
-
 export async function login(
   email: string,
   password: string
 ): Promise<AuthResponse> {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
@@ -65,6 +56,7 @@ export async function login(
 export async function register(data: RegisterData): Promise<AuthResponse> {
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
