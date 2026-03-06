@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -16,6 +17,7 @@ const LoadingFallback = () => (
 
 const App: React.FC = () => {
   return (
+    <ErrorBoundary>
     <LanguageProvider>
       <LandingConfigProvider>
       <Router>
@@ -31,6 +33,7 @@ const App: React.FC = () => {
       </Router>
     </LandingConfigProvider>
     </LanguageProvider>
+    </ErrorBoundary>
   );
 };
 
