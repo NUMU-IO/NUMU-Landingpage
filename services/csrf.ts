@@ -6,7 +6,7 @@
  * attached to every state-changing request via the X-CSRF-Token header.
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8021/api/v1";
+const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 
 let csrfToken: string | null = null;
 let pending: Promise<void> | null = null;

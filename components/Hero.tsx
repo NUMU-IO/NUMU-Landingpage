@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Hero: React.FC = () => {
@@ -21,10 +22,10 @@ const Hero: React.FC = () => {
           {t('hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start pt-2 sm:pt-4 w-full sm:w-auto">
-          <button className="bg-brand-gradient text-white text-sm sm:text-base font-bold h-11 sm:h-12 md:h-14 px-6 sm:px-8 rounded-2xl shadow-[5px_5px_10px_rgba(15,23,42,0.3),-5px_-5px_10px_rgba(255,255,255,0.9)] active:shadow-neu-pressed hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group w-full sm:w-auto">
+          <Link to="/signup" className="bg-brand-gradient text-white text-sm sm:text-base font-bold h-11 sm:h-12 md:h-14 px-6 sm:px-8 rounded-2xl shadow-[5px_5px_10px_rgba(15,23,42,0.3),-5px_-5px_10px_rgba(255,255,255,0.9)] active:shadow-neu-pressed hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group w-full sm:w-auto">
             <span>{t('hero.cta_primary')}</span>
             <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform rtl:group-hover:-translate-x-1 rtl:rotate-180">arrow_forward</span>
-          </button>
+          </Link>
           <button className="bg-background-light dark:bg-background-dark text-text-main dark:text-white text-sm sm:text-base font-bold h-11 sm:h-12 md:h-14 px-6 sm:px-8 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm active:shadow-neu-pressed transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
             <span className="material-symbols-outlined text-primary">play_circle</span>
             <span>{t('hero.cta_secondary')}</span>

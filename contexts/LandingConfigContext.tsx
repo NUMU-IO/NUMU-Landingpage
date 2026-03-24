@@ -30,7 +30,7 @@ const DEFAULT_CONFIG: LandingConfig = {
   },
 };
 
-const API_BASE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) || 'http://localhost:8021';
+const API_BASE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) || 'https://numueg.app/api/v1';
 const CACHE_KEY = 'numu-landing-config';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
@@ -63,7 +63,7 @@ export const LandingConfigProvider: React.FC<{ children: ReactNode }> = ({ child
 
     async function fetchConfig() {
       try {
-        const res = await fetch(`${API_BASE}/api/v1/public/landing-config`);
+        const res = await fetch(`${API_BASE}/public/landing-config`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         const data = json.data || json;

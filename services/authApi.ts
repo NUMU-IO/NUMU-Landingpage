@@ -6,7 +6,7 @@
 
 import { getCSRFToken, initCSRF } from "./csrf";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8021/api/v1";
+const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 
 export interface User {
   id: string;
@@ -96,5 +96,37 @@ export async function register(data: RegisterData): Promise<AuthResponse> {
     `${API_BASE}/auth/register`,
     data,
     "Registration failed",
+  );
+}
+
+export async function forgotPassword(email: string): Promise<{ message: string }> {
+  return postWithCsrf<{ message: string }>(
+    `${API_BASE}/auth/forgot-password`,
+    { email },
+    "Password reset request failed",
+  );
+}
+
+export async function verifyEmailByCode(code: string): Promise<void> {
+  await postWithCsrf<unknown>(
+    `${API_BASE}/auth/verify-email-code`,
+    { code },
+    "Verification failed",
+  );
+}
+
+export async function verifyEmailByToken(token: string): Promise<void> {
+  await postWithCsrf<unknown>(
+    `${API_BASE}/auth/verify-email`,
+    { token },
+    "Verification failed",
+  );
+}
+
+export async function resendVerificationEmail(): Promise<void> {
+  await postWithCsrf<unknown>(
+    `${API_BASE}/auth/resend-verification`,
+    {},
+    "Failed to resend verification email",
   );
 }

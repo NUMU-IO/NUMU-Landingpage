@@ -23,8 +23,8 @@ function vitePluginCSP(): Plugin {
                 "script-src 'self'",
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 "font-src 'self' https://fonts.gstatic.com",
-                "img-src 'self' data: blob: https: https://numu.store",
-                "connect-src 'self' https://*.numu.store https://*.sentry.io https://*.ingest.sentry.io",
+                "img-src 'self' data: blob: https: https://numueg.app",
+                "connect-src 'self' https://numueg.app https://*.numueg.app https://*.sentry.io https://*.ingest.sentry.io",
                 "worker-src 'self' blob:",
               ].join('; ') + ';',
             },
@@ -40,6 +40,27 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 3090,
     host: '0.0.0.0',
+    proxy: {
+      '/api': {
+        target: 'https://numueg.app',
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+        secure: false,
+        configure: (proxy) => {
+          // Strip Secure flag from cookies so they work on http://localhost
+          proxy.on('proxyRes', (proxyRes) => {
+            const setCookie = proxyRes.headers['set-cookie'];
+            if (setCookie) {
+              proxyRes.headers['set-cookie'] = setCookie.map((cookie: string) =>
+                cookie
+                  .replace(/;\s*Secure/gi, '')
+                  .replace(/;\s*SameSite=None/gi, '; SameSite=Lax')
+              );
+            }
+          });
+        },
+      },
+    },
   },
   plugins: [react(), vitePluginCSP()],
   resolve: {

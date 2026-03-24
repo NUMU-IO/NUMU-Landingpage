@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { register } from '../services/authApi';
 
 const SignUp: React.FC = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +25,7 @@ const SignUp: React.FC = () => {
 
     try {
       await register({ email, password, first_name, last_name });
-      window.location.href = import.meta.env.VITE_DASHBOARD_URL;
+      navigate(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       setError(err.message || 'Registration failed');
     } finally {

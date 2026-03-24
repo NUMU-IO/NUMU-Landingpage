@@ -8,6 +8,12 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
 const SignUp = lazy(() => import('./pages/SignUp'));
 const Login = lazy(() => import('./pages/Login'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const Waitlist = lazy(() => import('./pages/Waitlist'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
@@ -27,7 +33,13 @@ const App: React.FC = () => {
             <Route element={<AuthLayout />}>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
             </Route>
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </Suspense>
       </Router>

@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
         {/* Left: Logo */}
         <div className="flex-1 flex justify-start">
           <Link to="/" className="flex items-center gap-2 md:gap-3 text-text-main dark:text-white">
-            <img src="/numu_logo.png" alt="NUMU" className="h-7 sm:h-8 md:h-10 w-auto object-contain" width="120" height="40" />
+            <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-7 sm:h-8 md:h-10 w-auto object-contain" width="120" height="40" />
           </Link>
         </div>
 
