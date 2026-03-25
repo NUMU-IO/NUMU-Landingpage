@@ -37,7 +37,7 @@ const Waitlist: React.FC = () => {
       <div className="w-full max-w-lg text-center flex flex-col items-center gap-8">
         {/* Logo */}
         <Link to="/" className="inline-block hover:scale-105 transition-transform">
-          <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-10 w-auto object-contain" width="120" height="40" loading="eager" fetchPriority="high" />
+          <img src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" className="h-10 w-auto object-contain" width="120" height="40" loading="eager" fetchPriority="high" />
         </Link>
 
         {/* Checkmark */}

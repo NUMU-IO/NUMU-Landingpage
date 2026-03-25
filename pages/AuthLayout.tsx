@@ -26,7 +26,7 @@ const AuthLayout: React.FC = () => {
           <div className="pointer-events-auto">
             <Link to="/" className="inline-block mb-4 lg:mb-8 hover:scale-105 transition-transform">
               <div className="flex items-center gap-3 text-white justify-center lg:justify-start">
-                 <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-10 lg:h-12 w-auto object-contain brightness-0 invert" width="120" height="40" />
+                 <img src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" className="h-10 lg:h-12 w-auto object-contain brightness-0 invert" width="120" height="40" />
               </div>
             </Link>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-2 lg:mb-6 leading-tight">

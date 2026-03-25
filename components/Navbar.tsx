@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
         <div className="flex-1 flex justify-start">
           <Link to="/" className="flex items-center gap-2 md:gap-3">
             <img
-              src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'}
+              src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'}
               alt="NUMU"
               className={`h-7 sm:h-8 md:h-10 w-auto object-contain transition-all duration-300 ${!scrolled ? 'brightness-0 invert' : ''}`}
               width="120"

@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto w-full flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-12 px-4 py-8 md:py-0">
       <div className="flex items-center gap-3 text-text-main dark:text-white mb-2 sm:mb-4 md:mb-8">
-        <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
+        <img src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
       </div>
       <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 text-text-muted font-medium text-xs sm:text-sm md:text-base">
         {links.map((link) => (

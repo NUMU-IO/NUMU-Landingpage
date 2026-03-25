@@ -8,7 +8,7 @@ const CTA: React.FC = () => {
     <div className="max-w-5xl mx-auto w-full px-4">
       <div className="relative rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-neu-floating p-6 sm:p-8 md:p-16 text-center overflow-hidden" style={{ background: 'hsl(222.2, 47.4%, 11.2%)' }}>
         {/* NUMU watermark pattern — same as merchant hub balance cards */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('/numu_v3.png')", backgroundSize: "100px", backgroundRepeat: "repeat" }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('/numu_v3.webp')", backgroundSize: "100px", backgroundRepeat: "repeat" }} />
 
         <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
           <h2 className="font-arabic text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight">{t('cta.title')}</h2>
