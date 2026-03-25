@@ -21,7 +21,7 @@ function vitePluginCSP(): Plugin {
               content: [
                 "default-src 'self'",
                 "script-src 'self'",
-                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
                 "font-src 'self' https://fonts.gstatic.com",
                 "img-src 'self' data: blob: https: https://numueg.app",
                 "connect-src 'self' https://numueg.app https://*.numueg.app https://*.sentry.io https://*.ingest.sentry.io",

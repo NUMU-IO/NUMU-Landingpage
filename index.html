@@ -6,7 +6,7 @@
     <title>NUMU — Build Your Online Store in Egypt & MENA</title>
     <meta name="description" content="Launch your e-commerce store with bilingual Arabic-English support, Egyptian payment gateways, Bosta shipping, and ETA e-invoicing. Start selling online today."/>
     <meta name="robots" content="index, follow"/>
-    <meta name="theme-color" content="#1e40af"/>
+    <meta name="theme-color" content="#0b1120"/>
     <link rel="canonical" href="https://numueg.app/"/>
     <link rel="icon" type="image/png" href="/favicon.png"/>
 
@@ -17,22 +17,27 @@
     <!-- DNS prefetch for Sentry (lazy-loaded) -->
     <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io"/>
 
-    <!-- Preload LCP hero image -->
-    <link rel="preload" as="image" href="/numu-logo-en.webp" type="image/webp"/>
+    <!-- Critical font: Alexandria for hero (render-blocking is OK — it's the LCP text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800;900&display=swap" rel="stylesheet"/>
 
-    <!-- Critical fonts: Alexandria (hero text) loaded normally with swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-
-    <!-- Non-critical fonts: Inter (body) and Material Symbols loaded async -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
+    <!-- Non-critical fonts loaded async -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" media="print" onload="this.media='all'"/>
-    <!-- Fallback for browsers with JS disabled -->
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"/>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"/>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
     </noscript>
 
     <link rel="stylesheet" href="/index.css"/>
+
+    <!-- Inline critical CSS for instant hero render -->
+    <style>
+      .skeleton-hero{min-height:100vh;background:#0b1120;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;padding:2rem}
+      .skeleton-logo{width:120px;height:40px;background:rgba(255,255,255,.06);border-radius:8px;animation:pulse 1.5s ease-in-out infinite}
+      .skeleton-line{height:3rem;background:rgba(255,255,255,.06);border-radius:12px;animation:pulse 1.5s ease-in-out infinite}
+      .skeleton-line-sm{height:1rem;background:rgba(255,255,255,.04);border-radius:8px;animation:pulse 1.5s ease-in-out infinite}
+      @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    </style>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website"/>
@@ -63,7 +68,19 @@
     </script>
 </head>
 <body class="bg-background-light text-text-main font-display antialiased">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Skeleton shown instantly while JS loads — eliminates blank white screen -->
+      <div class="skeleton-hero">
+        <div class="skeleton-logo"></div>
+        <div class="skeleton-line" style="width:80%;max-width:600px"></div>
+        <div class="skeleton-line" style="width:60%;max-width:450px"></div>
+        <div class="skeleton-line" style="width:70%;max-width:520px;opacity:.7"></div>
+        <div style="display:flex;gap:1rem;margin-top:1rem">
+          <div class="skeleton-line-sm" style="width:160px;height:2.5rem;border-radius:999px"></div>
+          <div class="skeleton-line-sm" style="width:140px;height:2.5rem;border-radius:999px"></div>
+        </div>
+      </div>
+    </div>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>
