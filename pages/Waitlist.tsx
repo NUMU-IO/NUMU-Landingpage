@@ -37,7 +37,7 @@ const Waitlist: React.FC = () => {
       <div className="w-full max-w-lg text-center flex flex-col items-center gap-8">
         {/* Logo */}
         <Link to="/" className="inline-block hover:scale-105 transition-transform">
-          <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-10 w-auto object-contain" width="120" height="40" />
+          <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-10 w-auto object-contain" width="120" height="40" loading="eager" fetchPriority="high" />
         </Link>
 
         {/* Checkmark */}
@@ -60,7 +60,7 @@ const Waitlist: React.FC = () => {
           <p className="text-xs font-bold uppercase tracking-widest text-text-muted">
             {t('waitlist.time_on_waitlist')}
           </p>
-          <div className="flex gap-2 sm:gap-3 md:gap-4">
+          <div className="flex gap-2 sm:gap-3 md:gap-4" dir="ltr">
             {timerBlocks.map(({ value, label }) => (
               <div key={label} className="flex flex-col items-center gap-1.5">
                 <div className="w-14 sm:w-16 md:w-20 rounded-2xl bg-background-light dark:bg-background-dark shadow-[6px_6px_12px_rgba(163,177,198,0.5),-6px_-6px_12px_rgba(255,255,255,0.9)] flex items-center justify-center">

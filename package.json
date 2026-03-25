@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "serve dist -s -l 8080"
   },
   "dependencies": {
+    "serve": "^14.2.4",
     "@sentry/react": "^10.41.0",
     "@types/matter-js": "^0.20.2",
     "matter-js": "^0.20.0",

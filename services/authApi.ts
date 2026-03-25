@@ -56,6 +56,16 @@ async function postWithCsrf<T>(
 
   let res = await doFetch();
 
+  // Extract user-friendly error message from API response
+  const extractError = (errBody: any, fallback: string): string => {
+    if (!errBody) return fallback;
+    // API format: { error: { code, message } }
+    if (errBody.error?.message) return errBody.error.message;
+    // FastAPI format: { detail: "..." }
+    if (errBody.detail) return errBody.detail;
+    return fallback;
+  };
+
   // Handle CSRF token expiry: refresh and retry once
   if (res.status === 403) {
     const errBody = await res.json().catch(() => null);
@@ -63,13 +73,13 @@ async function postWithCsrf<T>(
       await initCSRF();
       res = await doFetch();
     } else {
-      throw new Error(errBody?.detail || `${errorPrefix} (${res.status})`);
+      throw new Error(extractError(errBody, `${errorPrefix} (${res.status})`));
     }
   }
 
   if (!res.ok) {
     const errBody = await res.json().catch(() => null);
-    throw new Error(errBody?.detail || `${errorPrefix} (${res.status})`);
+    throw new Error(extractError(errBody, `${errorPrefix} (${res.status})`));
   }
 
   const json = await res.json();
