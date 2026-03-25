@@ -132,8 +132,9 @@ export const translations: Record<string, string> = {
   
   // Hero
   'hero.built_for': 'Built for Egypt & GCC',
-  'hero.title_start': 'Launch Your Online Store in',
-  'hero.title_highlight': 'Egypt & MENA',
+  'hero.title_line1': 'NUMU Grows Your',
+  'hero.title_line2': 'E-Commerce',
+  'hero.title_line3': 'in Egypt & MENA',
   'hero.subtitle': 'The only platform with built-in Paymob, Fawry, and Bosta integrations. Native Arabic support, ETA e-invoicing, and advanced COD workflows designed for local growth.',
   'hero.cta_primary': 'Start Selling Today',
   'hero.cta_secondary': 'Watch Demo',
@@ -365,8 +366,10 @@ export const translationsAr: Record<string, string> = {
   
   // Hero
   'hero.built_for': 'معمول عشان مصر والخليج',
-  'hero.title_start': 'افتح متجرك الإلكتروني في',
-  'hero.title_highlight': 'مصر والشرق الأوسط',
+  'hero.title_line1': 'نُمو معاك في نمو',
+  'hero.title_line2': 'تجارتك الإلكترونية',
+  'hero.title_line3': 'في مصر والشرق',
+  'hero.title_line4': 'الأوسط',
   'hero.subtitle': 'المنصة الوحيدة اللي فيها كل حاجة: بيموب، فوري، وبوسطة. عربي 100%، فاتورة إلكترونية، وشغل الدفع عند الاستلام اللي ينجزك.',
   'hero.cta_primary': 'ابدأ متجرك دلوقتي',
   'hero.cta_secondary': 'شوف الفيديو',

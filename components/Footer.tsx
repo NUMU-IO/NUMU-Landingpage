@@ -17,19 +17,16 @@ const Footer: React.FC = () => {
   ];
 
   const handleClick = (e: React.MouseEvent, link: typeof links[0]) => {
-    if (!link.hash) return; // Let <Link> handle normal routes
+    if (!link.hash) return;
     e.preventDefault();
-
     const scrollTo = () => {
       const el = document.getElementById(link.hash!);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
-
     if (location.pathname === '/') {
       scrollTo();
     } else {
       navigate('/');
-      // Wait for home page to render, then scroll
       setTimeout(scrollTo, 100);
     }
   };
