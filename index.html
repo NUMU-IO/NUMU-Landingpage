@@ -9,8 +9,30 @@
     <meta name="theme-color" content="#1e40af"/>
     <link rel="canonical" href="https://numueg.app/"/>
     <link rel="icon" type="image/png" href="/favicon.png"/>
-    <link rel="preload" as="image" href="/numu-logo-ar.webp"/>
-    <link rel="preload" as="image" href="/numu-logo-en.webp"/>
+
+    <!-- Preconnect to font origins (must be early) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+    <!-- DNS prefetch for Sentry (lazy-loaded) -->
+    <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io"/>
+
+    <!-- Preload LCP hero image -->
+    <link rel="preload" as="image" href="/numu-logo-en.webp" type="image/webp"/>
+
+    <!-- Critical fonts: Alexandria (hero text) loaded normally with swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+    <!-- Non-critical fonts: Inter (body) and Material Symbols loaded async -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" media="print" onload="this.media='all'"/>
+    <!-- Fallback for browsers with JS disabled -->
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"/>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
+    </noscript>
+
+    <link rel="stylesheet" href="/index.css"/>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website"/>
@@ -26,12 +48,6 @@
     <meta name="twitter:title" content="NUMU — Build Your Online Store in Egypt & MENA"/>
     <meta name="twitter:description" content="Launch your e-commerce store with bilingual Arabic-English support, Egyptian payment gateways, Bosta shipping, and ETA e-invoicing."/>
     <meta name="twitter:image" content="https://numueg.app/numu-logo-en.webp"/>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="/index.css"/>
 
     <!-- Structured data -->
     <script type="application/ld+json">

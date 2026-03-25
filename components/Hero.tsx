@@ -173,8 +173,11 @@ const Hero: React.FC = () => {
               <img
                 src="/numu-symbol-white.webp"
                 alt=""
+                width="256"
+                height="256"
                 className="h-48 sm:h-64 w-auto object-contain animate-float relative"
                 style={{ animationDelay: "1s" }}
+                decoding="async"
               />
             </div>
 
