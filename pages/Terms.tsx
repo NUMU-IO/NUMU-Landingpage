@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 
 const sectionIcons = [
   'person_add',
@@ -24,6 +25,12 @@ const sections = [
 
 const Terms: React.FC = () => {
   const { t, dir, language } = useLanguage();
+
+  useSEO({
+    title: 'Terms of Service — NUMU | E-commerce Platform for Egypt & MENA',
+    description: 'Review the NUMU terms of service governing the use of our e-commerce platform, payment processing, and merchant obligations in Egypt and MENA.',
+    canonical: 'https://numueg.app/terms',
+  });
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark" dir={dir}>

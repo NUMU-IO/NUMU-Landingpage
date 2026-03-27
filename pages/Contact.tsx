@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 
 const Contact: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [sent, setSent] = useState(false);
+
+  useSEO({
+    title: 'Contact NUMU — Get Help with Your Egypt & MENA E-commerce Store',
+    description: 'Reach out to the NUMU team for support, partnership inquiries, or questions about our e-commerce platform for Egypt and MENA. We respond in Arabic and English.',
+    canonical: 'https://numueg.app/contact',
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

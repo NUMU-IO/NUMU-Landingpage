@@ -1,9 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 
 const Pricing: React.FC = () => {
   const { t, dir, language } = useLanguage();
+
+  useSEO({
+    title: 'Pricing — NUMU | Simple, Transparent Plans for Egypt & MENA',
+    description: 'NUMU pricing plans are coming soon. Join the waitlist for a free trial — no credit card required. Affordable e-commerce plans for merchants in Egypt, Saudi Arabia, and UAE.',
+    canonical: 'https://numueg.app/pricing',
+  });
 
   const perks = [
     { icon: 'timer', text: t('pricing.free_trial') },

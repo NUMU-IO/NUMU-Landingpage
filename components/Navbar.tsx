@@ -53,12 +53,12 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="fixed top-2 sm:top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none" ref={menuRef}>
-      <nav className="bg-background-light/80 backdrop-blur-md dark:bg-background-dark/80 rounded-full shadow-neu-floating border border-white/20 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between w-full max-w-6xl pointer-events-auto transition-all duration-300 relative">
+      <nav aria-label="Main navigation" className="bg-background-light/80 backdrop-blur-md dark:bg-background-dark/80 rounded-full shadow-neu-floating border border-white/20 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between w-full max-w-6xl pointer-events-auto transition-all duration-300 relative">
 
         {/* Left: Logo */}
         <div className="flex-1 flex justify-start">
-          <Link to="/" className="flex items-center gap-2 md:gap-3 text-text-main dark:text-white">
-            <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-7 sm:h-8 md:h-10 w-auto object-contain" width="120" height="40" />
+          <Link to="/" aria-label="NUMU home" className="flex items-center gap-2 md:gap-3 text-text-main dark:text-white">
+            <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU — E-commerce platform for Egypt and MENA" className="h-7 sm:h-8 md:h-10 w-auto object-contain" width="120" height="40" />
           </Link>
         </div>
 
@@ -74,9 +74,11 @@ const Navbar: React.FC = () => {
           <div className="relative" ref={langRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              aria-label="Select language"
+              aria-expanded={isLangMenuOpen}
               className="text-text-muted hover:text-primary font-medium text-sm transition-colors cursor-pointer flex items-center gap-2 p-2"
             >
-              <span className="material-symbols-outlined text-lg sm:text-xl">language</span>
+              <span className="material-symbols-outlined text-lg sm:text-xl" aria-hidden="true">language</span>
             </button>
 
             {isLangMenuOpen && (
@@ -109,8 +111,10 @@ const Navbar: React.FC = () => {
           <button
             className="lg:hidden text-text-main dark:text-white p-1.5 -mr-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
           >
-            <span className="material-symbols-outlined text-xl sm:text-2xl">
+            <span className="material-symbols-outlined text-xl sm:text-2xl" aria-hidden="true">
               {isMenuOpen ? 'close' : 'menu'}
             </span>
           </button>

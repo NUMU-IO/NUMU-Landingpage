@@ -15,6 +15,7 @@ import Footer from '../components/Footer';
 import { NavItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useLandingConfig } from '../contexts/LandingConfigContext';
+import { useSEO } from '../hooks/useSEO';
 
 const Home: React.FC = () => {
   const [activeSectionId, setActiveSectionId] = useState<string>('hero');
@@ -22,6 +23,12 @@ const Home: React.FC = () => {
   const { t } = useLanguage();
   const { isSectionVisible } = useLandingConfig();
   const location = useLocation();
+
+  useSEO({
+    title: 'NUMU — Build Your Online Store in Egypt & MENA',
+    description: 'Launch your e-commerce store with bilingual Arabic-English support, Egyptian payment gateways (Paymob, Fawry), Bosta shipping, and ETA e-invoicing. Start selling online in Egypt, Saudi Arabia, and UAE today.',
+    canonical: 'https://numueg.app/',
+  });
 
   const allNavItems: NavItem[] = useMemo(() => [
     { id: 'hero', label: t('nav.home') },
@@ -94,7 +101,7 @@ const Home: React.FC = () => {
 
       <main className="lg:snap-y lg:snap-mandatory h-screen overflow-y-scroll scroll-smooth no-scrollbar w-full">
         {isSectionVisible('hero') && (
-          <section id="hero" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light pt-20 lg:pt-0">
+          <section id="hero" aria-label="Hero" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light pt-20 lg:pt-0">
             <Hero />
           </section>
         )}
@@ -104,7 +111,7 @@ const Home: React.FC = () => {
           </section>
         )}
         {isSectionVisible('features') && (
-          <section id="features" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
+          <section id="features" aria-label="Features" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
             <Features />
           </section>
         )}
@@ -124,12 +131,12 @@ const Home: React.FC = () => {
           </section>
         )}
         {isSectionVisible('integrations') && (
-          <section id="integrations" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
+          <section id="integrations" aria-label="Integrations" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
             <Integrations />
           </section>
         )}
         {isSectionVisible('testimonials') && (
-          <section id="testimonials" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt py-20 lg:py-0">
+          <section id="testimonials" aria-label="Testimonials" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt py-20 lg:py-0">
             <Testimonials />
           </section>
         )}
@@ -139,7 +146,7 @@ const Home: React.FC = () => {
           </section>
         )}
         {isSectionVisible('footer') && (
-          <section id="footer" className="lg:snap-end relative flex items-center justify-center bg-background-alt py-12 lg:py-16">
+          <section id="footer" aria-label="Footer" className="lg:snap-end relative flex items-center justify-center bg-background-alt py-12 lg:py-16">
             <Footer />
           </section>
         )}

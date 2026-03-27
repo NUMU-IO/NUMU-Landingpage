@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 
 const sectionIcons = [
   'database',
@@ -22,6 +23,12 @@ const sections = [
 
 const Privacy: React.FC = () => {
   const { t, dir, language } = useLanguage();
+
+  useSEO({
+    title: 'Privacy Policy — NUMU | How We Protect Your Data',
+    description: 'Read the NUMU privacy policy to understand how we collect, use, and protect your personal data on our e-commerce platform for Egypt and MENA.',
+    canonical: 'https://numueg.app/privacy',
+  });
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark" dir={dir}>

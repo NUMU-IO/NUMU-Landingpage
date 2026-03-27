@@ -19,7 +19,7 @@ const Integrations: React.FC = () => {
             { icon: 'auto_awesome', text: t('integrations.ai') },
           ].map((item, idx) => (
             <li key={idx} className="flex items-center gap-2.5 sm:gap-3 text-text-main font-medium text-sm sm:text-base">
-              <span className="size-7 sm:size-8 rounded-full shadow-neu-pressed text-primary flex items-center justify-center shrink-0">
+              <span className="size-7 sm:size-8 rounded-full shadow-neu-pressed text-primary flex items-center justify-center shrink-0" aria-hidden="true">
                 <span className="material-symbols-outlined text-xs sm:text-sm">{item.icon}</span>
               </span>
               {item.text}
