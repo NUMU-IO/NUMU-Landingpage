@@ -32,28 +32,32 @@ const Testimonials: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto w-full px-4">
+    <div className="max-w-6xl mx-auto w-full px-4" itemScope itemType="https://schema.org/Product">
+      <meta itemProp="name" content="NUMU E-commerce Platform" />
       <h2 className="text-2xl sm:text-3xl font-bold text-text-main dark:text-white mb-6 sm:mb-8 md:mb-12 text-center">{t('testimonials.title')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         {testimonials.map((t, i) => (
-          <div key={i} className="rounded-2xl sm:rounded-3xl shadow-neu-pressed p-5 sm:p-6 md:p-8 bg-background-light">
+          <article key={i} className="rounded-2xl sm:rounded-3xl shadow-neu-pressed p-5 sm:p-6 md:p-8 bg-background-light" itemScope itemType="https://schema.org/Review" itemProp="review">
             <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="size-10 sm:size-12 rounded-full shadow-neu-flat-sm bg-cover bg-center shrink-0" style={{ backgroundImage: `url('${t.img}')` }}></div>
-              <div>
-                <p className="text-sm font-bold text-text-main dark:text-white">{t.name}</p>
+              <div className="size-10 sm:size-12 rounded-full shadow-neu-flat-sm bg-cover bg-center shrink-0" style={{ backgroundImage: `url('${t.img}')` }} role="img" aria-label={`${t.name} profile photo`}></div>
+              <div itemScope itemType="https://schema.org/Person" itemProp="author">
+                <p className="text-sm font-bold text-text-main dark:text-white" itemProp="name">{t.name}</p>
                 <div className="flex flex-col">
-                  <p className="text-xs text-primary font-medium">{t.role}</p>
+                  <p className="text-xs text-primary font-medium" itemProp="jobTitle">{t.role}</p>
                   <p className="text-[10px] text-text-muted">{t.loc}</p>
                 </div>
               </div>
             </div>
-            <div className="flex text-primary mb-3">
+            <div className="flex text-primary mb-3" itemScope itemType="https://schema.org/Rating" itemProp="reviewRating">
+              <meta itemProp="ratingValue" content={String(t.stars)} />
+              <meta itemProp="bestRating" content="5" />
               {[...Array(5)].map((_, starIdx) => (
-                <span key={starIdx} className={`material-symbols-outlined text-sm ${starIdx < t.stars ? '' : 'text-text-muted/30'}`}>star</span>
+                <span key={starIdx} className={`material-symbols-outlined text-sm ${starIdx < t.stars ? '' : 'text-text-muted/30'}`} aria-hidden="true">star</span>
               ))}
+              <span className="sr-only">{t.stars} out of 5 stars</span>
             </div>
-            <p className="text-sm text-text-muted italic">{t.text}</p>
-          </div>
+            <blockquote className="text-sm text-text-muted italic" itemProp="reviewBody">{t.text}</blockquote>
+          </article>
         ))}
       </div>
     </div>

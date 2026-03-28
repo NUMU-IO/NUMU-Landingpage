@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /verify-email
+Disallow: /api/
+Crawl-delay: 10
 
 Sitemap: https://numueg.app/sitemap.xml
