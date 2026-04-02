@@ -1,26 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../contexts/LanguageContext';
-import { login, forgotPassword } from '../services/authApi';
-import { useSEO } from '../hooks/useSEO';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { useLanguage } from "../contexts/LanguageContext";
+import { login, forgotPassword } from "../services/authApi";
+import { useSEO } from "../hooks/useSEO";
+
+const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
+const DASHBOARD_URL =
+  import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
 
 const Login: React.FC = () => {
-  const { t } = useLanguage();
-  useSEO({ title: 'Login — NUMU', description: 'Sign in to your NUMU merchant account.', canonical: 'https://numueg.app/login', noIndex: true });
+  const { t, language } = useLanguage();
+  const isAr = language === "ar";
+  useSEO({
+    title: "Login — NUMU",
+    description: "Sign in to your NUMU merchant account.",
+    canonical: "https://numueg.app/login",
+    noIndex: true,
+  });
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotEmail, setForgotEmail] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSent, setForgotSent] = useState(false);
-  const [forgotError, setForgotError] = useState('');
+  const [forgotError, setForgotError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -29,11 +40,12 @@ const Login: React.FC = () => {
         navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       } else {
         // Redirect to merchant dashboard (separate app)
-        const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
+        const dashboardUrl =
+          import.meta.env.VITE_DASHBOARD_URL || "https://dashboard.numueg.app";
         window.location.href = dashboardUrl;
       }
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -41,14 +53,14 @@ const Login: React.FC = () => {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setForgotError('');
+    setForgotError("");
     setForgotLoading(true);
 
     try {
       await forgotPassword(forgotEmail);
       setForgotSent(true);
     } catch (err: any) {
-      setForgotError(err.message || 'Request failed');
+      setForgotError(err.message || "Request failed");
     } finally {
       setForgotLoading(false);
     }
@@ -58,13 +70,17 @@ const Login: React.FC = () => {
     return (
       <div className="flex flex-col gap-5 lg:gap-8">
         <div className="text-center lg:text-start">
-          <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">{t('auth.forgot_title')}</h2>
-          <p className="text-text-muted text-sm sm:text-base">{t('auth.forgot_subtitle')}</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">
+            {t("auth.forgot_title")}
+          </h2>
+          <p className="text-text-muted text-sm sm:text-base">
+            {t("auth.forgot_subtitle")}
+          </p>
         </div>
 
         {forgotSent ? (
           <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-4 rounded-xl text-sm">
-            {t('auth.forgot_success')}
+            {t("auth.forgot_success")}
           </div>
         ) : (
           <>
@@ -74,16 +90,21 @@ const Login: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={handleForgotPassword} className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
+            <form
+              onSubmit={handleForgotPassword}
+              className="flex flex-col gap-3 sm:gap-4 lg:gap-5"
+            >
               <div className="flex flex-col gap-1.5 sm:gap-2">
-                <label className="text-sm font-bold text-text-main dark:text-white">{t('auth.email')}</label>
+                <label className="text-sm font-bold text-text-main dark:text-white">
+                  {t("auth.email")}
+                </label>
                 <input
                   type="email"
                   required
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
-                  placeholder={t('auth.email_placeholder')}
+                  placeholder={t("auth.email_placeholder")}
                 />
               </div>
 
@@ -95,7 +116,7 @@ const Login: React.FC = () => {
                 {forgotLoading ? (
                   <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <span>{t('auth.forgot_send')}</span>
+                  <span>{t("auth.forgot_send")}</span>
                 )}
               </button>
             </form>
@@ -104,10 +125,14 @@ const Login: React.FC = () => {
 
         <button
           type="button"
-          onClick={() => { setShowForgot(false); setForgotSent(false); setForgotError(''); }}
+          onClick={() => {
+            setShowForgot(false);
+            setForgotSent(false);
+            setForgotError("");
+          }}
           className="text-center text-sm text-primary font-bold hover:underline"
         >
-          {t('auth.forgot_back')}
+          {t("auth.forgot_back")}
         </button>
       </div>
     );
@@ -116,8 +141,12 @@ const Login: React.FC = () => {
   return (
     <div className="flex flex-col gap-5 lg:gap-8">
       <div className="text-center lg:text-start">
-        <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">{t('auth.login_title')}</h2>
-        <p className="text-text-muted text-sm sm:text-base">{t('auth.login_subtitle')}</p>
+        <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">
+          {t("auth.login_title")}
+        </h2>
+        <p className="text-text-muted text-sm sm:text-base">
+          {t("auth.login_subtitle")}
+        </p>
       </div>
 
       {error && (
@@ -126,21 +155,28 @@ const Login: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3 sm:gap-4 lg:gap-5"
+      >
         <div className="flex flex-col gap-1.5 sm:gap-2">
-          <label className="text-sm font-bold text-text-main dark:text-white">{t('auth.email')}</label>
+          <label className="text-sm font-bold text-text-main dark:text-white">
+            {t("auth.email")}
+          </label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
-            placeholder={t('auth.email_placeholder')}
+            placeholder={t("auth.email_placeholder")}
           />
         </div>
 
         <div className="flex flex-col gap-1.5 sm:gap-2">
-          <label className="text-sm font-bold text-text-main dark:text-white">{t('auth.password')}</label>
+          <label className="text-sm font-bold text-text-main dark:text-white">
+            {t("auth.password")}
+          </label>
           <input
             type="password"
             required
@@ -154,10 +190,13 @@ const Login: React.FC = () => {
         <div className="flex items-center justify-end text-xs sm:text-sm">
           <button
             type="button"
-            onClick={() => { setShowForgot(true); setForgotEmail(email); }}
+            onClick={() => {
+              setShowForgot(true);
+              setForgotEmail(email);
+            }}
             className="text-primary font-bold hover:underline"
           >
-            {t('auth.forgot_password')}
+            {t("auth.forgot_password")}
           </button>
         </div>
 
@@ -170,17 +209,58 @@ const Login: React.FC = () => {
             <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           ) : (
             <>
-              <span>{t('auth.login_button')}</span>
-              <span className="material-symbols-outlined rtl:rotate-180">login</span>
+              <span>{t("auth.login_button")}</span>
+              <span className="material-symbols-outlined rtl:rotate-180">
+                login
+              </span>
             </>
           )}
         </button>
       </form>
 
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-light dark:border-white/10" /></div>
+        <div className="relative flex justify-center text-xs"><span className="bg-background-light dark:bg-background-dark px-3 text-text-muted">{isAr ? 'أو' : 'or'}</span></div>
+      </div>
+
+      {/* Google Sign-In */}
+      <div className="flex justify-center">
+        <GoogleLogin
+          onSuccess={async (credentialResponse) => {
+            if (!credentialResponse.credential) return;
+            setLoading(true);
+            setError('');
+            try {
+              const res = await fetch(`${API_BASE}/auth/google`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_token: credentialResponse.credential }),
+              });
+              if (!res.ok) {
+                const errBody = await res.json().catch(() => null);
+                throw new Error(errBody?.detail || errBody?.error?.message || 'Google login failed');
+              }
+              window.location.href = DASHBOARD_URL;
+            } catch (err: any) {
+              setError(err.message || 'Google login failed');
+            } finally {
+              setLoading(false);
+            }
+          }}
+          onError={() => setError(isAr ? 'فشل تسجيل الدخول بجوجل' : 'Google sign-in failed')}
+          size="large"
+          width="100%"
+          text="signin_with"
+          shape="pill"
+        />
+      </div>
+
       <div className="text-center text-sm text-text-muted">
-        {t('auth.dont_have_account')} {' '}
+        {t("auth.dont_have_account")}{" "}
         <Link to="/signup" className="text-primary font-bold hover:underline">
-          {t('auth.signup_link')}
+          {t("auth.signup_link")}
         </Link>
       </div>
     </div>

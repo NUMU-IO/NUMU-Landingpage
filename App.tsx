@@ -2,7 +2,10 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ErrorBoundary } from './components/ErrorBoundary';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -24,6 +27,7 @@ const LoadingFallback = () => (
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <LanguageProvider>
       <LandingConfigProvider>
       <Router>
@@ -45,6 +49,7 @@ const App: React.FC = () => {
       </Router>
     </LandingConfigProvider>
     </LanguageProvider>
+    </GoogleOAuthProvider>
     </ErrorBoundary>
   );
 };
