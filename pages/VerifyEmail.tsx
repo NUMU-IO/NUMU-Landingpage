@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { verifyEmailByCode, verifyEmailByToken, resendVerificationEmail } from '../services/authApi';
+import { useSEO } from '../hooks/useSEO';
 
 const RESEND_COOLDOWN = 60; // seconds
 
 const VerifyEmail: React.FC = () => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
+  useSEO({ title: 'Verify Email — NUMU', description: 'Verify your NUMU account email address.', canonical: 'https://numueg.app/verify-email', noIndex: true });
   const [searchParams] = useSearchParams();
 
   const [code, setCode] = useState<string[]>(Array(6).fill(''));
@@ -25,12 +26,12 @@ const VerifyEmail: React.FC = () => {
     if (!token) return;
     setLoading(true);
     verifyEmailByToken(token)
-      .then(() => navigate('/waitlist', { replace: true }))
+      .then(() => window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app')
       .catch((err) => {
         setError(err.message || 'Verification failed');
         setLoading(false);
       });
-  }, [token, navigate]);
+  }, [token]);
 
   // Resend cooldown timer
   useEffect(() => {
@@ -81,7 +82,7 @@ const VerifyEmail: React.FC = () => {
     setLoading(true);
     try {
       await verifyEmailByCode(fullCode);
-      navigate('/waitlist', { replace: true });
+      window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
     } catch (err: any) {
       setError(err.message || 'Verification failed');
       setCode(Array(6).fill(''));

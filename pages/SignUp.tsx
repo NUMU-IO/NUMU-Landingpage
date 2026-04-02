@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { register } from '../services/authApi';
+import { useSEO } from '../hooks/useSEO';
 
 const SignUp: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isAr = language === 'ar';
+  useSEO({ title: 'Sign Up — NUMU', description: 'Create your NUMU merchant account.', canonical: 'https://numueg.app/signup', noIndex: true });
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,6 +41,25 @@ const SignUp: React.FC = () => {
       <div className="text-center lg:text-start">
         <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">{t('auth.signup_title')}</h2>
         <p className="text-text-muted text-sm sm:text-base">{t('auth.signup_subtitle')}</p>
+      </div>
+
+      {/* Beta notice */}
+      <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-xl text-sm flex items-start gap-2.5">
+        <span className="material-symbols-outlined text-amber-500 text-lg mt-0.5 shrink-0">lock</span>
+        <div>
+          <p className="font-semibold text-amber-800">
+            {isAr ? 'نحن في مرحلة البيتا الخاصة' : 'We\'re in private beta'}
+          </p>
+          <p className="text-amber-700/80 text-xs mt-0.5">
+            {isAr
+              ? 'ستحتاج كود دعوة لإنشاء متجرك بعد التسجيل. ليس لديك كود؟'
+              : 'You\'ll need an invite code to create your store after signing up. Don\'t have one?'}
+            {' '}
+            <Link to="/" className="underline font-medium" state={{ scrollTo: 'waitlist' }}>
+              {isAr ? 'انضم لقائمة الانتظار' : 'Join the waitlist'}
+            </Link>
+          </p>
+        </div>
       </div>
 
       {error && (

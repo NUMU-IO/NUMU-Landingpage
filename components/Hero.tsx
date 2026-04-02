@@ -96,15 +96,16 @@ const Hero: React.FC = () => {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 animate-fade-in-up-3 justify-center lg:justify-start">
-              <Link
-                to="/signup"
+              <a
+                href="#waitlist"
+                onClick={(e) => { e.preventDefault(); document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }); }}
                 className="group bg-brand-gradient text-white font-bold py-3.5 px-8 rounded-2xl shadow-[5px_5px_10px_rgba(15,23,42,0.3),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
               >
                 <span>{t("hero.cta_primary")}</span>
                 <span className="material-symbols-outlined text-lg group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180 transition-transform">
                   arrow_forward
                 </span>
-              </Link>
+              </a>
               <button className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center">
                 <span className="material-symbols-outlined text-primary text-lg">
                   play_circle
