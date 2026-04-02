@@ -11,6 +11,7 @@
     "start": "serve dist -s -l 8080"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.13.4",
     "@sentry/react": "^10.41.0",
     "@types/matter-js": "^0.20.2",
     "matter-js": "^0.20.0",

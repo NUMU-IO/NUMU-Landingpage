@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useLanguage } from '../contexts/LanguageContext';
 import { register } from '../services/authApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'https://numueg.app/api/v1';
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
 import { useSEO } from '../hooks/useSEO';
 
 const SignUp: React.FC = () => {
@@ -121,6 +125,45 @@ const SignUp: React.FC = () => {
           )}
         </button>
       </form>
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-light dark:border-white/10" /></div>
+        <div className="relative flex justify-center text-xs"><span className="bg-background-light dark:bg-background-dark px-3 text-text-muted">{isAr ? 'أو' : 'or'}</span></div>
+      </div>
+
+      {/* Google Sign-Up */}
+      <div className="flex justify-center">
+        <GoogleLogin
+          onSuccess={async (credentialResponse) => {
+            if (!credentialResponse.credential) return;
+            setLoading(true);
+            setError('');
+            try {
+              const res = await fetch(`${API_BASE}/auth/google`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_token: credentialResponse.credential }),
+              });
+              if (!res.ok) {
+                const errBody = await res.json().catch(() => null);
+                throw new Error(errBody?.detail || errBody?.error?.message || 'Google signup failed');
+              }
+              window.location.href = DASHBOARD_URL;
+            } catch (err: any) {
+              setError(err.message || 'Google signup failed');
+            } finally {
+              setLoading(false);
+            }
+          }}
+          onError={() => setError(isAr ? 'فشل التسجيل بجوجل' : 'Google sign-up failed')}
+          size="large"
+          width="100%"
+          text="signup_with"
+          shape="pill"
+        />
+      </div>
 
       <div className="text-center text-sm text-text-muted">
         {t('auth.already_have_account')} {' '}
