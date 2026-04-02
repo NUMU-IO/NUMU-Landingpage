@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { login, forgotPassword } from '../services/authApi';
+import { useSEO } from '../hooks/useSEO';
 
 const Login: React.FC = () => {
   const { t } = useLanguage();
+  useSEO({ title: 'Login — NUMU', description: 'Sign in to your NUMU merchant account.', canonical: 'https://numueg.app/login', noIndex: true });
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +28,9 @@ const Login: React.FC = () => {
       if (!result.user?.is_verified) {
         navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       } else {
-        navigate('/waitlist');
+        // Redirect to merchant dashboard (separate app)
+        const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
+        window.location.href = dashboardUrl;
       }
     } catch (err: any) {
       setError(err.message || 'Login failed');

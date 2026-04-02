@@ -10,11 +10,14 @@ import AIShowcase from '../components/AIShowcase';
 import MultiChannelShowcase from '../components/MultiChannelShowcase';
 import Integrations from '../components/Integrations';
 import Testimonials from '../components/Testimonials';
+import BetaProgram from '../components/BetaProgram';
+import WaitlistSection from '../components/WaitlistSection';
 import CTA from '../components/CTA';
 import Footer from '../components/Footer';
 import { NavItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useLandingConfig } from '../contexts/LandingConfigContext';
+import { useSEO } from '../hooks/useSEO';
 
 const Home: React.FC = () => {
   const [activeSectionId, setActiveSectionId] = useState<string>('hero');
@@ -22,6 +25,12 @@ const Home: React.FC = () => {
   const { t } = useLanguage();
   const { isSectionVisible } = useLandingConfig();
   const location = useLocation();
+
+  useSEO({
+    title: 'NUMU — Build Your Online Store in Egypt & MENA',
+    description: 'Launch your e-commerce store with bilingual Arabic-English support, Egyptian payment gateways (Paymob, Fawry), Bosta shipping, and ETA e-invoicing. Start selling online in Egypt, Saudi Arabia, and UAE today.',
+    canonical: 'https://numueg.app/',
+  });
 
   const allNavItems: NavItem[] = useMemo(() => [
     { id: 'hero', label: t('nav.home') },
@@ -32,6 +41,8 @@ const Home: React.FC = () => {
     { id: 'multichannel-showcase', label: t('features.multichannel.title') },
     { id: 'integrations', label: t('nav.integrations') },
     { id: 'testimonials', label: t('nav.testimonials') },
+    { id: 'beta-program', label: t('nav.beta') },
+    { id: 'waitlist', label: t('nav.waitlist') },
     { id: 'cta', label: t('nav.cta') },
     { id: 'footer', label: t('nav.footer') },
   ], [t]);
@@ -152,6 +163,20 @@ const Home: React.FC = () => {
         {isSectionVisible('testimonials') && (
           <section id="testimonials" className="py-16 sm:py-24 bg-background-alt">
             <Testimonials />
+          </section>
+        )}
+
+        {/* Beta Program */}
+        {isSectionVisible('beta-program') && (
+          <section id="beta-program" className="py-16 sm:py-24 bg-background-light">
+            <BetaProgram />
+          </section>
+        )}
+
+        {/* Waitlist */}
+        {isSectionVisible('waitlist') && (
+          <section id="waitlist" className="py-16 sm:py-24 bg-background-alt">
+            <WaitlistSection />
           </section>
         )}
 

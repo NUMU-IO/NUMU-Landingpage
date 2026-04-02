@@ -147,13 +147,16 @@ const Navbar: React.FC = () => {
             {t('auth.login_link')}
           </Link>
 
-          <Link to="/signup" className={`text-white text-xs sm:text-sm font-bold py-1.5 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-200 hover:scale-105 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+          <a
+            href="#waitlist"
+            onClick={(e) => handleNavClick(e, 'waitlist')}
+            className={`text-white text-xs sm:text-sm font-bold py-1.5 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-200 hover:scale-105 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
             scrolled
               ? 'bg-brand-gradient shadow-neu-flat-sm active:shadow-neu-pressed-sm hover:shadow-lg'
               : 'bg-brand-gradient shadow-[0_2px_10px_rgba(30,58,138,0.4)] hover:shadow-[0_4px_20px_rgba(30,58,138,0.5)]'
           }`}>
-            <span>{t('nav.start_free')}</span>
-          </Link>
+            <span>{language === 'ar' ? 'انضم للبيتا' : 'Join Beta'}</span>
+          </a>
 
           {/* Burger Menu Button */}
           <button
@@ -178,7 +181,8 @@ const Navbar: React.FC = () => {
             <a onClick={(e) => handleNavClick(e, 'features')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#features">{t('nav.features')}</a>
             <a onClick={(e) => handleNavClick(e, 'integrations')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#integrations">{t('nav.integrations')}</a>
             <a onClick={(e) => handleNavClick(e, 'testimonials')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#testimonials">{t('nav.testimonials')}</a>
-            <a onClick={(e) => handleNavClick(e, 'cta')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#cta">{t('nav.cta')}</a>
+            <a onClick={(e) => handleNavClick(e, 'beta-program')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#beta-program">{language === 'ar' ? 'برنامج البيتا' : 'Beta Program'}</a>
+            <a onClick={(e) => handleNavClick(e, 'waitlist')} className="text-primary font-bold text-base sm:text-lg p-3 hover:bg-primary/5 rounded-xl transition-colors cursor-pointer" href="#waitlist">{language === 'ar' ? 'انضم للقائمة' : 'Join Waitlist'}</a>
             <Link to="/contact" className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsMenuOpen(false)}>
               {t('footer.contact')}
             </Link>
