@@ -35,7 +35,7 @@ const Privacy: React.FC = () => {
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 sm:px-12 py-5">
         <Link to="/">
-          <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU" className="h-8 w-auto object-contain" />
+          <img src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" className="h-8 w-auto object-contain" />
         </Link>
         <Link to="/" className="text-sm text-text-muted hover:text-primary font-medium transition-colors">
           {t('waitlist.back_home')}

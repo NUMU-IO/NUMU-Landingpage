@@ -1,0 +1,54 @@
+name: Deploy Landing Page
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: deploy-landing
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  DEPLOY_HOST: 188.166.156.151
+  DEPLOY_USER: root
+  DEPLOY_PATH: /opt/numu/landing-page
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Deploy to server via rsync
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avz --delete
+          path: dist/
+          remote_path: ${{ env.DEPLOY_PATH }}/
+          remote_host: ${{ env.DEPLOY_HOST }}
+          remote_user: ${{ env.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Reload Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            docker exec numu-nginx-staging nginx -s reload
+            echo "Landing page deployed successfully"

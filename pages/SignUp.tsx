@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useLanguage } from '../contexts/LanguageContext';
 import { register } from '../services/authApi';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://numueg.app/api/v1';
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
+import { useSEO } from '../hooks/useSEO';
+
 const SignUp: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isAr = language === 'ar';
+  useSEO({ title: 'Sign Up — NUMU', description: 'Create your NUMU merchant account.', canonical: 'https://numueg.app/signup', noIndex: true });
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,6 +45,25 @@ const SignUp: React.FC = () => {
       <div className="text-center lg:text-start">
         <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">{t('auth.signup_title')}</h2>
         <p className="text-text-muted text-sm sm:text-base">{t('auth.signup_subtitle')}</p>
+      </div>
+
+      {/* Beta notice */}
+      <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-xl text-sm flex items-start gap-2.5">
+        <span className="material-symbols-outlined text-amber-500 text-lg mt-0.5 shrink-0">lock</span>
+        <div>
+          <p className="font-semibold text-amber-800">
+            {isAr ? 'نحن في مرحلة البيتا الخاصة' : 'We\'re in private beta'}
+          </p>
+          <p className="text-amber-700/80 text-xs mt-0.5">
+            {isAr
+              ? 'ستحتاج كود دعوة لإنشاء متجرك بعد التسجيل. ليس لديك كود؟'
+              : 'You\'ll need an invite code to create your store after signing up. Don\'t have one?'}
+            {' '}
+            <Link to="/" className="underline font-medium" state={{ scrollTo: 'waitlist' }}>
+              {isAr ? 'انضم لقائمة الانتظار' : 'Join the waitlist'}
+            </Link>
+          </p>
+        </div>
       </div>
 
       {error && (
@@ -99,6 +125,45 @@ const SignUp: React.FC = () => {
           )}
         </button>
       </form>
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-light dark:border-white/10" /></div>
+        <div className="relative flex justify-center text-xs"><span className="bg-background-light dark:bg-background-dark px-3 text-text-muted">{isAr ? 'أو' : 'or'}</span></div>
+      </div>
+
+      {/* Google Sign-Up */}
+      <div className="flex justify-center">
+        <GoogleLogin
+          onSuccess={async (credentialResponse) => {
+            if (!credentialResponse.credential) return;
+            setLoading(true);
+            setError('');
+            try {
+              const res = await fetch(`${API_BASE}/auth/google`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_token: credentialResponse.credential }),
+              });
+              if (!res.ok) {
+                const errBody = await res.json().catch(() => null);
+                throw new Error(errBody?.detail || errBody?.error?.message || 'Google signup failed');
+              }
+              window.location.href = DASHBOARD_URL;
+            } catch (err: any) {
+              setError(err.message || 'Google signup failed');
+            } finally {
+              setLoading(false);
+            }
+          }}
+          onError={() => setError(isAr ? 'فشل التسجيل بجوجل' : 'Google sign-up failed')}
+          size="large"
+          width="100%"
+          text="signup_with"
+          shape="pill"
+        />
+      </div>
 
       <div className="text-center text-sm text-text-muted">
         {t('auth.already_have_account')} {' '}

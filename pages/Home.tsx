@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SideNav from '../components/SideNav';
-import Hero from '../components/Hero';
+import Hero, { HeroStats } from '../components/Hero';
 import Preview from '../components/Preview';
 import Features from '../components/Features';
 import ImportShowcase from '../components/ImportShowcase';
@@ -10,6 +10,8 @@ import AIShowcase from '../components/AIShowcase';
 import MultiChannelShowcase from '../components/MultiChannelShowcase';
 import Integrations from '../components/Integrations';
 import Testimonials from '../components/Testimonials';
+import BetaProgram from '../components/BetaProgram';
+import WaitlistSection from '../components/WaitlistSection';
 import CTA from '../components/CTA';
 import Footer from '../components/Footer';
 import { NavItem } from '../types';
@@ -39,24 +41,23 @@ const Home: React.FC = () => {
     { id: 'multichannel-showcase', label: t('features.multichannel.title') },
     { id: 'integrations', label: t('nav.integrations') },
     { id: 'testimonials', label: t('nav.testimonials') },
+    { id: 'beta-program', label: t('nav.beta') },
+    { id: 'waitlist', label: t('nav.waitlist') },
     { id: 'cta', label: t('nav.cta') },
     { id: 'footer', label: t('nav.footer') },
   ], [t]);
 
-  // Filter nav items to only include visible sections
   const navItems = useMemo(
     () => allNavItems.filter((item) => isSectionVisible(item.id)),
     [allNavItems, isSectionVisible]
   );
 
   useEffect(() => {
-    // Handle scroll from other pages
     if (location.state && location.state.scrollTo) {
       const element = document.getElementById(location.state.scrollTo);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-      // Clear state to prevent scrolling on subsequent renders/refreshes
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -73,7 +74,7 @@ const Home: React.FC = () => {
       {
         root: null,
         rootMargin: '0px',
-        threshold: 0.55,
+        threshold: 0.3,
       }
     );
 
@@ -95,58 +96,100 @@ const Home: React.FC = () => {
   }, [navItems]);
 
   return (
-    <div className="h-screen overflow-hidden relative font-display">
+    <div className="relative font-display">
       <Navbar />
       <SideNav activeId={activeSectionId} items={navItems} />
 
-      <main className="lg:snap-y lg:snap-mandatory h-screen overflow-y-scroll scroll-smooth no-scrollbar w-full">
+      <main className="w-full scroll-smooth">
+        {/* Hero - dark background, dashboard overlaps into light */}
         {isSectionVisible('hero') && (
-          <section id="hero" aria-label="Hero" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light pt-20 lg:pt-0">
+          <section id="hero">
             <Hero />
           </section>
         )}
+
+        {/* Stats bridge — sits in the light section right after the hero */}
+        {isSectionVisible('hero') && (
+          <div className="bg-background-light relative z-10 -mt-24 sm:-mt-32 lg:-mt-40">
+            <div className="max-w-6xl mx-auto px-4">
+              <HeroStats />
+            </div>
+          </div>
+        )}
+
+        {/* Preview - neumorphic light */}
         {isSectionVisible('preview') && (
-          <section id="preview" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt overflow-hidden py-20 lg:py-0">
+          <section id="preview" className="py-16 sm:py-24 bg-background-alt">
             <Preview />
           </section>
         )}
+
+        {/* Features */}
         {isSectionVisible('features') && (
-          <section id="features" aria-label="Features" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
+          <section id="features" className="py-16 sm:py-24 bg-background-light">
             <Features />
           </section>
         )}
+
+        {/* Import showcase */}
         {isSectionVisible('import-showcase') && (
-          <section id="import-showcase" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt py-20 lg:py-0">
+          <section id="import-showcase" className="py-16 sm:py-24 bg-background-alt">
             <ImportShowcase />
           </section>
         )}
+
+        {/* AI showcase */}
         {isSectionVisible('ai-showcase') && (
-          <section id="ai-showcase" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
+          <section id="ai-showcase" className="py-16 sm:py-24 bg-background-light">
             <AIShowcase />
           </section>
         )}
+
+        {/* Multi-channel */}
         {isSectionVisible('multichannel-showcase') && (
-          <section id="multichannel-showcase" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt py-20 lg:py-0">
+          <section id="multichannel-showcase" className="py-16 sm:py-24 bg-background-alt">
             <MultiChannelShowcase />
           </section>
         )}
+
+        {/* Integrations */}
         {isSectionVisible('integrations') && (
-          <section id="integrations" aria-label="Integrations" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-20 lg:py-0">
+          <section id="integrations" className="py-16 sm:py-24 bg-background-light">
             <Integrations />
           </section>
         )}
+
+        {/* Testimonials */}
         {isSectionVisible('testimonials') && (
-          <section id="testimonials" aria-label="Testimonials" className="lg:snap-start min-h-screen lg:h-screen relative flex items-center justify-center bg-background-alt py-20 lg:py-0">
+          <section id="testimonials" className="py-16 sm:py-24 bg-background-alt">
             <Testimonials />
           </section>
         )}
+
+        {/* Beta Program */}
+        {isSectionVisible('beta-program') && (
+          <section id="beta-program" className="py-16 sm:py-24 bg-background-light">
+            <BetaProgram />
+          </section>
+        )}
+
+        {/* Waitlist */}
+        {isSectionVisible('waitlist') && (
+          <section id="waitlist" className="py-16 sm:py-24 bg-background-alt">
+            <WaitlistSection />
+          </section>
+        )}
+
+        {/* CTA */}
         {isSectionVisible('cta') && (
-          <section id="cta" className="lg:snap-start min-h-[60vh] lg:min-h-screen lg:h-screen relative flex items-center justify-center bg-background-light py-16 lg:py-0">
+          <section id="cta" className="py-16 sm:py-24 bg-background-light">
             <CTA />
           </section>
         )}
+
+        {/* Footer */}
         {isSectionVisible('footer') && (
-          <section id="footer" aria-label="Footer" className="lg:snap-end relative flex items-center justify-center bg-background-alt py-12 lg:py-16">
+          <section id="footer" className="bg-background-alt py-12 lg:py-16">
             <Footer />
           </section>
         )}

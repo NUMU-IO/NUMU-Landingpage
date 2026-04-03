@@ -6,6 +6,7 @@ const Navbar: React.FC = () => {
   const { t, language, toggleLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,14 @@ const Navbar: React.FC = () => {
     setIsLangMenuOpen(false);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -52,21 +61,54 @@ const Navbar: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="fixed top-2 sm:top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none" ref={menuRef}>
-      <nav aria-label="Main navigation" className="bg-background-light/80 backdrop-blur-md dark:bg-background-dark/80 rounded-full shadow-neu-floating border border-white/20 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between w-full max-w-6xl pointer-events-auto transition-all duration-300 relative">
+    <div className="fixed top-2 sm:top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none" ref={menuRef}>
+      <nav className={`rounded-2xl px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between w-full max-w-7xl pointer-events-auto transition-all duration-500 relative ${
+        scrolled
+          ? 'bg-background-light/80 backdrop-blur-md shadow-neu-floating border border-white/20'
+          : 'bg-white/5 backdrop-blur-md border border-white/10'
+      }`}>
 
         {/* Left: Logo */}
         <div className="flex-1 flex justify-start">
-          <Link to="/" aria-label="NUMU home" className="flex items-center gap-2 md:gap-3 text-text-main dark:text-white">
-            <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU — E-commerce platform for Egypt and MENA" className="h-7 sm:h-8 md:h-10 w-auto object-contain" width="120" height="40" />
+          <Link to="/" className="flex items-center gap-2 md:gap-3">
+            <img
+              src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'}
+              alt="NUMU"
+              className={`h-7 sm:h-8 md:h-10 w-auto object-contain transition-all duration-300 ${!scrolled ? 'brightness-0 invert' : ''}`}
+              width="120"
+              height="40"
+              fetchPriority="high"
+            />
           </Link>
         </div>
 
         {/* Center: Links (Desktop) */}
         <div className="hidden lg:flex items-center gap-8">
-          <a onClick={(e) => handleNavClick(e, 'preview')} className="text-text-muted hover:text-primary font-medium text-sm transition-colors cursor-pointer" href="#preview">{t('nav.product')}</a>
-          <a onClick={(e) => handleNavClick(e, 'features')} className="text-text-muted hover:text-primary font-medium text-sm transition-colors cursor-pointer" href="#features">{t('nav.features')}</a>
-          <a onClick={(e) => handleNavClick(e, 'testimonials')} className="text-text-muted hover:text-primary font-medium text-sm transition-colors cursor-pointer" href="#testimonials">{t('nav.testimonials')}</a>
+          {[
+            { id: 'features', label: t('nav.features') },
+            { id: 'integrations', label: t('nav.integrations') },
+            { id: 'testimonials', label: t('nav.testimonials') },
+            { id: 'cta', label: t('nav.cta') },
+          ].map((item) => (
+            <a
+              key={item.id}
+              onClick={(e) => handleNavClick(e, item.id)}
+              className={`font-medium text-sm transition-colors cursor-pointer ${
+                scrolled ? 'text-text-muted hover:text-primary' : 'text-white/60 hover:text-white'
+              }`}
+              href={`#${item.id}`}
+            >
+              {item.label}
+            </a>
+          ))}
+          <Link
+            to="/contact"
+            className={`font-medium text-sm transition-colors ${
+              scrolled ? 'text-text-muted hover:text-primary' : 'text-white/60 hover:text-white'
+            }`}
+          >
+            {t('footer.contact')}
+          </Link>
         </div>
 
         {/* Right: Actions */}
@@ -74,15 +116,15 @@ const Navbar: React.FC = () => {
           <div className="relative" ref={langRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              aria-label="Select language"
-              aria-expanded={isLangMenuOpen}
-              className="text-text-muted hover:text-primary font-medium text-sm transition-colors cursor-pointer flex items-center gap-2 p-2"
+              className={`font-medium text-sm transition-colors cursor-pointer flex items-center gap-2 p-2 ${
+                scrolled ? 'text-text-muted hover:text-primary' : 'text-white/50 hover:text-white'
+              }`}
             >
-              <span className="material-symbols-outlined text-lg sm:text-xl" aria-hidden="true">language</span>
+              <span className="material-symbols-outlined text-lg sm:text-xl">language</span>
             </button>
 
             {isLangMenuOpen && (
-              <div className="absolute top-full right-0 mt-2 w-32 bg-background-light dark:bg-background-dark rounded-xl shadow-neu-floating border border-white/20 overflow-hidden flex flex-col py-1">
+              <div className="absolute top-full right-0 mt-2 w-32 bg-background-light dark:bg-background-dark rounded-xl shadow-neu-floating border border-white/20 overflow-hidden flex flex-col py-1 animate-slide-down">
                 <button
                   onClick={() => handleLanguageSelect('en')}
                   className={`px-4 py-2.5 text-sm text-start hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${language === 'en' ? 'text-primary font-bold' : 'text-text-muted'}`}
@@ -99,22 +141,29 @@ const Navbar: React.FC = () => {
             )}
           </div>
 
-          <Link to="/login" className="text-text-muted hover:text-primary font-medium text-sm transition-colors hidden lg:block">
+          <Link to="/login" className={`font-medium text-sm transition-colors hidden lg:block ${
+            scrolled ? 'text-text-muted hover:text-primary' : 'text-white/70 hover:text-white'
+          }`}>
             {t('auth.login_link')}
           </Link>
 
-          <Link to="/signup" className="bg-brand-gradient text-white text-xs sm:text-sm font-bold py-1.5 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-6 rounded-full shadow-neu-flat-sm active:shadow-neu-pressed-sm transition-all duration-200 hover:shadow-lg hover:scale-105 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
-            <span>{t('nav.start_free')}</span>
-          </Link>
+          <a
+            href="#waitlist"
+            onClick={(e) => handleNavClick(e, 'waitlist')}
+            className={`text-white text-xs sm:text-sm font-bold py-1.5 px-3 sm:py-2 sm:px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-200 hover:scale-105 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+            scrolled
+              ? 'bg-brand-gradient shadow-neu-flat-sm active:shadow-neu-pressed-sm hover:shadow-lg'
+              : 'bg-brand-gradient shadow-[0_2px_10px_rgba(30,58,138,0.4)] hover:shadow-[0_4px_20px_rgba(30,58,138,0.5)]'
+          }`}>
+            <span>{language === 'ar' ? 'انضم للبيتا' : 'Join Beta'}</span>
+          </a>
 
           {/* Burger Menu Button */}
           <button
-            className="lg:hidden text-text-main dark:text-white p-1.5 -mr-1"
+            className={`lg:hidden p-1.5 -mr-1 ${scrolled ? 'text-text-main' : 'text-white'}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMenuOpen}
           >
-            <span className="material-symbols-outlined text-xl sm:text-2xl" aria-hidden="true">
+            <span className="material-symbols-outlined text-xl sm:text-2xl">
               {isMenuOpen ? 'close' : 'menu'}
             </span>
           </button>
@@ -124,15 +173,19 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <>
-          {/* Backdrop to close on outside tap */}
           <div
             className="fixed inset-0 z-[-1] pointer-events-auto lg:hidden"
             onClick={() => setIsMenuOpen(false)}
           />
           <div className="absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 p-3 sm:p-4 bg-background-light/95 backdrop-blur-xl dark:bg-background-dark/95 rounded-2xl shadow-neu-floating border border-white/20 pointer-events-auto lg:hidden flex flex-col gap-1 animate-slide-down">
-            <a onClick={(e) => handleNavClick(e, 'preview')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#preview">{t('nav.product')}</a>
             <a onClick={(e) => handleNavClick(e, 'features')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#features">{t('nav.features')}</a>
+            <a onClick={(e) => handleNavClick(e, 'integrations')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#integrations">{t('nav.integrations')}</a>
             <a onClick={(e) => handleNavClick(e, 'testimonials')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#testimonials">{t('nav.testimonials')}</a>
+            <a onClick={(e) => handleNavClick(e, 'beta-program')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#beta-program">{language === 'ar' ? 'برنامج البيتا' : 'Beta Program'}</a>
+            <a onClick={(e) => handleNavClick(e, 'waitlist')} className="text-primary font-bold text-base sm:text-lg p-3 hover:bg-primary/5 rounded-xl transition-colors cursor-pointer" href="#waitlist">{language === 'ar' ? 'انضم للقائمة' : 'Join Waitlist'}</a>
+            <Link to="/contact" className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsMenuOpen(false)}>
+              {t('footer.contact')}
+            </Link>
             <Link to="/login" className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsMenuOpen(false)}>
               {t('auth.login_link')}
             </Link>

@@ -17,19 +17,16 @@ const Footer: React.FC = () => {
   ];
 
   const handleClick = (e: React.MouseEvent, link: typeof links[0]) => {
-    if (!link.hash) return; // Let <Link> handle normal routes
+    if (!link.hash) return;
     e.preventDefault();
-
     const scrollTo = () => {
       const el = document.getElementById(link.hash!);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
-
     if (location.pathname === '/') {
       scrollTo();
     } else {
       navigate('/');
-      // Wait for home page to render, then scroll
       setTimeout(scrollTo, 100);
     }
   };
@@ -37,7 +34,7 @@ const Footer: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto w-full flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-12 px-4 py-8 md:py-0">
       <div className="flex items-center gap-3 text-text-main dark:text-white mb-2 sm:mb-4 md:mb-8">
-        <img src={language === 'ar' ? '/numu-logo-ar.png' : '/numu-logo-en.png'} alt="NUMU — E-commerce platform for Egypt and MENA" className="h-10 sm:h-14 md:h-16 w-auto object-contain" width="160" height="64" />
+        <img src={language === 'ar' ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU — E-commerce platform for Egypt and MENA" className="h-10 sm:h-14 md:h-16 w-auto object-contain" width="160" height="64" />
       </div>
       <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 text-text-muted font-medium text-xs sm:text-sm md:text-base">
         {links.map((link) => (
