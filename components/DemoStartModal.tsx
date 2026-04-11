@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
 
 interface DemoStartModalProps {
@@ -92,11 +93,17 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
       }
 
       const body = await res.json();
-      const dashboardUrl = body.data?.dashboard_url;
+      const data = body.data;
 
-      // Redirect to the merchant hub — cookies are already set by the API
-      if (dashboardUrl) {
-        window.location.href = dashboardUrl;
+      // Redirect to the merchant hub's /token-handoff page with tokens
+      // as URL params. That page calls POST /auth/token-handoff to set
+      // httpOnly cookies on the hub's own origin, then redirects to /.
+      if (data?.access_token) {
+        const handoffUrl = new URL("/token-handoff", DASHBOARD_URL);
+        handoffUrl.searchParams.set("access_token", data.access_token);
+        handoffUrl.searchParams.set("refresh_token", data.refresh_token);
+        handoffUrl.searchParams.set("redirect", "/?welcome=demo");
+        window.location.href = handoffUrl.toString();
       }
     } catch {
       setError(t("demo.modal.error.generic"));
