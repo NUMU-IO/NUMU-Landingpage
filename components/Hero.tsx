@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import DemoStartModal from "./DemoStartModal";
 
 const AnimatedCounter: React.FC<{
   end: number;
@@ -30,6 +31,7 @@ const AnimatedCounter: React.FC<{
 
 const Hero: React.FC = () => {
   const [activeBar, setActiveBar] = useState(10);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
   const { t, dir } = useLanguage();
 
   // Real merchant hub colors
@@ -106,12 +108,16 @@ const Hero: React.FC = () => {
                   arrow_forward
                 </span>
               </a>
-              <button className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center">
+              <button
+                onClick={() => setDemoModalOpen(true)}
+                className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
+              >
                 <span className="material-symbols-outlined text-primary text-lg">
-                  play_circle
+                  storefront
                 </span>
                 <span>{t("hero.cta_secondary")}</span>
               </button>
+              <DemoStartModal isOpen={demoModalOpen} onClose={() => setDemoModalOpen(false)} />
             </div>
 
             {/* Trust badges */}
