@@ -8,6 +8,7 @@ import Features from '../components/Features';
 import ImportShowcase from '../components/ImportShowcase';
 import AIShowcase from '../components/AIShowcase';
 import MultiChannelShowcase from '../components/MultiChannelShowcase';
+import CookieConsent from '../components/CookieConsent';
 import Integrations from '../components/Integrations';
 import Testimonials from '../components/Testimonials';
 import BetaProgram from '../components/BetaProgram';
@@ -194,6 +195,7 @@ const Home: React.FC = () => {
           </section>
         )}
       </main>
+      <CookieConsent />
     </div>
   );
 };
