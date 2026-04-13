@@ -73,49 +73,6 @@ const BetaProgram: React.FC = () => {
         ))}
       </div>
 
-      {/* How it works */}
-      <div className="mt-12 sm:mt-16 rounded-2xl bg-background-light dark:bg-background-dark shadow-neu-flat p-6 sm:p-10">
-        <h3 className="text-lg sm:text-xl font-bold text-text-main dark:text-white mb-6 text-center">
-          {isAr ? 'إزاي تنضم؟' : 'How It Works'}
-        </h3>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-center gap-6 sm:gap-3">
-          {[
-            { step: '1', icon: 'mail', text: isAr ? 'سجّل بريدك في قائمة الانتظار' : 'Sign up for the waitlist' },
-            { step: '2', icon: 'share', text: isAr ? 'شارك كود الإحالة مع أصدقائك' : 'Share your referral code with friends' },
-            { step: '3', icon: 'key', text: isAr ? 'استلم كود الدعوة على بريدك' : 'Receive your invite code via email' },
-            { step: '4', icon: 'storefront', text: isAr ? 'ابدأ ببناء متجرك!' : 'Start building your store!' },
-          ].map((s, i, arr) => (
-            <React.Fragment key={s.step}>
-              <div className="flex sm:flex-col items-center gap-3 sm:gap-2 text-center flex-1">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-primary text-lg">{s.icon}</span>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-0.5">{isAr ? `خطوة ${s.step}` : `Step ${s.step}`}</p>
-                  <p className="text-sm font-medium text-text-main dark:text-white">{s.text}</p>
-                </div>
-              </div>
-              {i < arr.length - 1 && (
-                <div className="hidden sm:block w-8 h-px bg-border-light dark:bg-white/10" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-
-        <div className="text-center mt-8">
-          <a
-            href="#waitlist"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="inline-flex items-center gap-2 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white font-bold h-12 sm:h-14 px-8 sm:px-10 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm hover:scale-[1.01] transition-all"
-          >
-            <span>{isAr ? 'انضم الآن' : 'Join Now'}</span>
-            <span className="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
-          </a>
-        </div>
-      </div>
     </div>
   );
 };

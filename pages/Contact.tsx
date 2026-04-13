@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://numueg.app/api/v1';
+
 const Contact: React.FC = () => {
   const { t, dir, language } = useLanguage();
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', city: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   useSEO({
     title: 'Contact NUMU — Get Help with Your Egypt & MENA E-commerce Store',
@@ -13,11 +16,23 @@ const Contact: React.FC = () => {
     canonical: 'https://numueg.app/contact',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just show success state — wire up to API later
-    setSent(true);
+    setStatus('sending');
+    try {
+      const res = await fetch(`${API_BASE}/public/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setStatus('sent');
+    } catch {
+      setStatus('error');
+    }
   };
+
+  const inputClass = "h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50";
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col" dir={dir}>
@@ -41,7 +56,7 @@ const Contact: React.FC = () => {
             <p className="text-text-muted text-base">{t('contact.subtitle')}</p>
           </div>
 
-          {sent ? (
+          {status === 'sent' ? (
             <div className="bg-green-50 border border-green-200 text-green-700 px-6 py-5 rounded-2xl text-center text-sm">
               <span className="material-symbols-outlined text-3xl mb-2 block">check_circle</span>
               {t('contact.success')}
@@ -53,7 +68,9 @@ const Contact: React.FC = () => {
                 <input
                   type="text"
                   required
-                  className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className={inputClass}
                   placeholder={t('contact.name_placeholder')}
                 />
               </div>
@@ -63,9 +80,49 @@ const Contact: React.FC = () => {
                 <input
                   type="email"
                   required
-                  className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className={inputClass}
                   placeholder={t('contact.email_placeholder')}
                 />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-text-main dark:text-white">{t('contact.phone')}</label>
+                <input
+                  type="tel"
+                  required
+                  dir="ltr"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className={inputClass}
+                  placeholder={t('contact.phone_placeholder')}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-text-main dark:text-white">{t('contact.country')}</label>
+                  <input
+                    type="text"
+                    required
+                    value={form.country}
+                    onChange={(e) => setForm({ ...form, country: e.target.value })}
+                    className={inputClass}
+                    placeholder={t('contact.country_placeholder')}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-text-main dark:text-white">{t('contact.city')}</label>
+                  <input
+                    type="text"
+                    required
+                    value={form.city}
+                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                    className={inputClass}
+                    placeholder={t('contact.city_placeholder')}
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -73,17 +130,32 @@ const Contact: React.FC = () => {
                 <textarea
                   required
                   rows={5}
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="px-5 sm:px-6 py-4 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50 resize-none"
                   placeholder={t('contact.message_placeholder')}
                 />
               </div>
 
+              {status === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm text-center">
+                  {t('contact.error')}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="mt-2 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white font-bold h-12 sm:h-14 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm active:shadow-neu-pressed hover:scale-[1.01] transition-all flex items-center justify-center gap-2 w-full"
+                disabled={status === 'sending'}
+                className="mt-2 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white font-bold h-12 sm:h-14 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm active:shadow-neu-pressed hover:scale-[1.01] transition-all flex items-center justify-center gap-2 w-full disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <span>{t('contact.send')}</span>
-                <span className="material-symbols-outlined rtl:rotate-180">send</span>
+                {status === 'sending' ? (
+                  <div className="size-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                ) : (
+                  <>
+                    <span>{t('contact.send')}</span>
+                    <span className="material-symbols-outlined rtl:rotate-180">send</span>
+                  </>
+                )}
               </button>
             </form>
           )}

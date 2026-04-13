@@ -14,6 +14,7 @@ const Footer: React.FC = () => {
     { key: 'footer.privacy', href: '/privacy' },
     { key: 'footer.terms', href: '/terms' },
     { key: 'footer.contact', href: '/contact' },
+    { key: 'footer.refund', href: '/refund' },
   ];
 
   const handleClick = (e: React.MouseEvent, link: typeof links[0]) => {
