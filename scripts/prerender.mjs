@@ -193,9 +193,13 @@ async function main() {
   const chromePath = findChrome();
   console.log(`Using Chrome: ${chromePath}`);
 
+  // `detached: true` puts the server into its own process group so we can
+  // kill the whole group later — killing just the shell wrapper leaves the
+  // `serve` grandchild alive with open pipes and Node never exits.
   const server = spawn('npx', ['serve', DIST, '-s', '-l', String(PORT)], {
-    stdio: 'pipe',
+    stdio: 'ignore',
     shell: process.platform === 'win32',
+    detached: process.platform !== 'win32',
   });
 
   // Wait for server to be ready
@@ -236,7 +240,16 @@ async function main() {
     }
   } finally {
     await browser.close();
-    server.kill();
+    try {
+      if (process.platform !== 'win32' && server.pid) {
+        // Kill the whole process group (negative pid).
+        process.kill(-server.pid, 'SIGTERM');
+      } else {
+        server.kill();
+      }
+    } catch {
+      // Already dead.
+    }
   }
 
   for (const { route, html } of rendered) {
@@ -250,7 +263,9 @@ async function main() {
   console.log('\n✅ Prerender complete!');
 }
 
-main().catch((err) => {
-  console.error('Prerender failed:', err);
-  process.exit(1);
-});
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('Prerender failed:', err);
+    process.exit(1);
+  });
