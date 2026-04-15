@@ -1,259 +1,295 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <!-- Primary Meta Tags -->
     <title>NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط</title>
-    <meta name="title" content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"/>
-    <meta name="description" content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، دعم عربي كامل، والدفع عند الاستلام. افتح متجرك في ١٠ دقايق."/>
-    <meta name="keywords" content="e-commerce Egypt, online store Egypt, متجر إلكتروني مصر, Paymob integration, Fawry payment, Bosta shipping, ETA e-invoicing, Arabic e-commerce platform, MENA e-commerce, sell online Egypt, COD Egypt, cash on delivery Egypt, e-commerce Saudi Arabia, online store UAE"/>
-    <meta name="author" content="NUMU Inc."/>
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
-    <meta name="theme-color" content="#0b1120"/>
+    <meta
+      name="title"
+      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+    />
+    <meta
+      name="description"
+      content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، دعم عربي كامل، والدفع عند الاستلام. افتح متجرك في ١٠ دقايق."
+    />
+    <meta name="author" content="NUMU Inc." />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#0b1120" />
 
     <!-- Geo Tags -->
-    <meta name="geo.region" content="EG"/>
-    <meta name="geo.placename" content="Cairo, Egypt"/>
-    <meta name="ICBM" content="30.0444, 31.2357"/>
+    <meta name="geo.region" content="EG" />
+    <meta name="geo.placename" content="Cairo, Egypt" />
+    <meta name="ICBM" content="30.0444, 31.2357" />
 
-    <!-- Canonical & Alternate Language Links -->
-    <link rel="canonical" href="https://numueg.app/"/>
-    <link rel="alternate" hreflang="en" href="https://numueg.app/"/>
-    <link rel="alternate" hreflang="ar" href="https://numueg.app/"/>
-    <link rel="alternate" hreflang="x-default" href="https://numueg.app/"/>
+    <!-- Canonical (prerender + useSEO will override per route) -->
+    <link rel="canonical" href="https://numueg.app/" />
 
     <!-- Favicon & App Icons -->
-    <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png"/>
-    <link rel="apple-touch-icon" sizes="512x512" href="/favicon.png"/>
-    <meta name="msapplication-TileColor" content="#0b1120"/>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/favicon.png" />
+    <meta name="msapplication-TileColor" content="#0b1120" />
 
     <!-- Preconnect to font origins (must be early) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- DNS prefetch for Sentry (lazy-loaded) -->
-    <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io"/>
+    <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io" />
 
-    <!-- Critical font: Alexandria for hero (render-blocking is OK — it's the LCP text) -->
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800;900&display=swap" rel="stylesheet"/>
+    <!-- All web fonts in a single request — cuts a CRP round-trip. Material Symbols is route-split (loaded only where needed). -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Material Symbols + remaining font weights (loaded normally — icons are above the fold) -->
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-
-    <link rel="stylesheet" href="/index.css"/>
+    <link rel="stylesheet" href="/index.css" />
 
     <!-- Inline critical CSS for instant hero render -->
     <style>
-      .skeleton-hero{min-height:100vh;background:#0b1120;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;padding:2rem}
-      .skeleton-logo{width:120px;height:40px;background:rgba(255,255,255,.06);border-radius:8px;animation:pulse 1.5s ease-in-out infinite}
-      .skeleton-line{height:3rem;background:rgba(255,255,255,.06);border-radius:12px;animation:pulse 1.5s ease-in-out infinite}
-      .skeleton-line-sm{height:1rem;background:rgba(255,255,255,.04);border-radius:8px;animation:pulse 1.5s ease-in-out infinite}
-      @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+      .skeleton-hero {
+        min-height: 100vh;
+        background: #0b1120;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem;
+      }
+      .skeleton-logo {
+        width: 120px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      .skeleton-line {
+        height: 3rem;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      .skeleton-line-sm {
+        height: 1rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
     </style>
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website"/>
-    <meta property="og:site_name" content="NUMU"/>
-    <meta property="og:url" content="https://numueg.app/"/>
-    <meta property="og:title" content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"/>
-    <meta property="og:description" content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل. افتح متجرك في ١٠ دقايق."/>
-    <meta property="og:image" content="https://numueg.app/og-image.png"/>
-    <meta property="og:image:width" content="1200"/>
-    <meta property="og:image:height" content="630"/>
-    <meta property="og:image:alt" content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"/>
-    <meta property="og:locale" content="ar_EG"/>
-    <meta property="og:locale:alternate" content="en_US"/>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NUMU" />
+    <meta property="og:url" content="https://numueg.app/" />
+    <meta
+      property="og:title"
+      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+    />
+    <meta
+      property="og:description"
+      content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل. افتح متجرك في ١٠ دقايق."
+    />
+    <meta property="og:image" content="https://numueg.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
+    />
+    <meta property="og:locale" content="ar_EG" />
+    <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@numueg"/>
-    <meta name="twitter:creator" content="@numueg"/>
-    <meta name="twitter:title" content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"/>
-    <meta name="twitter:description" content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل."/>
-    <meta name="twitter:image" content="https://numueg.app/og-image.png"/>
-    <meta name="twitter:image:alt" content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"/>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@numueg" />
+    <meta name="twitter:creator" content="@numueg" />
+    <meta
+      name="twitter:title"
+      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+    />
+    <meta
+      name="twitter:description"
+      content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل."
+    />
+    <meta name="twitter:image" content="https://numueg.app/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
+    />
 
     <!-- Structured Data: Organization -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "NUMU",
-      "alternateName": "نمو",
-      "url": "https://numueg.app",
-      "logo": "https://numueg.app/numu-logo-en.png",
-      "description": "أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل.",
-      "foundingLocation": {
-        "@type": "Place",
-        "name": "Cairo, Egypt"
-      },
-      "areaServed": ["EG", "SA", "AE", "KW", "QA", "BH", "OM"],
-      "sameAs": [
-        "https://www.instagram.com/numu_eg/",
-        "https://x.com/numueg",
-        "https://www.linkedin.com/in/numueg"
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "email": "support@numueg.app",
-        "availableLanguage": ["English", "Arabic"]
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "NUMU",
+        "alternateName": "نمو",
+        "url": "https://numueg.app",
+        "logo": "https://numueg.app/numu-logo-en.webp",
+        "description": "أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل.",
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Cairo, Egypt"
+        },
+        "areaServed": ["EG", "SA", "AE", "KW", "QA", "BH", "OM"],
+        "sameAs": [
+          "https://www.instagram.com/numueg_/",
+          "https://x.com/numueg",
+          "https://www.linkedin.com/in/numueg"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support@numueg.app",
+          "availableLanguage": ["English", "Arabic"]
+        }
       }
-    }
     </script>
 
     <!-- Structured Data: SoftwareApplication -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "NUMU",
-      "alternateName": "نمو",
-      "description": "منصة التجارة الإلكترونية لمصر والشرق الأوسط — بيموب، فوري، بوسطة، فاتورة إلكترونية، والدفع عند الاستلام.",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "inLanguage": ["en", "ar"],
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EGP",
-        "description": "تجربة مجانية ٣٠ يوم — بدون بطاقة"
-      },
-      "featureList": [
-        "Paymob and Fawry payment gateway integration",
-        "Bosta automated shipping and waybill generation",
-        "ETA e-invoicing compliance",
-        "Native Arabic RTL storefront",
-        "Cash on Delivery (COD) management",
-        "AI-powered product descriptions in Arabic and English",
-        "Multi-channel selling: website, WhatsApp, Instagram, Facebook",
-        "Social media product import"
-      ],
-      "screenshot": "https://numueg.app/og-image.png",
-      "url": "https://numueg.app",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5",
-        "bestRating": "5",
-        "reviewCount": "3"
-      },
-      "review": [
-        {
-          "@type": "Review",
-          "author": { "@type": "Person", "name": "Fatma El-Sayed" },
-          "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-          "reviewBody": "ربط بوسطة ده اختراع. بنشحن أكتر من 50 أوردر في اليوم في كل حتة في مصر من غير ما نطبع بوليصة واحدة بإيدينا."
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "NUMU",
+        "alternateName": "نمو",
+        "description": "منصة التجارة الإلكترونية لمصر والشرق الأوسط — بيموب، فوري، بوسطة، فاتورة إلكترونية، والدفع عند الاستلام.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "inLanguage": ["en", "ar"],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EGP",
+          "description": "تجربة مجانية ٣٠ يوم — بدون بطاقة"
         },
-        {
-          "@type": "Review",
-          "author": { "@type": "Person", "name": "Omar Al-Fayed" },
-          "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-          "reviewBody": "أخيراً منصة فاهمة العربي صح. مبيعاتنا زادت الضعف لما نقلنا لصفحة الدفع المعربة من نمو."
-        },
-        {
-          "@type": "Review",
-          "author": { "@type": "Person", "name": "Youssef Kamel" },
-          "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-          "reviewBody": "إدارة الكاش والدفع الأونلاين في مكان واحد ريحتنا جداً في الحسابات. بنصح أي حد بيها."
-        }
-      ]
-    }
+        "featureList": [
+          "Paymob and Fawry payment gateway integration",
+          "Bosta automated shipping and waybill generation",
+          "ETA e-invoicing compliance",
+          "Native Arabic RTL storefront",
+          "Cash on Delivery (COD) management",
+          "AI-powered product descriptions in Arabic and English",
+          "Multi-channel selling: website, WhatsApp, Instagram, Facebook",
+          "Social media product import"
+        ],
+        "screenshot": "https://numueg.app/og-image.png",
+        "url": "https://numueg.app"
+      }
     </script>
 
-    <!-- Structured Data: WebSite with SearchAction -->
+    <!-- Structured Data: WebSite -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "NUMU",
-      "url": "https://numueg.app",
-      "description": "Build and grow your online store in Egypt and MENA with NUMU.",
-      "inLanguage": ["en", "ar"],
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://numueg.app/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "NUMU",
+        "url": "https://numueg.app",
+        "description": "Build and grow your online store in Egypt and MENA with NUMU.",
+        "inLanguage": ["en", "ar"],
+        "publisher": {
+          "@type": "Organization",
+          "name": "NUMU",
+          "url": "https://numueg.app"
+        }
       }
-    }
     </script>
 
     <!-- Structured Data: FAQPage -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What payment gateways does NUMU support?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NUMU natively integrates with Paymob and Fawry for online card and wallet payments, and supports Cash on Delivery (COD) with advanced fee configuration for Egypt and the GCC."
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What payment gateways does NUMU support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "NUMU natively integrates with Paymob and Fawry for online card and wallet payments, and supports Cash on Delivery (COD) with advanced fee configuration for Egypt and the GCC."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does NUMU support Arabic storefronts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. NUMU is Arabic-first with full RTL (right-to-left) support across the dashboard and customer storefronts. All content can be managed in both Arabic and English."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does NUMU handle shipping in Egypt?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "NUMU integrates directly with Bosta for automated waybill generation and governorate-based shipping rates across Egypt, allowing merchants to ship orders without manual data entry."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is NUMU compliant with Egyptian tax regulations?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. NUMU automatically generates ETA (Egyptian Tax Authority) compliant e-invoices for every transaction, keeping your business fully tax-compliant."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I sell on WhatsApp and Instagram with NUMU?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. NUMU supports multi-channel selling from a single dashboard — manage your website, WhatsApp, Instagram, and Facebook orders and inventory all in one place."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a free trial?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. NUMU offers a free trial with no credit card required. You can start selling immediately and upgrade to a paid plan when you are ready."
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Does NUMU support Arabic storefronts?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. NUMU is Arabic-first with full RTL (right-to-left) support across the dashboard and customer storefronts. All content can be managed in both Arabic and English."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does NUMU handle shipping in Egypt?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NUMU integrates directly with Bosta for automated waybill generation and governorate-based shipping rates across Egypt, allowing merchants to ship orders without manual data entry."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is NUMU compliant with Egyptian tax regulations?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. NUMU automatically generates ETA (Egyptian Tax Authority) compliant e-invoices for every transaction, keeping your business fully tax-compliant."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I sell on WhatsApp and Instagram with NUMU?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. NUMU supports multi-channel selling from a single dashboard — manage your website, WhatsApp, Instagram, and Facebook orders and inventory all in one place."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is there a free trial?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. NUMU offers a free trial with no credit card required. You can start selling immediately and upgrade to a paid plan when you are ready."
-          }
-        }
-      ]
-    }
+        ]
+      }
     </script>
-</head>
-<body class="bg-background-light text-text-main font-display antialiased">
+  </head>
+  <body class="bg-background-light text-text-main font-display antialiased">
     <div id="root">
       <!-- Skeleton shown instantly while JS loads — eliminates blank white screen -->
       <div class="skeleton-hero">
         <div class="skeleton-logo"></div>
-        <div class="skeleton-line" style="width:80%;max-width:600px"></div>
-        <div class="skeleton-line" style="width:60%;max-width:450px"></div>
-        <div class="skeleton-line" style="width:70%;max-width:520px;opacity:.7"></div>
-        <div style="display:flex;gap:1rem;margin-top:1rem">
-          <div class="skeleton-line-sm" style="width:160px;height:2.5rem;border-radius:999px"></div>
-          <div class="skeleton-line-sm" style="width:140px;height:2.5rem;border-radius:999px"></div>
+        <div class="skeleton-line" style="width: 80%; max-width: 600px"></div>
+        <div class="skeleton-line" style="width: 60%; max-width: 450px"></div>
+        <div
+          class="skeleton-line"
+          style="width: 70%; max-width: 520px; opacity: 0.7"
+        ></div>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem">
+          <div
+            class="skeleton-line-sm"
+            style="width: 160px; height: 2.5rem; border-radius: 999px"
+          ></div>
+          <div
+            class="skeleton-line-sm"
+            style="width: 140px; height: 2.5rem; border-radius: 999px"
+          ></div>
         </div>
       </div>
     </div>
-<script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
