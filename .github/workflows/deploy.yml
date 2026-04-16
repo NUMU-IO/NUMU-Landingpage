@@ -40,7 +40,7 @@ jobs:
       - name: Verify prerender produced per-route HTML
         run: |
           set -e
-          for route in "" pricing contact privacy terms refund; do
+          for route in "" pricing contact privacy terms refund 404; do
             file="dist/${route}/index.html"
             [ "$route" = "" ] && file="dist/index.html"
             if [ ! -f "$file" ]; then

@@ -1,57 +1,13 @@
 import path from 'path';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 
-/**
- * Injects Content-Security-Policy meta tag only in production builds.
- */
-/**
- * Injects Content-Security-Policy meta tag only in production builds.
- *
- * When the landing page is served behind our nginx (which sends its own
- * CSP response header), browsers intersect the two policies — the meta tag
- * must therefore allow everything nginx allows or we'll lock ourselves out.
- *
- * Google Identity Services (the Sign-in button) loads a script from
- * accounts.google.com and renders its button inside an iframe from the same
- * origin, so both `script-src` and `frame-src` must list it.
- */
-function vitePluginCSP(): Plugin {
-  return {
-    name: 'numu-csp',
-    transformIndexHtml(html, ctx) {
-      if (ctx.server) return html;
-      return {
-        html,
-        tags: [
-          {
-            tag: 'meta',
-            attrs: {
-              'http-equiv': 'Content-Security-Policy',
-              content: [
-                "default-src 'self'",
-                "base-uri 'self'",
-                "object-src 'none'",
-                "form-action 'self'",
-                // 'unsafe-inline' is needed for Vite's module preload shim and inline critical CSS.
-                "script-src 'self' 'unsafe-inline' https://accounts.google.com https://*.googleusercontent.com",
-                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-                "font-src 'self' https://fonts.gstatic.com data:",
-                "img-src 'self' data: blob: https:",
-                "connect-src 'self' https://numueg.app https://*.numueg.app https://*.sentry.io https://*.ingest.sentry.io https://accounts.google.com",
-                "frame-src https://accounts.google.com https://*.paymob.com https://*.kashier.io",
-                "worker-src 'self' blob:",
-                "upgrade-insecure-requests",
-              ].join('; ') + ';',
-            },
-            injectTo: 'head',
-          },
-        ],
-      };
-    },
-  };
-}
+// CSP is delivered as an HTTP response header from nginx (see
+// NUMU-api/docker/nginx/nginx.conf → `set $landing_csp`). Don't emit a
+// <meta http-equiv="Content-Security-Policy"> here — two sources drift apart
+// and browsers intersect them, so the stricter one wins and you lose headers
+// like `frame-ancestors` that can only be set via HTTP header.
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -80,7 +36,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    vitePluginCSP(),
     // Pre-compress assets with Brotli (best) and gzip (fallback)
     ...(mode === 'production' ? [
       viteCompression({ algorithm: 'brotliCompress', threshold: 1024 }),

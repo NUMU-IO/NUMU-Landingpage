@@ -18,6 +18,7 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Refund = lazy(() => import('./pages/Refund'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
@@ -46,6 +47,8 @@ const App: React.FC = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/refund" element={<Refund />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Router>

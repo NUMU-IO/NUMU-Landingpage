@@ -143,6 +143,10 @@ const ROUTES = [
     ],
   },
   {
+    path: '/404',
+    extraJsonLd: [],
+  },
+  {
     path: '/refund',
     extraJsonLd: [
       {

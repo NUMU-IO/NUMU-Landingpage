@@ -105,7 +105,7 @@ const Pricing: React.FC = () => {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 sm:px-12 py-5">
         <Link to="/">
-          <img src={isAr ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" className="h-8 w-auto" />
+          <img src={isAr ? '/numu-logo-ar.webp' : '/numu-logo-en.webp'} alt="NUMU" width="120" height="32" className="h-8 w-auto" />
         </Link>
         <Link to="/" className="text-sm text-text-muted hover:text-primary font-medium transition-colors">
           {isAr ? 'الرئيسية' : 'Home'}

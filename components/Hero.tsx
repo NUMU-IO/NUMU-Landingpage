@@ -64,33 +64,33 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Headline — each line is a separate block for clean Arabic spacing */}
-            <div
+            <h1
               className="font-arabic font-extrabold text-white mb-6 animate-fade-in-up-1 flex flex-col pt-3 overflow-visible"
               style={{ gap: "0.75rem" }}
             >
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ lineHeight: 1.6, paddingTop: '0.2em' }}
               >
                 <span className="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent" style={{ WebkitBackgroundClip: 'text', paddingTop: '0.3em', display: 'inline-block' }}>
                   {t("hero.title_line1").split(" ")[0]}
                 </span>{" "}
                 {t("hero.title_line1").split(" ").slice(1).join(" ")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              </span>
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ lineHeight: 1.1 }}
               >
                 {t("hero.title_line2")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent pt-2"
+              </span>
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent pt-2"
                 style={{ lineHeight: 1.1 }}
               >
                 {t("hero.title_line3")}
                 {t("hero.title_line4") !== "hero.title_line4" && t("hero.title_line4") ? " " + t("hero.title_line4") : ""}
-              </p>
-            </div>
+              </span>
+            </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-white/50 leading-relaxed max-w-xl animate-fade-in-up-2 mx-auto lg:mx-0">
               {t("hero.subtitle")}
