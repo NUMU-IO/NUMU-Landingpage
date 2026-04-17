@@ -35,6 +35,7 @@ jobs:
       - name: Build + prerender (SSG)
         env:
           CHROME_PATH: /usr/bin/google-chrome
+          VITE_DASHBOARD_URL: https://merchant.numueg.app
         run: npm run build:ssg
 
       - name: Verify prerender produced per-route HTML

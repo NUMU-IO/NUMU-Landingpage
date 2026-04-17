@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -9,7 +9,6 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
-const SignUp = lazy(() => import('./pages/SignUp'));
 const Login = lazy(() => import('./pages/Login'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 const Waitlist = lazy(() => import('./pages/Waitlist'));
@@ -36,8 +35,10 @@ const App: React.FC = () => {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
+            {/* /signup retired \u2014 everyone starts via the demo modal on home.
+                Google OAuth inside that modal still creates a real 30-day trial. */}
+            <Route path="/signup" element={<Navigate to="/?demo=1" replace />} />
             <Route element={<AuthLayout />}>
-              <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
             </Route>

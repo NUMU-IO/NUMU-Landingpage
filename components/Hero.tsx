@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import DemoStartModal from "./DemoStartModal";
 
@@ -33,6 +33,18 @@ const Hero: React.FC = () => {
   const [activeBar, setActiveBar] = useState(10);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const { t, dir } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open the demo modal when a /signup visit (or any CTA) redirects here
+  // with ?demo=1. Strip the param once we've consumed it so back/forward
+  // navigation doesn't re-trigger the popup.
+  useEffect(() => {
+    if (searchParams.get("demo") === "1") {
+      setDemoModalOpen(true);
+      searchParams.delete("demo");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Real merchant hub colors
   const dashBg = "#0d1117"; // hsl(225, 25%, 6%)
