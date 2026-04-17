@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { register } from '../services/authApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://numueg.app/api/v1';
-const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://merchant.numueg.app';
 import { useSEO } from '../hooks/useSEO';
 
 const SignUp: React.FC = () => {

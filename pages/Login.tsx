@@ -41,7 +41,7 @@ const Login: React.FC = () => {
       } else {
         // Redirect to merchant dashboard (separate app)
         const dashboardUrl =
-          import.meta.env.VITE_DASHBOARD_URL || "https://dashboard.numueg.app";
+          import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
         window.location.href = dashboardUrl;
       }
     } catch (err: any) {
