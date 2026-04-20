@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import DemoStartModal from "./DemoStartModal";
 
 const AnimatedCounter: React.FC<{
   end: number;
@@ -30,7 +31,20 @@ const AnimatedCounter: React.FC<{
 
 const Hero: React.FC = () => {
   const [activeBar, setActiveBar] = useState(10);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
   const { t, dir } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open the demo modal when a /signup visit (or any CTA) redirects here
+  // with ?demo=1. Strip the param once we've consumed it so back/forward
+  // navigation doesn't re-trigger the popup.
+  useEffect(() => {
+    if (searchParams.get("demo") === "1") {
+      setDemoModalOpen(true);
+      searchParams.delete("demo");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Real merchant hub colors
   const dashBg = "#0d1117"; // hsl(225, 25%, 6%)
@@ -62,33 +76,33 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Headline — each line is a separate block for clean Arabic spacing */}
-            <div
+            <h1
               className="font-arabic font-extrabold text-white mb-6 animate-fade-in-up-1 flex flex-col pt-3 overflow-visible"
               style={{ gap: "0.75rem" }}
             >
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ lineHeight: 1.6, paddingTop: '0.2em' }}
               >
                 <span className="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent" style={{ WebkitBackgroundClip: 'text', paddingTop: '0.3em', display: 'inline-block' }}>
                   {t("hero.title_line1").split(" ")[0]}
                 </span>{" "}
                 {t("hero.title_line1").split(" ").slice(1).join(" ")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              </span>
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ lineHeight: 1.1 }}
               >
                 {t("hero.title_line2")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent pt-2"
+              </span>
+              <span
+                className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent pt-2"
                 style={{ lineHeight: 1.1 }}
               >
                 {t("hero.title_line3")}
                 {t("hero.title_line4") !== "hero.title_line4" && t("hero.title_line4") ? " " + t("hero.title_line4") : ""}
-              </p>
-            </div>
+              </span>
+            </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-white/50 leading-relaxed max-w-xl animate-fade-in-up-2 mx-auto lg:mx-0">
               {t("hero.subtitle")}
@@ -106,12 +120,16 @@ const Hero: React.FC = () => {
                   arrow_forward
                 </span>
               </a>
-              <button className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center">
+              <button
+                onClick={() => setDemoModalOpen(true)}
+                className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
+              >
                 <span className="material-symbols-outlined text-primary text-lg">
-                  play_circle
+                  storefront
                 </span>
                 <span>{t("hero.cta_secondary")}</span>
               </button>
+              <DemoStartModal isOpen={demoModalOpen} onClose={() => setDemoModalOpen(false)} />
             </div>
 
             {/* Trust badges */}

@@ -4,30 +4,30 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 
 const sectionIcons = [
-  'database',
-  'analytics',
-  'shield_lock',
-  'cookie',
-  'admin_panel_settings',
-  'mail',
+  'undo',
+  'verified',
+  'schedule',
+  'local_shipping',
+  'block',
+  'support_agent',
 ];
 
 const sections = [
-  { title: 'privacy.collect_title', text: 'privacy.collect_text' },
-  { title: 'privacy.use_title', text: 'privacy.use_text' },
-  { title: 'privacy.protect_title', text: 'privacy.protect_text' },
-  { title: 'privacy.cookies_title', text: 'privacy.cookies_text' },
-  { title: 'privacy.rights_title', text: 'privacy.rights_text' },
-  { title: 'privacy.contact_title', text: 'privacy.contact_text' },
+  { title: 'refund.section1_title', text: 'refund.section1_text' },
+  { title: 'refund.section2_title', text: 'refund.section2_text' },
+  { title: 'refund.section3_title', text: 'refund.section3_text' },
+  { title: 'refund.section4_title', text: 'refund.section4_text' },
+  { title: 'refund.section5_title', text: 'refund.section5_text' },
+  { title: 'refund.section6_title', text: 'refund.section6_text' },
 ];
 
-const Privacy: React.FC = () => {
+const Refund: React.FC = () => {
   const { t, dir, language } = useLanguage();
 
   useSEO({
-    title: 'Privacy Policy — NUMU | How We Protect Your Data',
-    description: 'Read the NUMU privacy policy to understand how we collect, use, and protect your personal data on our e-commerce platform for Egypt and MENA.',
-    canonical: 'https://numueg.app/privacy',
+    title: 'Refund Policy — NUMU | Returns & Exchanges',
+    description: 'Read the NUMU refund and return policy. Easy 14-day returns, quality guarantee, and fast refund processing for all orders.',
+    canonical: 'https://numueg.app/refund',
   });
 
   return (
@@ -45,14 +45,14 @@ const Privacy: React.FC = () => {
       {/* Hero */}
       <div className="text-center px-6 pt-12 sm:pt-20 pb-10 sm:pb-14">
         <div className="animate-fade-in-up-1 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold mb-6">
-          <span className="material-symbols-outlined text-base">verified_user</span>
-          {t('privacy.last_updated')}: March 2026
+          <span className="material-symbols-outlined text-base">shield</span>
+          {t('refund.badge')}
         </div>
         <h1 className="animate-fade-in-up-2 text-3xl sm:text-4xl md:text-5xl font-black text-text-main dark:text-white mb-4">
-          {t('privacy.title')}
+          {t('refund.title')}
         </h1>
         <p className="animate-fade-in-up-3 text-text-muted text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-          {t('privacy.intro')}
+          {t('refund.subtitle')}
         </p>
       </div>
 
@@ -83,4 +83,4 @@ const Privacy: React.FC = () => {
   );
 };
 
-export default Privacy;
+export default Refund;

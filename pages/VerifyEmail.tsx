@@ -26,7 +26,7 @@ const VerifyEmail: React.FC = () => {
     if (!token) return;
     setLoading(true);
     verifyEmailByToken(token)
-      .then(() => window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app')
+      .then(() => window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://merchant.numueg.app')
       .catch((err) => {
         setError(err.message || 'Verification failed');
         setLoading(false);
@@ -82,7 +82,7 @@ const VerifyEmail: React.FC = () => {
     setLoading(true);
     try {
       await verifyEmailByCode(fullCode);
-      window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://dashboard.numueg.app';
+      window.location.href = import.meta.env.VITE_DASHBOARD_URL || 'https://merchant.numueg.app';
     } catch (err: any) {
       setError(err.message || 'Verification failed');
       setCode(Array(6).fill(''));

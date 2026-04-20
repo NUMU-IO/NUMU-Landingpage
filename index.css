@@ -99,21 +99,27 @@ h1, h2, h3, h4, h5, h6 {
   animation: auth-orb-drift 20s ease-in-out infinite alternate;
 }
 
+/* Orb positions use fixed pixels rather than % so they don't shift vertically
+ * when the hero text height changes during webfont swap (CLS culprit — each
+ * % is relative to container height, which grows when Alexandria swaps in).
+ */
 .hero-bg::before {
   width: 650px;
   height: 650px;
-  top: -15%;
-  left: -8%;
+  top: -120px;
+  left: -80px;
   background: radial-gradient(circle, hsl(215 85% 52% / 0.55), hsl(200 70% 45% / 0.2) 50%, transparent 72%);
+  will-change: transform;
 }
 
 .hero-bg::after {
   width: 550px;
   height: 550px;
-  bottom: 30%;
-  right: -8%;
+  top: 320px;
+  right: -80px;
   background: radial-gradient(circle, hsl(265 65% 55% / 0.3), hsl(290 50% 45% / 0.1) 50%, transparent 72%);
   animation-delay: -10s;
+  will-change: transform;
 }
 
 @keyframes auth-orb-drift {

@@ -8,6 +8,8 @@ import Features from '../components/Features';
 import ImportShowcase from '../components/ImportShowcase';
 import AIShowcase from '../components/AIShowcase';
 import MultiChannelShowcase from '../components/MultiChannelShowcase';
+import CookieConsent from '../components/CookieConsent';
+import PricingSection from '../components/PricingSection';
 import Integrations from '../components/Integrations';
 import Testimonials from '../components/Testimonials';
 import BetaProgram from '../components/BetaProgram';
@@ -159,9 +161,14 @@ const Home: React.FC = () => {
           </section>
         )}
 
+        {/* Pricing */}
+        <section id="pricing" className="py-16 sm:py-24 bg-background-alt">
+          <PricingSection />
+        </section>
+
         {/* Testimonials */}
         {isSectionVisible('testimonials') && (
-          <section id="testimonials" className="py-16 sm:py-24 bg-background-alt">
+          <section id="testimonials" className="py-16 sm:py-24 bg-background-light">
             <Testimonials />
           </section>
         )}
@@ -194,6 +201,7 @@ const Home: React.FC = () => {
           </section>
         )}
       </main>
+      <CookieConsent />
     </div>
   );
 };

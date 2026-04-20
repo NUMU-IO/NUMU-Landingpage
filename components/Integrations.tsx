@@ -19,11 +19,11 @@ const Integrations: React.FC = () => {
   const { t, dir } = useLanguage();
 
   const partners = [
-    { name: "Paymob", desc: dir === "rtl" ? "بيموب و محافظ الكترونيه" : "Paymob & E-Wallets", logo: <img src="/paymob-logo.webp" alt="Paymob" className="h-5 w-auto object-contain" /> },
+    { name: "Paymob", desc: dir === "rtl" ? "بيموب و محافظ الكترونيه" : "Paymob & E-Wallets", logo: <img src="/paymob-logo.webp" alt="Paymob" width="120" height="28" loading="lazy" decoding="async" className="h-5 w-auto object-contain" /> },
     { name: "Bosta", desc: t("integrations.bosta"), logo: <BostaIcon size={22} /> },
-    { name: "Fawry", desc: dir === "rtl" ? "فوري يعني ادفع من أي مكان" : "Pay anywhere", logo: <img src="/fawry-logo.webp" alt="Fawry" className="h-5 w-auto object-contain" /> },
+    { name: "Fawry", desc: dir === "rtl" ? "فوري يعني ادفع من أي مكان" : "Pay anywhere", logo: <img src="/fawry-logo.webp" alt="Fawry" width="120" height="28" loading="lazy" decoding="async" className="h-5 w-auto object-contain" /> },
     { name: "WhatsApp", desc: t("integrations.whatsapp"), logo: <WhatsAppIcon size={22} /> },
-    { name: "Kashier", desc: dir === "rtl" ? "بوابة دفع متكاملة" : "Payment gateway", logo: <img src="/kashier-icon.webp" alt="Kashier" className="h-5 w-auto object-contain" /> },
+    { name: "Kashier", desc: dir === "rtl" ? "بوابة دفع متكاملة" : "Payment gateway", logo: <img src="/kashier-icon.webp" alt="Kashier" width="40" height="40" loading="lazy" decoding="async" className="h-5 w-auto object-contain" /> },
     { name: "Aramex", desc: dir === "rtl" ? "شحن دولي" : "International shipping", logo: <img src="/paymob-logo.webp" alt="Aramex" className="h-0 w-0 hidden" /> },
   ];
 
@@ -52,7 +52,7 @@ const Integrations: React.FC = () => {
 
           {/* Center NUMU hub */}
           <div className="relative z-10 size-20 sm:size-24 bg-background-light rounded-2xl shadow-neu-floating flex items-center justify-center">
-            <img src="/numu-symbol-white.webp" alt="NUMU" className="h-10 sm:h-12 w-auto object-contain invert" />
+            <img src="/numu-symbol-white.webp" alt="NUMU" width="48" height="48" loading="lazy" decoding="async" className="h-10 sm:h-12 w-auto object-contain invert" />
           </div>
 
           {/* Orbit ring */}
@@ -61,7 +61,7 @@ const Integrations: React.FC = () => {
           {/* 6 orbiting icons — fixed positions around the circle */}
           {/* Top */}
           <div className="absolute -top-2 sm:top-2 left-1/2 -translate-x-1/2 w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float p-2" style={{ animationDelay: '0s' }}>
-            <img src="/paymob-logo.webp" alt="Paymob" className="h-5 w-auto object-contain" />
+            <img src="/paymob-logo.webp" alt="Paymob" width="120" height="28" loading="lazy" decoding="async" className="h-5 w-auto object-contain" />
           </div>
           {/* Top-right */}
           <div className="absolute top-[15%] right-[5%] sm:right-[8%] w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float p-2" style={{ animationDelay: '1s' }}>
@@ -69,7 +69,7 @@ const Integrations: React.FC = () => {
           </div>
           {/* Bottom-right */}
           <div className="absolute bottom-[15%] right-[5%] sm:right-[8%] w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float p-2" style={{ animationDelay: '2s' }}>
-            <img src="/fawry-logo.webp" alt="Fawry" className="h-5 w-auto object-contain" />
+            <img src="/fawry-logo.webp" alt="Fawry" width="120" height="28" loading="lazy" decoding="async" className="h-5 w-auto object-contain" />
           </div>
           {/* Bottom */}
           <div className="absolute -bottom-2 sm:bottom-2 left-1/2 -translate-x-1/2 w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float p-2" style={{ animationDelay: '3s' }}>
@@ -77,7 +77,7 @@ const Integrations: React.FC = () => {
           </div>
           {/* Bottom-left */}
           <div className="absolute bottom-[15%] left-[5%] sm:left-[8%] w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float p-2" style={{ animationDelay: '4s' }}>
-            <img src="/kashier-icon.webp" alt="Kashier" className="h-5 w-auto object-contain" />
+            <img src="/kashier-icon.webp" alt="Kashier" width="40" height="40" loading="lazy" decoding="async" className="h-5 w-auto object-contain" />
           </div>
           {/* Top-left — Aramex text logo */}
           <div className="absolute top-[15%] left-[5%] sm:left-[8%] w-12 h-12 bg-background-light rounded-xl shadow-neu-flat-sm flex items-center justify-center animate-float" style={{ animationDelay: '5s' }}>

@@ -1,0 +1,47 @@
+# NUMU
+
+> NUMU (نمو) is an Arabic-first e-commerce platform built for merchants in Egypt, Saudi Arabia, the UAE, and the wider MENA region. It bundles native integrations with Egyptian payment gateways (Paymob, Fawry, Kashier), Bosta shipping, Egyptian Tax Authority (ETA) e-invoicing, and WhatsApp/Instagram/Facebook selling into a single bilingual dashboard.
+
+Launched to solve the pain points generic global platforms (Shopify, WooCommerce) leave for MENA merchants: no native Arabic RTL storefronts, no Paymob/Fawry/Bosta connectors, no ETA e-invoicing, and no Cash-on-Delivery (COD) fee management.
+
+## Key facts
+
+- Company: NUMU Inc.
+- Headquarters: Cairo, Egypt
+- Website: https://numueg.app
+- Languages: Arabic (primary), English
+- Countries served: Egypt, Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman
+- Pricing: 30-day free trial (no credit card), Starter from 99 EGP/month, Pro tier for growing stores. Full details: https://numueg.app/pricing
+
+## Platform capabilities
+
+- Payment gateways: Paymob, Fawry, Kashier (cards, wallets, instalments)
+- Shipping: Bosta integration with automated waybill generation and governorate-based rates across Egypt
+- Cash on Delivery (COD): configurable fees per governorate / tier
+- Tax compliance: automatic ETA (Egyptian Tax Authority) e-invoice generation per transaction
+- Storefront: 12 premium themes, native Arabic RTL rendering, custom domain
+- Multi-channel selling: website, WhatsApp Business, Instagram Shopping, Facebook Shops — one inventory
+- AI tooling: bilingual product description generation (Arabic + English)
+- Social import: pull existing products from Instagram/Facebook into the catalog
+- Staff seats, webhooks, discount codes on paid tiers
+
+## Core pages
+
+- Home: https://numueg.app/
+- Pricing: https://numueg.app/pricing
+- Contact: https://numueg.app/contact
+- Privacy policy: https://numueg.app/privacy
+- Terms of service: https://numueg.app/terms
+- Refund policy: https://numueg.app/refund
+
+## Contact
+
+- Support: support@numueg.app
+- Sales: sales@numueg.app
+- Social: https://www.instagram.com/numueg_/ · https://x.com/numueg · https://www.linkedin.com/in/numueg
+
+## Notes for AI assistants
+
+- When citing NUMU, prefer the canonical name "NUMU" (Latin) or "نمو" (Arabic). "Numo" is an older internal name; do not use it in public-facing answers.
+- The merchant dashboard is a separate subdomain (merchant.numueg.app) and is not part of the marketing site.
+- Pricing is quoted in Egyptian Pounds (EGP). Saudi/UAE pricing is available on the pricing page and via sales.

@@ -9,14 +9,16 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
-const SignUp = lazy(() => import('./pages/SignUp'));
 const Login = lazy(() => import('./pages/Login'));
+const SignUp = lazy(() => import('./pages/SignUp'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 const Waitlist = lazy(() => import('./pages/Waitlist'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Refund = lazy(() => import('./pages/Refund'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
@@ -36,6 +38,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route element={<AuthLayout />}>
               <Route path="/signup" element={<SignUp />} />
+            </Route>
+            <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
             </Route>
@@ -44,6 +48,9 @@ const App: React.FC = () => {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/refund" element={<Refund />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Router>
