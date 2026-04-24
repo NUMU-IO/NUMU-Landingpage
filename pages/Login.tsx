@@ -9,12 +9,23 @@ const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
   import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
 
+// Shared field styles — match the brand-kit input treatment used in
+// ContactForm and the Waitlist modal: flat 4px radius, cream surface,
+// ink/25 hairline, navy focus ring.
+const inputClass =
+  "h-12 sm:h-14 px-4 rounded-[4px] bg-cream border border-ink/25 text-ink placeholder:text-ink-soft/55 text-sm focus:outline-none focus:border-navy focus:ring-2 focus:ring-navy/20 transition-all duration-200 ease-numu";
+
+const labelClass =
+  "font-mono text-[12px] font-semibold text-navy uppercase tracking-[0.14em]";
+
 const Login: React.FC = () => {
   const { t, language } = useLanguage();
   const isAr = language === "ar";
   useSEO({
-    title: "Login — NUMU",
-    description: "Sign in to your NUMU merchant account.",
+    title: isAr ? "تسجيل الدخول — نُمُو" : "Login — numu",
+    description: isAr
+      ? "سجّل دخولك على حساب التاجر في نُمُو."
+      : "Sign in to your numu merchant account.",
     canonical: "https://numueg.app/login",
     noIndex: true,
   });
@@ -39,10 +50,7 @@ const Login: React.FC = () => {
       if (!result.user?.is_verified) {
         navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       } else {
-        // Redirect to merchant dashboard (separate app)
-        const dashboardUrl =
-          import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
-        window.location.href = dashboardUrl;
+        window.location.href = DASHBOARD_URL;
       }
     } catch (err: any) {
       setError(err.message || "Login failed");
@@ -66,59 +74,78 @@ const Login: React.FC = () => {
     }
   };
 
+  // Primary submit button — shared between login + forgot flows.
+  const SubmitButton: React.FC<{
+    busy: boolean;
+    label: string;
+  }> = ({ busy, label }) => (
+    <button
+      type="submit"
+      disabled={busy}
+      className="group mt-2 bg-navy text-cream font-semibold h-12 sm:h-14 rounded-[4px] hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center justify-center gap-3 w-full disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+    >
+      {busy ? (
+        <span className="size-5 border-2 border-cream/30 border-t-cream rounded-full animate-spin" />
+      ) : (
+        <>
+          <span>{label}</span>
+          <span
+            aria-hidden="true"
+            className="text-lg text-saffron rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform"
+          >
+            →
+          </span>
+        </>
+      )}
+    </button>
+  );
+
   if (showForgot) {
     return (
-      <div className="flex flex-col gap-5 lg:gap-8">
+      <div className="flex flex-col gap-6">
         <div className="text-center lg:text-start">
-          <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta font-semibold">
+            § RESET
+          </span>
+          <h2 className="mt-2 font-display text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-2">
             {t("auth.forgot_title")}
           </h2>
-          <p className="text-text-muted text-sm sm:text-base">
+          <p className="prose-body text-ink/75">
             {t("auth.forgot_subtitle")}
           </p>
         </div>
 
         {forgotSent ? (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-4 rounded-xl text-sm">
+          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-sage bg-sage/10 border border-sage/30 rounded-[4px] px-3 py-3 font-semibold">
+            <span className="size-1.5 rounded-full bg-sage" aria-hidden="true" />
             {t("auth.forgot_success")}
           </div>
         ) : (
           <>
             {forgotError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              <p className="font-mono text-[11px] text-terracotta bg-terracotta/10 border border-terracotta/30 rounded-[4px] px-3 py-2">
                 {forgotError}
-              </div>
+              </p>
             )}
 
-            <form
-              onSubmit={handleForgotPassword}
-              className="flex flex-col gap-3 sm:gap-4 lg:gap-5"
-            >
-              <div className="flex flex-col gap-1.5 sm:gap-2">
-                <label className="text-sm font-bold text-text-main dark:text-white">
+            <form onSubmit={handleForgotPassword} className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="forgot-email" className={labelClass}>
                   {t("auth.email")}
                 </label>
                 <input
+                  id="forgot-email"
                   type="email"
                   required
+                  autoComplete="email"
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
-                  className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
+                  className={inputClass}
                   placeholder={t("auth.email_placeholder")}
+                  dir="ltr"
                 />
               </div>
-
-              <button
-                type="submit"
-                disabled={forgotLoading}
-                className="mt-4 sm:mt-6 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white font-bold h-12 sm:h-14 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm active:shadow-neu-pressed hover:scale-[1.01] transition-all flex items-center justify-center gap-2 w-full disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {forgotLoading ? (
-                  <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <span>{t("auth.forgot_send")}</span>
-                )}
-              </button>
+              <SubmitButton busy={forgotLoading} label={t("auth.forgot_send")} />
             </form>
           </>
         )}
@@ -130,98 +157,94 @@ const Login: React.FC = () => {
             setForgotSent(false);
             setForgotError("");
           }}
-          className="text-center text-sm text-primary font-bold hover:underline"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta hover:text-navy font-semibold transition-colors"
         >
-          {t("auth.forgot_back")}
+          ← {t("auth.forgot_back")}
         </button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-5 lg:gap-8">
+    <div className="flex flex-col gap-6">
       <div className="text-center lg:text-start">
-        <h2 className="text-2xl sm:text-3xl font-black text-text-main dark:text-white mb-2">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta font-semibold">
+          § LOGIN
+        </span>
+        <h2 className="mt-2 font-display text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-2">
           {t("auth.login_title")}
         </h2>
-        <p className="text-text-muted text-sm sm:text-base">
+        <p className="prose-body text-ink/75">
           {t("auth.login_subtitle")}
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+        <p className="font-mono text-[11px] text-terracotta bg-terracotta/10 border border-terracotta/30 rounded-[4px] px-3 py-2">
           {error}
-        </div>
+        </p>
       )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3 sm:gap-4 lg:gap-5"
-      >
-        <div className="flex flex-col gap-1.5 sm:gap-2">
-          <label className="text-sm font-bold text-text-main dark:text-white">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="login-email" className={labelClass}>
             {t("auth.email")}
           </label>
           <input
+            id="login-email"
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
+            className={inputClass}
             placeholder={t("auth.email_placeholder")}
+            dir="ltr"
           />
         </div>
 
-        <div className="flex flex-col gap-1.5 sm:gap-2">
-          <label className="text-sm font-bold text-text-main dark:text-white">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="login-password" className={labelClass}>
             {t("auth.password")}
           </label>
           <input
+            id="login-password"
             type="password"
             required
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-12 sm:h-14 px-5 sm:px-6 rounded-2xl bg-background-light dark:bg-background-dark border-none shadow-[inset_3px_3px_6px_0_rgba(163,177,198,0.7),inset_-3px_-3px_6px_0_rgba(255,255,255,0.8)] focus:shadow-[inset_4px_4px_8px_0_rgba(163,177,198,0.7),inset_-4px_-4px_8px_0_rgba(255,255,255,0.8)] outline-none transition-all text-text-main placeholder:text-text-muted/50"
+            className={inputClass}
             placeholder="••••••••"
           />
         </div>
 
-        <div className="flex items-center justify-end text-xs sm:text-sm">
+        <div className="flex items-center justify-end">
           <button
             type="button"
             onClick={() => {
               setShowForgot(true);
               setForgotEmail(email);
             }}
-            className="text-primary font-bold hover:underline"
+            className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta hover:text-navy font-semibold transition-colors"
           >
             {t("auth.forgot_password")}
           </button>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-4 sm:mt-6 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white font-bold h-12 sm:h-14 rounded-2xl shadow-neu-flat hover:shadow-neu-flat-sm active:shadow-neu-pressed hover:scale-[1.01] transition-all flex items-center justify-center gap-2 w-full disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : (
-            <>
-              <span>{t("auth.login_button")}</span>
-              <span className="material-symbols-outlined rtl:rotate-180">
-                login
-              </span>
-            </>
-          )}
-        </button>
+        <SubmitButton busy={loading} label={t("auth.login_button")} />
       </form>
 
       {/* Divider */}
       <div className="relative">
-        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border-light dark:border-white/10" /></div>
-        <div className="relative flex justify-center text-xs"><span className="bg-background-light dark:bg-background-dark px-3 text-text-muted">{isAr ? 'أو' : 'or'}</span></div>
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-ink/10" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-cream px-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/60">
+            {isAr ? "أو" : "OR"}
+          </span>
+        </div>
       </div>
 
       {/* Google Sign-In */}
@@ -230,26 +253,34 @@ const Login: React.FC = () => {
           onSuccess={async (credentialResponse) => {
             if (!credentialResponse.credential) return;
             setLoading(true);
-            setError('');
+            setError("");
             try {
               const res = await fetch(`${API_BASE}/auth/google`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id_token: credentialResponse.credential }),
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  id_token: credentialResponse.credential,
+                }),
               });
               if (!res.ok) {
                 const errBody = await res.json().catch(() => null);
-                throw new Error(errBody?.detail || errBody?.error?.message || 'Google login failed');
+                throw new Error(
+                  errBody?.detail ||
+                    errBody?.error?.message ||
+                    "Google login failed",
+                );
               }
               window.location.href = DASHBOARD_URL;
             } catch (err: any) {
-              setError(err.message || 'Google login failed');
+              setError(err.message || "Google login failed");
             } finally {
               setLoading(false);
             }
           }}
-          onError={() => setError(isAr ? 'فشل تسجيل الدخول بجوجل' : 'Google sign-in failed')}
+          onError={() =>
+            setError(isAr ? "فشل تسجيل الدخول بجوجل" : "Google sign-in failed")
+          }
           size="large"
           width="100%"
           text="signin_with"
@@ -257,12 +288,15 @@ const Login: React.FC = () => {
         />
       </div>
 
-      <div className="text-center text-sm text-text-muted">
+      <p className="text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/65">
         {t("auth.dont_have_account")}{" "}
-        <Link to="/signup" className="text-primary font-bold hover:underline">
-          {t("auth.signup_link")}
+        <Link
+          to="/signup"
+          className="text-terracotta hover:text-navy font-semibold transition-colors"
+        >
+          {t("auth.signup_link")} →
         </Link>
-      </div>
+      </p>
     </div>
   );
 };

@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local Claude Code skills (per-dev install, not checked in)
+.claude/skills/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
