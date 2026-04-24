@@ -57,7 +57,6 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/matter-js')) return 'matter';
           if (id.includes('node_modules/@sentry')) return 'sentry';
           if (id.includes('node_modules/react-router') || id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) return 'vendor';
         },

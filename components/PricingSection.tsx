@@ -32,37 +32,9 @@ interface PricingData {
   promo?: Promo;
 }
 
-/* ── plan icon SVGs (Heroicons outline) ── */
-const planIcons: Record<string, React.ReactNode> = {
-  free: (
-    <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.841m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-    </svg>
-  ),
-  starter: (
-    <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.841m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-    </svg>
-  ),
-  growth: (
-    <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-    </svg>
-  ),
-  professional: (
-    <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-    </svg>
-  ),
-  enterprise: (
-    <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
-    </svg>
-  ),
-};
-
-const getIcon = (key: string) =>
-  planIcons[key] || planIcons["starter"];
+// Arabic-Indic numeral converter for RTL price display
+const toArabicDigits = (s: string): string =>
+  s.replace(/[0-9]/g, (d) => String.fromCharCode(0x0660 + parseInt(d, 10)));
 
 const PricingSection: React.FC = () => {
   const { language } = useLanguage();
@@ -82,168 +54,274 @@ const PricingSection: React.FC = () => {
 
   const { plans, promo } = data;
 
+  // Product JSON-LD per plan — lets Google show price/offer rich snippets
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@graph': plans
+      .filter((p) => p.price_monthly > 0)
+      .map((p) => ({
+        '@type': 'Product',
+        name: `numu — ${p.name_en}`,
+        description: `${p.name_en} plan for numu, the Arabic-first commerce platform. ${p.features.slice(0, 3).map((f) => f.en).join('. ')}.`,
+        brand: { '@type': 'Brand', name: 'numu' },
+        offers: {
+          '@type': 'Offer',
+          price: String(p.price_monthly),
+          priceCurrency: p.currency || 'EGP',
+          priceValidUntil: '2026-12-31',
+          availability: 'https://schema.org/InStock',
+          url: 'https://numueg.app/pricing',
+        },
+      })),
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6">
-      {/* Header */}
-      <div className="text-center mb-12 sm:mb-16">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-text-main dark:text-white mb-5">
-          {isAr ? "باقات بسيطة وشفافة" : "Simple, Transparent Pricing"}
+    <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      {/* Eyebrow + header */}
+      <div className="text-center mb-10 sm:mb-14">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta font-semibold">
+            § PRICING
+          </span>
+          <span className="eyebrow">
+            {isAr ? "باقات واضحة · بدون مفاجآت" : "CLEAR PLANS · NO SURPRISES"}
+          </span>
+        </div>
+
+        <h2 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-bold text-ink tracking-tight leading-[1.05] mb-5">
+          {isAr ? "باقات بسيطة وشفافة." : "Simple, transparent pricing."}
         </h2>
-        <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+        <p className="prose-body text-ink/75 max-w-xl mx-auto">
           {isAr
             ? "مفيش رسوم مخفية. مفيش عمولة على الأوردرات. أنت تاخد ١٠٠٪ من إيراداتك."
             : "No hidden fees. No per-order commissions. You keep 100% of your revenue."}
         </p>
 
+        {/* Saffron promo chip — warmth / offers, per brand kit */}
         {promo && (
-          <div className="mt-7 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary text-sm font-bold">
-            <span className="material-symbols-outlined text-base">local_offer</span>
-            {isAr ? promo.text_ar : promo.text_en}
+          <div className="mt-7 inline-flex items-center gap-2.5 px-4 py-2 bg-saffron/15 border border-saffron/40 rounded-[4px]">
+            <span
+              aria-hidden="true"
+              className="size-1.5 rounded-full bg-saffron animate-pulse"
+            />
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] font-semibold text-saffron">
+              {isAr ? promo.text_ar : promo.text_en}
+            </span>
           </div>
         )}
 
-        {/* Annual toggle */}
-        <div className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-background-light dark:bg-background-dark shadow-neu-pressed-sm">
-          <span className={`text-sm font-semibold transition-colors ${!annual ? "text-primary" : "text-text-muted"}`}>
+        {/* Annual toggle — flat, hairline border, no neu */}
+        <div className="mt-7 inline-flex items-center gap-3 px-4 py-2 bg-paper border border-ink/10 rounded-[4px]">
+          <span
+            className={`font-mono text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors ${
+              !annual ? "text-navy" : "text-ink-soft/50"
+            }`}
+          >
             {isAr ? "شهري" : "Monthly"}
           </span>
           <button
             type="button"
             title={isAr ? "تبديل الفترة" : "Toggle billing period"}
             onClick={() => setAnnual(!annual)}
-            className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${annual ? "bg-primary" : "bg-text-muted/30"}`}
+            // eslint-disable-next-line jsx-a11y/aria-proptypes
+            aria-pressed={annual}
+            className={`relative w-10 h-5 rounded-[4px] transition-colors duration-200 ease-numu ${
+              annual ? "bg-navy" : "bg-bone"
+            }`}
           >
             <span
-              className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 ${
-                annual ? "translate-x-6 rtl:-translate-x-6" : "translate-x-0.5 rtl:-translate-x-0.5"
+              className={`absolute top-0.5 w-4 h-4 rounded-[2px] bg-cream shadow-sm transition-transform duration-200 ease-numu ${
+                annual
+                  ? "translate-x-[21px] rtl:-translate-x-[21px]"
+                  : "translate-x-0.5 rtl:-translate-x-0.5"
               }`}
             />
           </button>
-          <span className={`text-sm font-semibold transition-colors ${annual ? "text-primary" : "text-text-muted"}`}>
+          <span
+            className={`font-mono text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors ${
+              annual ? "text-navy" : "text-ink-soft/50"
+            }`}
+          >
             {isAr ? "سنوي" : "Annual"}
           </span>
           {annual && (
-            <span className="text-[11px] font-bold text-white bg-primary px-2.5 py-0.5 rounded-full">
-              {isAr ? "وفر ١٧٪" : "Save 17%"}
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] font-semibold text-cream bg-terracotta px-2 py-0.5 rounded-[2px]">
+              {isAr ? `وفر ${toArabicDigits("17")}٪` : "Save 17%"}
             </span>
           )}
         </div>
       </div>
 
-      {/* Plan Cards */}
-      <div className={`grid gap-5 lg:gap-6 items-start ${
-        plans.length === 1 ? "grid-cols-1 max-w-md mx-auto" :
-        plans.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto" :
-        plans.length === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto" :
-        "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-      }`}>
+      {/* Plan cards — grid of flat editorial panels */}
+      <div
+        className={`grid gap-5 lg:gap-6 items-start ${
+          plans.length === 1
+            ? "grid-cols-1 max-w-md mx-auto"
+            : plans.length === 2
+              ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
+              : plans.length === 3
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        }`}
+      >
         {plans.map((plan) => {
           const isFree = plan.price_monthly === 0;
           const isCustom = plan.price_monthly === -1;
           const isPopular = plan.popular;
 
-          const price = isCustom
-            ? isAr ? "قيمة مخصصة" : "Custom"
+          const priceRaw = isCustom
+            ? isAr
+              ? "قيمة مخصصة"
+              : "Custom"
             : isFree
-              ? isAr ? "مجاناً" : "Free"
+              ? isAr
+                ? "مجاناً"
+                : "Free"
               : annual && plan.price_annual > 0
                 ? plan.price_annual.toLocaleString()
                 : plan.price_monthly.toLocaleString();
 
-          const period =
-            isFree
-              ? isAr ? "تجربة مجانية ٣٠ يوم" : "30-day free trial"
-              : isCustom
-                ? isAr ? "حسب متطلباتك ونطاق عملك" : "Based on your requirements"
-                : annual
-                  ? isAr ? "جنيه/سنة" : "EGP/year"
-                  : isAr ? "جنيه/شهر" : "EGP/month";
+          const price =
+            isAr && !isCustom && !isFree ? toArabicDigits(priceRaw) : priceRaw;
 
-          const subtitle =
-            isFree
-              ? isAr ? "بدون بطاقة ائتمان" : "No credit card needed"
-              : isCustom
-                ? isAr ? "حلول مخصصة للشركات الكبيرة" : "Custom solutions for large businesses"
+          const period = isFree
+            ? isAr
+              ? `تجربة مجانية ${toArabicDigits("30")} يوم`
+              : "30-day free trial"
+            : isCustom
+              ? isAr
+                ? "حسب متطلباتك ونطاق عملك"
+                : "Based on your requirements"
+              : annual
+                ? isAr
+                  ? "جنيه/سنة"
+                  : "EGP/year"
                 : isAr
-                  ? `كل اللي محتاجه ${plan.name_ar === "ستارترز" ? "تبدأ" : "تنمو"}`
-                  : `Everything you need to ${plan.name_en === "Starter" ? "start" : "grow"}`;
+                  ? "جنيه/شهر"
+                  : "EGP/month";
+
+          const subtitle = isFree
+            ? isAr
+              ? "بدون بطاقة ائتمان"
+              : "No credit card needed"
+            : isCustom
+              ? isAr
+                ? "حلول مخصصة للشركات الكبيرة"
+                : "Custom solutions for large businesses"
+              : isAr
+                ? `كل اللي محتاجه ${plan.name_ar === "ستارترز" ? "تبدأ" : "تنمو"}`
+                : `Everything you need to ${plan.name_en === "Starter" ? "start" : "grow"}`;
+
+          // Popular plan inverts palette: navy bg + cream text. Flat, no gradient.
+          const cardBase = "relative flex flex-col rounded-[14px] overflow-hidden transition-all duration-300 ease-numu";
+          const cardSurface = isPopular
+            ? "bg-navy text-cream shadow-card lg:scale-[1.03] z-10"
+            : "bg-paper border border-ink/10 text-ink shadow-card hover:-translate-y-0.5 hover:shadow-md";
 
           return (
-            <div
-              key={plan.key}
-              className={`relative flex flex-col rounded-3xl transition-all duration-300 ${
-                isPopular
-                  ? "bg-brand-gradient text-white shadow-[0_20px_60px_-15px_rgba(15,23,42,0.5)] lg:scale-105 z-10"
-                  : "bg-background-light dark:bg-background-dark shadow-neu-flat hover:shadow-neu-floating"
-              }`}
-            >
-              {/* Card content */}
-              <div className="flex flex-col flex-1 p-7 sm:p-9">
+            <div key={plan.key} className={`${cardBase} ${cardSurface}`}>
+              {/* Popular ribbon — saffron mono label peeking above top edge */}
+              {isPopular && (
+                <span className="absolute top-3 end-3 z-10 bg-saffron text-ink font-mono text-[10px] uppercase tracking-[0.18em] font-semibold px-2 py-0.5 rounded-[2px]">
+                  {isAr ? "الأكثر شهرة" : "Most Popular"}
+                </span>
+              )}
 
-                {/* Icon + plan name */}
-                <div className="flex items-center gap-3 mb-8">
-                  <div className={`size-11 rounded-xl flex items-center justify-center ${
-                    isPopular ? "bg-white/15" : "bg-primary/10"
-                  }`}>
-                    <span className={isPopular ? "text-white" : "text-primary"}>{getIcon(plan.key)}</span>
-                  </div>
-                  <h3 className={`text-base font-bold ${isPopular ? "text-white/90" : "text-text-main dark:text-white"}`}>
+              <div className="flex flex-col flex-1 p-6 sm:p-8">
+                {/* Plan name — mono eyebrow, not icon */}
+                <div className="mb-6">
+                  <p
+                    className={`font-mono text-[11px] uppercase tracking-[0.18em] font-semibold mb-1 ${
+                      isPopular ? "text-saffron" : "text-terracotta"
+                    }`}
+                  >
                     {isAr ? plan.name_ar : plan.name_en}
-                  </h3>
+                  </p>
                 </div>
 
-                {/* Price block */}
+                {/* Price — Reem Kufi display, tabular */}
                 <div className="mb-2">
                   {!isFree && !isCustom && (
-                    <p className={`text-xs font-medium mb-1 ${isPopular ? "text-white/50" : "text-text-muted"}`}>
+                    <p
+                      className={`font-mono text-[10px] uppercase tracking-[0.18em] mb-1 ${
+                        isPopular ? "text-cream/60" : "text-ink-soft/60"
+                      }`}
+                    >
                       {isAr ? "يبدأ من" : "Starting at"}
                     </p>
                   )}
                   <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className={`font-black tracking-tight ${
-                      isFree || isCustom ? "text-3xl sm:text-4xl" : "text-4xl sm:text-5xl"
-                    } ${
-                      isPopular ? "text-white" : "text-text-main dark:text-white"
-                    }`}>
+                    <span
+                      className={`font-display font-bold tabular-nums tracking-tight leading-none ${
+                        isFree || isCustom
+                          ? "text-4xl sm:text-5xl"
+                          : "text-5xl sm:text-6xl"
+                      }`}
+                    >
                       {price}
                     </span>
                     {!isFree && !isCustom && (
-                      <span className={`text-sm font-medium ${isPopular ? "text-white/50" : "text-text-muted"}`}>
+                      <span
+                        className={`text-sm font-medium ${
+                          isPopular ? "text-cream/60" : "text-ink-soft/70"
+                        }`}
+                      >
                         {period}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Subtitle / period for free & custom */}
-                <p className={`text-sm mb-7 ${isPopular ? "text-white/60" : "text-text-muted"}`}>
+                <p
+                  className={`text-sm mb-6 ${
+                    isPopular ? "text-cream/70" : "text-ink-soft/75"
+                  }`}
+                >
                   {isFree || isCustom ? period : subtitle}
                 </p>
 
                 {/* CTA */}
-                <div className="mb-8">
+                <div className="mb-6">
                   {(plan.cta === "try_demo" || plan.cta === "subscribe") && (
                     <button
                       type="button"
                       onClick={() => setDemoOpen(true)}
-                      className={`w-full font-bold py-4 rounded-2xl text-sm transition-all duration-200 ${
+                      className={`group w-full font-semibold py-3.5 rounded-[4px] text-sm transition-all duration-200 ease-numu flex items-center justify-center gap-2 ${
                         isPopular
-                          ? "bg-white text-[#0f172a] hover:bg-white/90 shadow-lg shadow-black/10"
-                          : "bg-brand-gradient text-white hover:opacity-90 shadow-neu-primary"
+                          ? "bg-cream text-navy hover:bg-cream/90 active:scale-[0.985]"
+                          : "bg-navy text-cream hover:bg-navy-800 active:scale-[0.985]"
                       }`}
                     >
-                      {isFree
-                        ? isAr ? "ابدأ مجاناً" : "Start free"
-                        : isAr ? "ابدأ الآن" : "Get started"}
+                      <span>
+                        {isFree
+                          ? isAr
+                            ? "ابدأ مجاناً"
+                            : "Start free"
+                          : isAr
+                            ? "ابدأ الآن"
+                            : "Get started"}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`text-base group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform rtl:rotate-180 ${
+                          isPopular ? "text-terracotta" : "text-saffron"
+                        }`}
+                      >
+                        →
+                      </span>
                     </button>
                   )}
                   {plan.cta === "contact" && (
                     <a
                       href="/contact"
-                      className={`block w-full text-center font-bold py-4 rounded-2xl text-sm transition-all duration-200 ${
+                      className={`block w-full text-center font-semibold py-3.5 rounded-[4px] text-sm transition-all duration-200 ease-numu border ${
                         isPopular
-                          ? "bg-white text-[#0f172a] hover:bg-white/90 shadow-lg shadow-black/10"
-                          : "border-2 border-text-main/15 text-text-main dark:text-white hover:border-primary/30 hover:bg-primary/5"
+                          ? "border-cream/30 text-cream hover:bg-cream/10"
+                          : "border-ink/15 text-ink hover:border-terracotta hover:text-terracotta hover:bg-terracotta/[0.04]"
                       }`}
                     >
                       {isAr ? "تواصل معنا" : "Contact us"}
@@ -251,19 +329,38 @@ const PricingSection: React.FC = () => {
                   )}
                 </div>
 
-                {/* Divider */}
-                <div className={`h-px mb-7 ${isPopular ? "bg-white/10" : "bg-text-muted/10"}`} />
+                {/* Hairline divider — bone on light, cream/20 on navy */}
+                <div
+                  className={`h-px mb-6 ${
+                    isPopular ? "bg-cream/15" : "bg-bone"
+                  }`}
+                />
 
-                {/* Features */}
-                <ul className="space-y-4 flex-1">
+                {/* Features — sage check (success) */}
+                <ul className="space-y-3 flex-1">
                   {plan.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <svg className={`size-[18px] shrink-0 mt-0.5 ${isPopular ? "text-blue-300" : "text-primary"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                      <svg
+                        className={`size-4 shrink-0 mt-0.5 ${
+                          isPopular ? "text-saffron" : "text-sage"
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
                       </svg>
-                      <span className={`text-[13px] leading-relaxed ${
-                        isPopular ? "text-white/75" : "text-text-muted"
-                      }`}>
+                      <span
+                        className={`text-[13px] leading-relaxed ${
+                          isPopular ? "text-cream/80" : "text-ink-soft/85"
+                        }`}
+                      >
                         {isAr ? f.ar : f.en}
                       </span>
                     </li>
@@ -276,11 +373,112 @@ const PricingSection: React.FC = () => {
       </div>
 
       {/* Bottom note */}
-      <p className="text-center text-sm text-text-muted mt-14 max-w-xl mx-auto leading-relaxed">
+      <p className="prose-body-sm text-center text-ink/70 mt-12 max-w-2xl mx-auto">
         {isAr
           ? "كل الباقات بتشمل: كل الثيمات، الدفع عند الاستلام، بيموب، فوري، بوسطة، ومتجر عربي ١٠٠٪. مفيش عمولة على أوردراتك."
           : "All plans include: all themes, COD, Paymob, Fawry, Bosta, and a fully Arabic storefront. Zero commission on your orders."}
       </p>
+
+      {/* Pledge strip — 30-day money-back is the answer to the #1 pricing
+          objection ("what if I don't like it?") and the reassurance
+          WooCommerce leads with. Paired with cancel-anytime + data-
+          ownership, it disarms the three standard SaaS pricing objections
+          in one row. Static class strings (no dynamic `bg-${accent}`) so
+          Tailwind JIT can see every utility at build time. */}
+      <div className="mt-10 max-w-4xl mx-auto bg-paper border border-ink/10 rounded-[10px] shadow-card p-5 sm:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4">
+          <div className="flex items-start gap-3 sm:items-center sm:flex-col sm:text-center">
+            <span
+              aria-hidden="true"
+              className="shrink-0 inline-flex items-center justify-center size-9 rounded-[4px] bg-terracotta/10 border border-terracotta/30"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 text-terracotta"
+              >
+                <path d="M12 2.5l7.5 3v6.3c0 4.3-3 8.1-7.5 9.7C7.5 19.9 4.5 16.1 4.5 11.8V5.5L12 2.5z" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-semibold text-ink leading-tight mb-0.5">
+                {isAr ? 'استرداد كامل خلال ٣٠ يوم' : '30-day money-back guarantee'}
+              </p>
+              <p className="prose-body-sm text-ink/70 leading-snug">
+                {isAr
+                  ? 'ما عجبكش؟ فلوسك ترجع كاملة. بدون أسئلة.'
+                  : 'Not a fit? Full refund. No questions.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 sm:items-center sm:flex-col sm:text-center">
+            <span
+              aria-hidden="true"
+              className="shrink-0 inline-flex items-center justify-center size-9 rounded-[4px] bg-sage/10 border border-sage/30"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 text-sage"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M8 12l3 3 5-6" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-semibold text-ink leading-tight mb-0.5">
+                {isAr ? 'إلغاء في أي وقت' : 'Cancel anytime'}
+              </p>
+              <p className="prose-body-sm text-ink/70 leading-snug">
+                {isAr
+                  ? 'بدون التزام طويل. غيّر أو وقّف وقت ما تحب.'
+                  : 'No lock-in. Change or stop whenever you want.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 sm:items-center sm:flex-col sm:text-center">
+            <span
+              aria-hidden="true"
+              className="shrink-0 inline-flex items-center justify-center size-9 rounded-[4px] bg-navy/10 border border-navy/30"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 text-navy"
+              >
+                <rect x="4" y="5" width="16" height="14" rx="2" />
+                <path d="M9 10l3 3 3-3" />
+                <path d="M12 13V7" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-semibold text-ink leading-tight mb-0.5">
+                {isAr ? 'بياناتك بياناتك' : 'Your data stays yours'}
+              </p>
+              <p className="prose-body-sm text-ink/70 leading-snug">
+                {isAr
+                  ? 'تصدير العملاء، الأوردرات، المنتجات ساعة ما تحب — CSV.'
+                  : 'Export customers, orders, products anytime — CSV.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <DemoStartModal isOpen={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>

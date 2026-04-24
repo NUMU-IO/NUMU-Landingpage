@@ -1,5 +1,10 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Numu brand kit v1.0 (2026) — Navy palette, canonical for marketing.
+ * Source of truth: .claude/skills/numu-design/colors_and_type.css
+ * Navy on cream, flat/editorial, Reem Kufi + Tajawal + Space Grotesk.
+ */
 export default {
   content: [
     "./index.html",
@@ -13,56 +18,78 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#1e40af",
-        "brand-start": "#0f172a",
-        "brand-end": "#1e3a8a",
-        "background-light": "#E0E5EC",
-        "background-alt": "#DDE2E9",
-        "background-dark": "#2a3b4c",
-        "text-main": "#2D3748",
-        "text-muted": "#718096",
-        // Dark hero colors
-        midnight: "#0a0f1e",
-        navy: "#0f1629",
-        deep: "#141b2d",
-        surface: "#1a2235",
+        // ── Brand palette (Navy) ──
+        navy: {
+          DEFAULT: "#003366",
+          900: "#001F3F",
+          800: "#002952",
+          600: "#1F4A7A",
+          500: "#3B6593",
+          300: "#8AA5C2",
+          100: "#D6E0EC",
+        },
+        violet: {
+          DEFAULT: "#6B46C1",
+          600: "#553C9A",
+          300: "#B5A3E0",
+        },
+        // Neutrals hoisted flat so `bg-paper`, `bg-bone`, `bg-cream` all
+        // resolve cleanly. (Previously `paper` / `bone` were nested under
+        // `cream.*` and only produced `bg-cream-paper` / `bg-cream-bone`.)
+        cream: "#F5EFE6",
+        paper: "#FBF6ED",
+        bone: "#EAE0CE",
+        ink: {
+          DEFAULT: "#0F1624",
+          soft: "#2B3344",
+        },
+        saffron: "#E8A430",
+        terracotta: "#C14A1C",
+        sage: "#6B8E68",
+
+        // ── Semantic aliases kept for backwards compat while sections migrate ──
+        primary: "#003366",
+        "background-light": "#F5EFE6",
+        "background-alt": "#FBF6ED",
+        "background-dark": "#001F3F",
+        "text-main": "#0F1624",
+        "text-muted": "#2B3344",
       },
       backgroundImage: {
-        "brand-gradient": "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-        "brand-gradient-hover":
-          "linear-gradient(135deg, #1e293b 0%, #1e40af 100%)",
-        "hero-gradient": "linear-gradient(180deg, #0f172a 0%, #0f1629 50%, #141b2d 100%)",
-        "hero-radial": "radial-gradient(ellipse at 50% 0%, rgba(30,64,175,0.15) 0%, transparent 60%)",
+        // Only allowed gradient is navy→violet, and only inside the logo mark.
+        "numu-logo-gradient":
+          "linear-gradient(135deg, #003366 0%, #6B46C1 100%)",
       },
       fontFamily: {
-        display: ["Outfit", "Alexandria", "sans-serif"],
-        arabic: ["Alexandria", "Outfit", "sans-serif"],
+        display: ["Reem Kufi", "Space Grotesk", "system-ui", "sans-serif"],
+        arabic: ["Tajawal", "system-ui", "sans-serif"],
+        latin: ["Space Grotesk", "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "Menlo", "monospace"],
+      },
+      letterSpacing: {
+        tight: "-0.02em",
+        wide: "0.08em",
+        xwide: "0.18em",
       },
       borderRadius: {
-        DEFAULT: "0.5rem",
-        lg: "1rem",
-        xl: "1.5rem",
-        "2xl": "2rem",
-        "3xl": "3rem",
+        // Brand / editorial radii — paper-like, square-ish
+        none: "0",
+        xs: "2px",
+        sm: "4px",
+        DEFAULT: "4px",
+        md: "8px",
+        lg: "10px",
+        xl: "14px",
+        "2xl": "14px",
         full: "9999px",
       },
       boxShadow: {
-        "neu-flat":
-          "9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)",
-        "neu-flat-sm":
-          "5px 5px 10px rgb(163,177,198,0.6), -5px -5px 10px rgba(255,255,255, 0.5)",
-        "neu-pressed":
-          "inset 6px 6px 10px 0 rgba(163,177,198, 0.7), inset -6px -6px 10px 0 rgba(255,255,255, 0.8)",
-        "neu-pressed-sm":
-          "inset 3px 3px 6px 0 rgba(163,177,198, 0.7), inset -3px -3px 6px 0 rgba(255,255,255, 0.8)",
-        "neu-floating":
-          "15px 15px 30px rgb(163,177,198,0.5), -15px -15px 30px rgba(255,255,255, 0.6)",
-        "neu-primary":
-          "5px 5px 10px rgba(15, 23, 42, 0.4), -5px -5px 10px rgba(30, 58, 138, 0.4)",
-        "neu-glow":
-          "inset 3px 3px 6px 0 rgba(163,177,198, 0.7), inset -3px -3px 6px 0 rgba(255,255,255, 0.8), 0 0 10px rgba(30, 58, 138, 0.3)",
-        "neu-active-glow":
-          "inset 2px 2px 5px 0 rgba(163,177,198, 0.7), inset -2px -2px 5px 0 rgba(255,255,255, 0.8), 0 0 15px rgba(30, 58, 138, 0.6)",
+        // Flat / editorial — no neumorphic.
+        xs: "0 1px 2px 0 hsl(0 0% 0% / 0.03)",
+        sm: "0 1px 3px 0 hsl(0 0% 0% / 0.06), 0 1px 2px -1px hsl(0 0% 0% / 0.06)",
+        md: "0 4px 6px -1px hsl(0 0% 0% / 0.05), 0 2px 4px -2px hsl(0 0% 0% / 0.05)",
+        lg: "0 10px 15px -3px hsl(0 0% 0% / 0.05), 0 4px 6px -4px hsl(0 0% 0% / 0.05)",
+        card: "0 1px 3px hsl(0 0% 0% / 0.04), 0 4px 12px hsl(0 0% 0% / 0.03)",
       },
       keyframes: {
         float: {
@@ -73,10 +100,18 @@ export default {
           from: { opacity: "0", transform: "translateY(-8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "fade-in-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
-        float: "float 6s ease-in-out infinite",
-        "slide-down": "slide-down 0.2s ease-out",
+        float: "float 6s cubic-bezier(0.16, 1, 0.3, 1) infinite",
+        "slide-down": "slide-down 200ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "fade-in-up": "fade-in-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both",
+      },
+      transitionTimingFunction: {
+        numu: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },

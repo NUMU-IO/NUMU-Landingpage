@@ -1,58 +1,121 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useWaitlistModal } from '../contexts/WaitlistModalContext';
 
+/**
+ * Closing CTA — full-bleed navy editorial panel with souk-tile accent,
+ * saffron "founder's program" chip and terracotta divider. Matches the
+ * brand-kit "CTA · start free" post aesthetic.
+ */
 const CTA: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
+  const { open: openWaitlist } = useWaitlistModal();
   const isAr = language === 'ar';
 
   return (
-    <div className="max-w-5xl mx-auto w-full px-4">
-      <div className="relative rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-neu-floating p-6 sm:p-8 md:p-16 text-center overflow-hidden" style={{ background: 'hsl(222.2, 47.4%, 11.2%)' }}>
-        {/* NUMU watermark pattern */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('/numu_v3.webp')", backgroundSize: "100px", backgroundRepeat: "repeat" }} />
+    <div className="max-w-[1200px] mx-auto w-full px-4 sm:px-6 lg:px-10">
+      <div className="relative bg-navy text-cream rounded-[14px] overflow-hidden numu-mockup-frame">
+        {/* Souk-tile top edge — editorial motif */}
+        <span
+          aria-hidden="true"
+          className="absolute top-0 left-0 right-0 h-3 opacity-30"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='12' viewBox='0 0 88 12'><g fill='none' stroke='%23F5EFE6' stroke-width='1'><path d='M0 6 L6 0 L12 6 L6 12 Z' /><circle cx='22' cy='6' r='3' /><path d='M32 6 L38 0 L44 6 L38 12 Z' /><circle cx='54' cy='6' r='3' /><path d='M64 6 L70 0 L76 6 L70 12 Z' /><circle cx='84' cy='6' r='3' /></g></svg>\")",
+            backgroundRepeat: 'repeat-x',
+          }}
+        />
 
-        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
-          <h2 className="font-arabic text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight">
-            {isAr ? 'جاهز تبني متجرك؟' : 'Ready to build your store?'}
+        <div className="relative px-6 sm:px-10 lg:px-16 py-14 sm:py-16 lg:py-20 text-center">
+          {/* Mono eyebrow + founder chip */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-saffron font-semibold">
+              § FOUNDER'S PROGRAM
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-saffron/15 border border-saffron/40 rounded-[4px] font-mono text-[10px] uppercase tracking-[0.18em] font-semibold text-saffron">
+              <span
+                className="size-1.5 rounded-full bg-saffron animate-pulse"
+                aria-hidden="true"
+              />
+              {isAr ? `أول ${toArabicDigits('100')} تاجر` : 'First 100 merchants'}
+            </span>
+          </div>
+
+          {/* Headline — terracotta accent on the verb */}
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-[64px] font-bold tracking-tight leading-[1.05] mb-5">
+            {isAr ? (
+              <>
+                جاهز <span className="text-saffron">تبدأ</span>؟
+              </>
+            ) : (
+              <>
+                Ready to <span className="text-saffron">start</span>?
+              </>
+            )}
           </h2>
-          <p className="text-white/50 text-sm sm:text-base md:text-lg max-w-xl">
+
+          <p className="prose-body text-cream/80 max-w-xl mx-auto mb-4">
             {isAr
-              ? 'انضم لبرنامج البيتا الخاص واحصل على وصول مبكر ودعم أولوية وشهر Premium مجاناً.'
-              : 'Join our private beta for early access, priority support, and a free month of Premium.'}
+              ? 'انضم لبرنامج التاجر المؤسس. وصول مبكر، دعم أولوية، وشهر Premium مجاناً.'
+              : 'Join the founder merchant program. Early access, priority support, free month of Premium.'}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 mt-2 sm:mt-4 w-full sm:w-auto">
-            {/* Primary — scroll to waitlist */}
-            <a
-              href="#waitlist"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="bg-white text-brand-start text-sm sm:text-base md:text-lg font-bold h-12 sm:h-14 md:h-16 px-6 sm:px-8 md:px-10 rounded-2xl shadow-[6px_6px_12px_rgba(0,0,0,0.3)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto"
+          {/* Terracotta hairline — editorial signature */}
+          <div className="flex justify-center mb-8">
+            <span className="w-12 h-[2px] bg-terracotta" aria-hidden="true" />
+          </div>
+
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto sm:inline-flex">
+            {/* Primary — cream on navy, saffron arrow, opens waitlist modal */}
+            <button
+              type="button"
+              onClick={() => openWaitlist()}
+              className="group bg-cream text-navy font-semibold py-3.5 px-7 rounded-[4px] text-sm sm:text-base hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               <span>{isAr ? 'انضم لقائمة الانتظار' : 'Join the Waitlist'}</span>
-              <span className="material-symbols-outlined">group_add</span>
-            </a>
+              <span
+                aria-hidden="true"
+                className="text-lg text-terracotta group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform rtl:rotate-180"
+              >
+                →
+              </span>
+            </button>
 
-            {/* Secondary — for those who already have a code */}
+            {/* Secondary — outlined cream */}
             <Link
               to="/signup"
-              className="border border-white/20 text-white text-sm sm:text-base font-semibold h-12 sm:h-14 md:h-16 px-6 sm:px-8 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto"
+              className="border border-cream/25 text-cream font-semibold py-3.5 px-7 rounded-[4px] text-sm sm:text-base hover:bg-cream/5 hover:border-saffron/60 hover:text-saffron transition-all duration-200 ease-numu flex items-center gap-2 w-full sm:w-auto justify-center"
             >
               <span>{isAr ? 'عندي كود دعوة' : 'I have an invite code'}</span>
-              <span className="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
             </Link>
           </div>
 
-          <p className="text-xs text-white/30 font-medium mt-2 sm:mt-4">
-            {isAr ? 'مفيش فيزا مطلوبة. الفترة التجريبية 14 يوم.' : 'No credit card required. 14-day trial included.'}
+          {/* Fine print — mono, muted */}
+          <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/50">
+            {isAr
+              ? `بدون فيزا · تجربة ${toArabicDigits('14')} يوم`
+              : 'No credit card · 14-day trial'}
           </p>
         </div>
+
+        {/* Souk-tile bottom edge */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-0 left-0 right-0 h-3 opacity-30"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='88' height='12' viewBox='0 0 88 12'><g fill='none' stroke='%23F5EFE6' stroke-width='1'><path d='M0 6 L6 0 L12 6 L6 12 Z' /><circle cx='22' cy='6' r='3' /><path d='M32 6 L38 0 L44 6 L38 12 Z' /><circle cx='54' cy='6' r='3' /><path d='M64 6 L70 0 L76 6 L70 12 Z' /><circle cx='84' cy='6' r='3' /></g></svg>\")",
+            backgroundRepeat: 'repeat-x',
+          }}
+        />
       </div>
     </div>
   );
 };
+
+const toArabicDigits = (s: string): string =>
+  s.replace(/[0-9]/g, (d) => String.fromCharCode(0x0660 + parseInt(d, 10)));
 
 export default CTA;

@@ -3,22 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <!-- Primary Meta Tags -->
-    <title>NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط</title>
+    <!-- Primary Meta Tags — Arabic-first fallback since <html lang="ar">.
+         useSEO overrides per route once JS boots. -->
+    <title>نُمُو — افتح متجرك الإلكتروني في مصر والشرق الأوسط</title>
     <meta
       name="title"
-      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+      content="نُمُو — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
     />
     <meta
       name="description"
       content="أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، دعم عربي كامل، والدفع عند الاستلام. افتح متجرك في ١٠ دقايق."
     />
-    <meta name="author" content="NUMU Inc." />
+    <meta name="author" content="numu Inc." />
     <meta
       name="robots"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     />
-    <meta name="theme-color" content="#0b1120" />
+    <meta name="theme-color" content="#F5EFE6" />
 
     <!-- Geo Tags -->
     <meta name="geo.region" content="EG" />
@@ -28,11 +29,16 @@
     <!-- Canonical (prerender + useSEO will override per route) -->
     <link rel="canonical" href="https://numueg.app/" />
 
-    <!-- Favicon & App Icons -->
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/favicon.png" />
-    <meta name="msapplication-TileColor" content="#0b1120" />
+    <!-- Favicon & App Icons — navy-N on cream paper, the brand's canonical
+         look. The navy-bg variants ship alongside (/favicon-cream*.png
+         inverted) in case a dark-mode-media-query override is needed later.
+         See scripts/make-favicons.mjs for the build step. -->
+    <link rel="icon" type="image/x-icon" href="/favicon-cream.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-cream-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-cream-32.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-cream.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-cream.png" />
+    <meta name="msapplication-TileColor" content="#F5EFE6" />
 
     <!-- Preconnect to font origins (must be early) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,19 +50,26 @@
     <!-- DNS prefetch for Sentry (lazy-loaded) -->
     <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io" />
 
-    <!-- All web fonts + Material Symbols in a single request — cuts a CRP round-trip. -->
+    <!-- Preload LCP candidate — navbar mark renders as soon as JS boots -->
+    <link rel="preload" as="image" href="/numu-mark-cream.webp" fetchpriority="high" />
+
+    <!-- Numu brand kit v1.0 webfonts — Reem Kufi (display, Latin+Arabic),
+         Tajawal (Arabic body), Space Grotesk (Latin body), JetBrains Mono
+         (labels, metadata). Material Symbols retained for legacy sections
+         not yet migrated to lucide. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Tajawal:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
 
     <link rel="stylesheet" href="/index.css" />
 
-    <!-- Inline critical CSS for instant hero render -->
+    <!-- Inline critical CSS for instant hero render — cream ground matches
+         the brand-kit hero, prevents dark→cream flash on JS load. -->
     <style>
       .skeleton-hero {
         min-height: 100vh;
-        background: #0b1120;
+        background: #F5EFE6;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -67,20 +80,20 @@
       .skeleton-logo {
         width: 120px;
         height: 40px;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 8px;
+        background: rgba(15, 22, 36, 0.06);
+        border-radius: 4px;
         animation: pulse 1.5s ease-in-out infinite;
       }
       .skeleton-line {
         height: 3rem;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
+        background: rgba(15, 22, 36, 0.06);
+        border-radius: 4px;
         animation: pulse 1.5s ease-in-out infinite;
       }
       .skeleton-line-sm {
         height: 1rem;
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 8px;
+        background: rgba(15, 22, 36, 0.04);
+        border-radius: 4px;
         animation: pulse 1.5s ease-in-out infinite;
       }
       @keyframes pulse {
@@ -100,7 +113,7 @@
     <meta property="og:url" content="https://numueg.app/" />
     <meta
       property="og:title"
-      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+      content="نُمُو — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
     />
     <meta
       property="og:description"
@@ -111,7 +124,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
+      content="نُمُو — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
     />
     <meta property="og:locale" content="ar_EG" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -122,7 +135,7 @@
     <meta name="twitter:creator" content="@numueg" />
     <meta
       name="twitter:title"
-      content="NUMU — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
+      content="نُمُو — افتح متجرك الإلكتروني في مصر والشرق الأوسط"
     />
     <meta
       name="twitter:description"
@@ -131,7 +144,7 @@
     <meta name="twitter:image" content="https://numueg.app/og-image.png" />
     <meta
       name="twitter:image:alt"
-      content="NUMU — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
+      content="نُمُو — منصة التجارة الإلكترونية لمصر والشرق الأوسط"
     />
 
     <!-- Structured Data: Organization -->
@@ -142,7 +155,7 @@
         "name": "NUMU",
         "alternateName": "نمو",
         "url": "https://numueg.app",
-        "logo": "https://numueg.app/numu-logo-en.webp",
+        "logo": "https://numueg.app/numu-mark-cream.webp",
         "description": "أول منصة متاجر إلكترونية مصرية ١٠٠٪ — بيموب، فوري، بوسطة، فاتورة إلكترونية، ودعم عربي كامل.",
         "foundingLocation": {
           "@type": "Place",
@@ -212,63 +225,9 @@
       }
     </script>
 
-    <!-- Structured Data: FAQPage -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What payment gateways does NUMU support?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "NUMU natively integrates with Paymob and Fawry for online card and wallet payments, and supports Cash on Delivery (COD) with advanced fee configuration for Egypt and the GCC."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does NUMU support Arabic storefronts?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. NUMU is Arabic-first with full RTL (right-to-left) support across the dashboard and customer storefronts. All content can be managed in both Arabic and English."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does NUMU handle shipping in Egypt?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "NUMU integrates directly with Bosta for automated waybill generation and governorate-based shipping rates across Egypt, allowing merchants to ship orders without manual data entry."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is NUMU compliant with Egyptian tax regulations?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. NUMU automatically generates ETA (Egyptian Tax Authority) compliant e-invoices for every transaction, keeping your business fully tax-compliant."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I sell on WhatsApp and Instagram with NUMU?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. NUMU supports multi-channel selling from a single dashboard — manage your website, WhatsApp, Instagram, and Facebook orders and inventory all in one place."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there a free trial?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. NUMU offers a free trial with no credit card required. You can start selling immediately and upgrade to a paid plan when you are ready."
-            }
-          }
-        ]
-      }
-    </script>
+    <!-- FAQPage JSON-LD is emitted by components/FAQ.tsx from the same
+         items array that renders the visible copy — keeps schema and
+         on-page text in lockstep. -->
   </head>
   <body class="bg-background-light text-text-main font-display antialiased">
     <div id="root">
