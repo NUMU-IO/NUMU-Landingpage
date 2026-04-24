@@ -64,14 +64,14 @@ const AIShowcase: React.FC = () => {
                 onClick={() => { setActiveStep(idx); setIsPaused(true); setTimeout(() => setIsPaused(false), 5000); }}
                 className={`flex items-start gap-3 sm:gap-4 p-4 rounded-2xl transition-all duration-300 text-start ${
                   activeStep === idx
-                    ? 'shadow-neu-pressed bg-background-light'
+                    ? 'bg-cream border border-ink/10 bg-background-light'
                     : 'hover:bg-background-alt/50'
                 }`}
               >
                 <div className={`size-10 sm:size-11 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                   activeStep === idx
-                    ? 'bg-brand-gradient text-white shadow-neu-primary'
-                    : 'shadow-neu-flat-sm text-primary'
+                    ? 'bg-navy text-white shadow-card'
+                    : 'shadow-card text-primary'
                 }`}>
                   <span className="material-symbols-outlined text-lg">{step.icon}</span>
                 </div>
@@ -96,7 +96,7 @@ const AIShowcase: React.FC = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           <div className="relative">
-            <div className="relative w-[260px] sm:w-[280px] md:w-[300px] h-[520px] sm:h-[560px] md:h-[600px] bg-background-light rounded-[2.5rem] border-[6px] border-gray-800 shadow-neu-floating overflow-hidden">
+            <div className="relative w-[260px] sm:w-[280px] md:w-[300px] h-[520px] sm:h-[560px] md:h-[600px] bg-background-light rounded-[2.5rem] border-[6px] border-gray-800 shadow-modal-panel overflow-hidden">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-800 rounded-b-2xl z-20" />
               <div className="h-10 bg-background-light flex items-end justify-between px-6 pb-1">
                 <span className="text-[10px] font-semibold text-text-main">9:41</span>
@@ -114,7 +114,7 @@ const AIShowcase: React.FC = () => {
                 }}>
                   <div className="flex items-center gap-2 mb-3 px-1">
                     <div className="size-6 rounded-md bg-accent flex items-center justify-center">
-                      <span className="text-white text-[8px] font-black">N</span>
+                      <span className="text-white text-[8px] font-bold">N</span>
                     </div>
                     <span className="text-xs font-bold text-text-main">{dir === 'rtl' ? 'اختار منتج' : 'Select Product'}</span>
                   </div>
@@ -133,13 +133,13 @@ const AIShowcase: React.FC = () => {
                       <span className="text-[8px] text-text-muted">{dir === 'rtl' ? 'فاضي' : 'Empty'}</span>
                     </div>
                     <div className="space-y-2">
-                      <div className="h-2 bg-background-light rounded-full w-full shadow-neu-pressed-sm" />
-                      <div className="h-2 bg-background-light rounded-full w-3/4 shadow-neu-pressed-sm" />
-                      <div className="h-2 bg-background-light rounded-full w-1/2 shadow-neu-pressed-sm" />
+                      <div className="h-2 bg-background-light rounded-full w-full bg-paper border border-ink/10" />
+                      <div className="h-2 bg-background-light rounded-full w-3/4 bg-paper border border-ink/10" />
+                      <div className="h-2 bg-background-light rounded-full w-1/2 bg-paper border border-ink/10" />
                     </div>
                   </div>
                   <div className="mt-3">
-                    <div className="bg-violet-500 text-white text-xs font-bold py-2.5 rounded-2xl text-center flex items-center justify-center gap-1.5 shadow-neu-primary">
+                    <div className="bg-violet-500 text-white text-xs font-bold py-2.5 rounded-2xl text-center flex items-center justify-center gap-1.5 shadow-card">
                       <span className="material-symbols-outlined text-sm">auto_awesome</span>
                       <span>{dir === 'rtl' ? 'اكتب بالذكاء الاصطناعي' : 'Generate with AI'}</span>
                     </div>
@@ -153,7 +153,7 @@ const AIShowcase: React.FC = () => {
                 }}>
                   <div className="flex items-center gap-2 mb-3 px-1">
                     <div className="size-6 rounded-md bg-accent flex items-center justify-center">
-                      <span className="text-white text-[8px] font-black">N</span>
+                      <span className="text-white text-[8px] font-bold">N</span>
                     </div>
                     <span className="text-xs font-bold text-text-main">{dir === 'rtl' ? 'الذكاء الاصطناعي بيكتب...' : 'AI Writing...'}</span>
                     <div className="flex gap-0.5 items-center ms-auto">
@@ -200,7 +200,7 @@ const AIShowcase: React.FC = () => {
                 }}>
                   <div className="flex items-center gap-2 mb-3 px-1">
                     <div className="size-6 rounded-md bg-accent flex items-center justify-center">
-                      <span className="text-white text-[8px] font-black">N</span>
+                      <span className="text-white text-[8px] font-bold">N</span>
                     </div>
                     <span className="text-xs font-bold text-text-main">{dir === 'rtl' ? 'جاهز للنشر' : 'Ready to Publish'}</span>
                   </div>
@@ -236,7 +236,7 @@ const AIShowcase: React.FC = () => {
                   </div>
                   <div className="flex flex-wrap gap-1 mb-3 transition-all duration-500" style={{ opacity: activeStep === 2 ? 1 : 0, transitionDelay: '600ms' }}>
                     {(dir === 'rtl' ? ['شنط جلد', 'كروس بادي', 'اكسسوارات'] : ['leather bag', 'crossbody', 'accessories']).map((tag, i) => (
-                      <span key={i} className="text-[7px] font-medium bg-background-alt text-text-muted px-2 py-0.5 rounded-full shadow-neu-flat-sm">#{tag}</span>
+                      <span key={i} className="text-[7px] font-medium bg-background-alt text-text-muted px-2 py-0.5 rounded-full shadow-card">#{tag}</span>
                     ))}
                   </div>
                   <div className="mt-auto bg-emerald-50 border border-emerald-200 rounded-2xl p-2 flex items-center justify-center gap-1.5" style={{
@@ -261,7 +261,7 @@ const AIShowcase: React.FC = () => {
                   key={idx}
                   onClick={() => { setActiveStep(idx); setIsPaused(true); setTimeout(() => setIsPaused(false), 5000); }}
                   className={`rounded-full transition-all duration-300 ${
-                    activeStep === idx ? 'w-8 h-2.5 bg-violet-500 shadow-neu-primary' : 'size-2.5 bg-background-alt shadow-neu-flat-sm hover:shadow-neu-pressed-sm'
+                    activeStep === idx ? 'w-8 h-2.5 bg-violet-500 shadow-card' : 'size-2.5 bg-background-alt shadow-card hover:bg-paper border border-ink/10'
                   }`}
                 />
               ))}

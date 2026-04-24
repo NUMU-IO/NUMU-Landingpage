@@ -30,8 +30,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build production bundle
-        run: npm run build
+      # Chrome is preinstalled on ubuntu-latest runners at /usr/bin/google-chrome.
+      # The prerender script picks it up via the CHROME_PATH env var.
+      - name: Build + prerender (SSG)
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          VITE_DASHBOARD_URL: https://merchant.numueg.app
+        run: npm run build:ssg
+
+      - name: Verify prerender produced per-route HTML
+        run: |
+          set -e
+          for route in "" pricing contact privacy terms refund 404; do
+            file="dist/${route}/index.html"
+            [ "$route" = "" ] && file="dist/index.html"
+            if [ ! -f "$file" ]; then
+              echo "::error::Missing prerendered file: $file"
+              exit 1
+            fi
+            if ! grep -q "x-numu-prerendered" "$file"; then
+              echo "::error::$file is not a prerendered document (missing marker)"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
 
       - name: Deploy to server via rsync
         uses: burnett01/rsync-deployments@7.0.1
