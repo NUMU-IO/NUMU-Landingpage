@@ -126,36 +126,40 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-ink/80 backdrop-blur-md p-4"
       dir={dir}
       onClick={handleBackdropClick}
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-md rounded-3xl bg-[#0a0e1a] border border-white/10 shadow-2xl p-8 animate-fade-in-up"
+        className="relative w-full max-w-md rounded-[14px] bg-navy-900 border border-cream/10 shadow-modal-panel p-8 animate-modal-panel"
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 end-4 text-white/40 hover:text-white transition-colors"
+          className="absolute top-4 end-4 size-8 rounded-[4px] flex items-center justify-center text-cream/55 hover:text-terracotta hover:bg-cream/5 transition-colors"
           aria-label="Close"
         >
-          <span className="material-symbols-outlined">close</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
 
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
-            <span className="material-symbols-outlined text-primary text-3xl">
-              {magicLinkSent ? "mark_email_read" : "storefront"}
+          <div className="inline-flex items-center gap-2 bg-saffron/15 border border-saffron/40 rounded-[4px] px-3 py-1 mb-4">
+            <span className="size-1.5 rounded-full bg-saffron animate-pulse" aria-hidden="true" />
+            <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
+              {magicLinkSent ? (isAr ? 'لينك مبعوت' : 'LINK SENT') : (isAr ? 'تجربة ٣٠ يوم' : '30-DAY TRIAL')}
             </span>
           </div>
-          <h2 className="text-xl font-bold text-white font-display">
+          <h2 className="font-display text-2xl sm:text-[28px] font-bold text-cream tracking-tight">
             {magicLinkSent
               ? isAr ? "بَعَتنا لك لينك" : "Check your inbox"
               : t("demo.modal.title")}
           </h2>
-          <p className="text-sm text-white/50 mt-2">
+          <p className="prose-body-sm text-cream/70 mt-2">
             {magicLinkSent
               ? isAr
                 ? `بَعَتنا لينك دخول على ${email} \u2014 اضغط عليه وهتلاقي نفسك جوا لوحة التحكم.`
@@ -168,7 +172,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors text-sm"
+            className="w-full bg-cream/10 hover:bg-cream/15 text-cream font-semibold py-3 px-6 rounded-[4px] transition-colors text-sm"
           >
             {isAr ? "تمام" : "Got it"}
           </button>
@@ -184,7 +188,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t("demo.modal.email_placeholder")}
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all text-sm"
+                  className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
                   dir="ltr"
                 />
               </div>
@@ -196,24 +200,24 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
 
               {/* Error message */}
               {error && (
-                <p className="text-red-400 text-sm text-center">{error}</p>
+                <p className="font-mono text-[11px] text-terracotta bg-terracotta/10 border border-terracotta/30 rounded-[4px] px-3 py-2">{error}</p>
               )}
 
               {/* Submit button */}
               <button
                 type="submit"
                 disabled={loading || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
-                className="w-full bg-brand-gradient text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="group w-full bg-saffron text-ink font-semibold h-12 px-6 rounded-[4px] hover:bg-saffron/90 active:scale-[0.985] transition-all duration-200 ease-numu disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-sm"
               >
                 {loading ? (
                   <>
-                    <span className="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    <span className="size-4 rounded-full border-2 border-ink/30 border-t-ink animate-spin" />
                     <span>{t("demo.modal.loading")}</span>
                   </>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined text-lg">rocket_launch</span>
                     <span>{t("demo.modal.submit")}</span>
+                    <span aria-hidden="true" className="text-lg text-terracotta rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform">→</span>
                   </>
                 )}
               </button>
@@ -222,11 +226,11 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
             {/* OR divider */}
             <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
+                <div className="w-full border-t border-cream/10" />
               </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-[#0a0e1a] px-3 text-white/40">
-                  {isAr ? "أو" : "or"}
+              <div className="relative flex justify-center">
+                <span className="bg-navy-900 px-3 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/50">
+                  {isAr ? "أو" : "OR"}
                 </span>
               </div>
             </div>
@@ -277,7 +281,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
-            <p className="text-center text-xs text-white/40 mt-4">
+            <p className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-cream/50 mt-4">
               {isAr
                 ? "بالدخول بجوجل بتحصل على تجربة ٣٠ يوم مباشرة"
                 : "Google sign-up gets you a 30-day trial instantly"}

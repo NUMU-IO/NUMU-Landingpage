@@ -1,38 +1,65 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
+/**
+ * Dashboard bento preview — 5 tiles in brand-kit colors.
+ * Flat editorial panels with hairline borders and 10–14px radii.
+ * Mix of cream/paper/navy surfaces for visual rhythm.
+ */
+
+const toArabicDigits = (s: string | number): string =>
+  String(s).replace(/[0-9]/g, (d) =>
+    String.fromCharCode(0x0660 + parseInt(d, 10)),
+  );
+
 const Preview: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(4);
-  const { t, dir } = useLanguage();
+  const { t, dir, language } = useLanguage();
+  const isAr = language === 'ar';
 
   return (
-    <div className="max-w-6xl mx-auto w-full px-4 py-8">
-      <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full shadow-neu-pressed-sm mb-4 w-fit mx-auto">
-          <span className="material-symbols-outlined text-primary text-sm">terminal</span>
-          <span className="text-[10px] sm:text-xs font-semibold text-text-muted tracking-wide uppercase">{dir === 'rtl' ? 'مركز التحكم' : 'Command Center'}</span>
+    <div className="max-w-[1360px] mx-auto w-full px-4 sm:px-6 lg:px-10">
+      {/* Header */}
+      <div className="text-center mb-10 sm:mb-14">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta font-semibold">
+            § DASHBOARD
+          </span>
+          <span className="eyebrow">
+            {isAr ? 'مركز التحكم · في مكان واحد' : 'COMMAND CENTER · ALL IN ONE'}
+          </span>
         </div>
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-text-main dark:text-white mb-2">{t('preview.title')}</h2>
-        <p className="text-text-muted text-sm sm:text-base max-w-xl mx-auto">{t('preview.subtitle')}</p>
+        <h2 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-bold text-ink tracking-tight leading-[1.05] mb-5">
+          {t('preview.title')}
+        </h2>
+        <p className="prose-body text-ink/75 max-w-2xl mx-auto">
+          {t('preview.subtitle')}
+        </p>
       </div>
 
-      {/* Bento grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-        {/* Revenue card - large */}
-        <div className="md:col-span-2 bg-background-light dark:bg-background-dark rounded-2xl sm:rounded-3xl shadow-neu-flat p-5 sm:p-6 md:p-8 transition-transform hover:-translate-y-1 duration-300 group">
+      {/* Bento — 3 cols, mixed sizes */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        {/* Revenue — large paper card, saffron accent bar */}
+        <div className="md:col-span-2 bg-paper border border-ink/10 border-s-[3px] border-s-saffron rounded-[14px] p-6 sm:p-7 shadow-card transition-all duration-200 ease-numu hover:-translate-y-0.5 hover:shadow-md">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <span className="text-[10px] sm:text-xs font-bold text-text-muted uppercase tracking-wider">{t('preview.revenue')}</span>
-              <p className="text-xl sm:text-2xl md:text-3xl font-black text-text-main dark:text-white mt-1">{t('preview.amount')}</p>
+              <span className="font-mono text-[10px] font-semibold text-ink-soft/60 uppercase tracking-[0.18em]">
+                {t('preview.revenue')}
+              </span>
+              <p className="font-display text-3xl sm:text-4xl font-bold text-navy tracking-tight tabular-nums mt-1 leading-none">
+                {t('preview.amount')}
+              </p>
             </div>
-            <div className="flex items-center gap-1.5 shadow-neu-pressed-sm rounded-full px-3 py-1.5">
-              <span className="material-symbols-outlined text-primary text-sm">trending_up</span>
-              <span className="text-xs font-bold text-primary">+23%</span>
-            </div>
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] font-semibold text-sage bg-sage/10 border border-sage/30 px-2.5 py-1 rounded-[4px]">
+              ↑ {isAr ? toArabicDigits(23) : '23'}%
+            </span>
           </div>
           {/* Chart bars */}
-          <div className="bg-background-light dark:bg-background-dark rounded-xl shadow-neu-pressed p-4">
-            <div className="flex items-end gap-2 h-24 sm:h-32" onMouseLeave={() => setActiveIndex(4)}>
+          <div className="bg-cream border border-ink/10 rounded-[10px] p-4">
+            <div
+              className="flex items-end gap-2 h-24 sm:h-32"
+              onMouseLeave={() => setActiveIndex(4)}
+            >
               {[
                 { key: 'mon', height: '40%' },
                 { key: 'tue', height: '60%' },
@@ -43,18 +70,21 @@ const Preview: React.FC = () => {
                 <div
                   key={item.key}
                   onMouseEnter={() => setActiveIndex(index)}
-                  className={`w-full rounded-t-lg transition-all duration-300 cursor-pointer origin-bottom ${
-                    activeIndex === index
-                      ? 'bg-brand-gradient shadow-[0_0_15px_rgba(30,58,138,0.5)] scale-y-105'
-                      : 'bg-primary/20 hover:bg-primary/30'
+                  className={`w-full rounded-t-[2px] transition-all duration-200 ease-numu cursor-pointer origin-bottom ${
+                    activeIndex === index ? 'bg-navy' : 'bg-navy/25 hover:bg-navy/40'
                   }`}
                   style={{ height: item.height }}
                 />
               ))}
             </div>
-            <div className="flex justify-between mt-2 text-xs font-bold text-text-muted border-t border-gray-200/50 pt-2">
+            <div className="flex justify-between mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/55 border-t border-bone pt-2">
               {['mon', 'tue', 'wed', 'thu', 'fri'].map((key, index) => (
-                <span key={key} className={`transition-colors duration-300 ${activeIndex === index ? 'text-primary' : ''}`}>
+                <span
+                  key={key}
+                  className={`transition-colors duration-200 ${
+                    activeIndex === index ? 'text-terracotta font-semibold' : ''
+                  }`}
+                >
                   {t(`preview.${key}`)}
                 </span>
               ))}
@@ -62,76 +92,143 @@ const Preview: React.FC = () => {
           </div>
         </div>
 
-        {/* Orders card - merchant hub glass style */}
-        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 text-white transition-transform hover:-translate-y-1 duration-300" style={{ background: '#0d1117', boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 8px 30px rgba(0,0,0,0.3)' }}>
+        {/* Orders — navy inversion tile */}
+        <div className="bg-navy text-cream rounded-[14px] p-6 sm:p-7 shadow-card transition-all duration-200 ease-numu hover:-translate-y-0.5">
           <div className="flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-blue-400 text-lg">shopping_bag</span>
-            <span className="text-[11px] font-medium text-white/45 uppercase tracking-wider">{t('preview.orders')}</span>
+            <span
+              className="size-1.5 rounded-full bg-saffron"
+              aria-hidden="true"
+            />
+            <span className="font-mono text-[10px] font-semibold text-cream/55 uppercase tracking-[0.18em]">
+              {t('preview.orders')}
+            </span>
           </div>
-          <p className="text-3xl sm:text-4xl font-bold tracking-tight tabular-nums mb-6" style={{ color: 'rgba(255,255,255,0.92)' }}>845</p>
-          <div className="space-y-3">
+          <p className="font-display text-4xl font-bold tracking-tight tabular-nums mb-6 text-cream leading-none">
+            {isAr ? toArabicDigits(845) : '845'}
+          </p>
+          <div className="space-y-2.5">
             {[
-              { label: dir === 'rtl' ? 'قيد التوصيل' : 'In Transit', count: 12, dotColor: 'bg-blue-400', badgeClass: 'text-blue-400 bg-blue-500/10' },
-              { label: dir === 'rtl' ? 'تم التسليم' : 'Delivered', count: 820, dotColor: 'bg-emerald-400', badgeClass: 'text-emerald-400 bg-emerald-500/10' },
-              { label: dir === 'rtl' ? 'معلقة' : 'Pending', count: 13, dotColor: 'bg-amber-400', badgeClass: 'text-amber-400 bg-amber-500/10' },
+              {
+                label: isAr ? 'قيد التوصيل' : 'In Transit',
+                count: 12,
+                dot: 'bg-saffron',
+                text: 'text-saffron',
+              },
+              {
+                label: isAr ? 'تم التسليم' : 'Delivered',
+                count: 820,
+                dot: 'bg-sage',
+                text: 'text-sage',
+              },
+              {
+                label: isAr ? 'معلقة' : 'Pending',
+                count: 13,
+                dot: 'bg-terracotta',
+                text: 'text-terracotta',
+              },
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className={`size-2 rounded-full ${item.dotColor}`} />
-                  <span className="text-[11px] text-white/45">{item.label}</span>
+                  <span
+                    className={`size-1.5 rounded-full ${item.dot}`}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[12px] text-cream/60">{item.label}</span>
                 </div>
-                <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full ${item.badgeClass}`}>{item.count}</span>
+                <span
+                  className={`font-mono text-[11px] font-semibold tabular-nums ${item.text}`}
+                >
+                  {isAr ? toArabicDigits(item.count) : item.count}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Shipments */}
-        <div className="bg-background-light dark:bg-background-dark rounded-2xl sm:rounded-3xl shadow-neu-flat p-5 sm:p-6 md:p-8 relative overflow-hidden transition-transform hover:-translate-y-1 duration-300 group">
-          <div className="absolute inset-0 bg-brand-gradient opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
-          <span className="material-symbols-outlined text-primary/10 text-6xl absolute bottom-2 end-2 rtl:-scale-x-100">local_shipping</span>
-          <div className="relative">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-orange-500 text-sm group-hover:scale-110 transition-transform duration-300 rtl:-scale-x-100">local_shipping</span>
-              <span className="text-[10px] sm:text-xs font-bold text-text-muted uppercase tracking-wider">{t('preview.shipments')}</span>
-            </div>
-            <p className="text-3xl font-black text-text-main dark:text-white mt-2 mb-1">12</p>
-            <p className="text-xs text-text-muted">{dir === 'rtl' ? 'شحنات نشطة الآن' : 'Active shipments now'}</p>
+        {/* Shipments — terracotta accent */}
+        <div className="bg-paper border border-ink/10 border-t-[3px] border-t-terracotta rounded-[14px] p-6 sm:p-7 shadow-card transition-all duration-200 ease-numu hover:-translate-y-0.5 hover:shadow-md">
+          <span className="font-mono text-[10px] font-semibold text-ink-soft/60 uppercase tracking-[0.18em]">
+            {t('preview.shipments')}
+          </span>
+          <p className="font-display text-5xl font-bold text-terracotta mt-2 mb-2 tabular-nums leading-none">
+            {isAr ? toArabicDigits(12) : '12'}
+          </p>
+          <p className="prose-body-sm text-ink/70">
+            {isAr ? 'شحنات نشطة الآن' : 'Active shipments now'}
+          </p>
+          <div className="mt-4 pt-3 border-t border-bone flex items-center gap-1.5">
+            <span
+              className="size-1.5 rounded-full bg-sage"
+              aria-hidden="true"
+            />
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/60">
+              Bosta · {isAr ? 'مباشر' : 'Live'}
+            </span>
           </div>
         </div>
 
-        {/* Customers */}
-        <div className="bg-background-light dark:bg-background-dark rounded-2xl sm:rounded-3xl shadow-neu-flat p-5 sm:p-6 md:p-8 transition-transform hover:-translate-y-1 duration-300">
+        {/* Customers — navy accent, avatar chips */}
+        <div className="bg-paper border border-ink/10 border-t-[3px] border-t-navy rounded-[14px] p-6 sm:p-7 shadow-card transition-all duration-200 ease-numu hover:-translate-y-0.5 hover:shadow-md">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-[10px] sm:text-xs font-bold text-text-muted uppercase tracking-wider">{dir === 'rtl' ? 'العملاء الجدد' : 'New Customers'}</span>
-            <div className="flex items-center gap-1 shadow-neu-pressed-sm rounded-full px-2 py-1">
-              <span className="text-[10px] font-bold text-primary">+18%</span>
-            </div>
+            <span className="font-mono text-[10px] font-semibold text-ink-soft/60 uppercase tracking-[0.18em]">
+              {isAr ? 'العملاء الجدد' : 'New Customers'}
+            </span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] font-semibold text-sage">
+              +{isAr ? toArabicDigits(18) : '18'}%
+            </span>
           </div>
-          <p className="text-3xl font-black text-text-main dark:text-white mb-4">{t('hero.stats.users')}</p>
+          <p className="font-display text-3xl font-bold text-navy mb-4 tabular-nums leading-none">
+            {t('hero.stats.users')}
+          </p>
           <div className="flex items-center">
             <div className="flex -space-x-2 rtl:space-x-reverse">
-              {['F', 'M', 'S', 'A', 'N'].map((letter, i) => (
-                <div key={i} className="size-8 rounded-full shadow-neu-flat-sm bg-background-light flex items-center justify-center border-2 border-background-light">
-                  <span className="text-[10px] font-semibold text-text-muted">{letter}</span>
-                </div>
-              ))}
+              {['F', 'M', 'S', 'A', 'N'].map((letter, i) => {
+                const colors = [
+                  'bg-terracotta text-cream',
+                  'bg-saffron text-ink',
+                  'bg-sage text-cream',
+                  'bg-navy text-cream',
+                  'bg-bone text-ink',
+                ];
+                return (
+                  <div
+                    key={i}
+                    className={`size-8 rounded-full flex items-center justify-center border-2 border-paper ${colors[i]}`}
+                  >
+                    <span className="font-display text-[11px] font-bold">
+                      {letter}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-            <span className="text-xs text-text-muted ms-3">+337 {dir === 'rtl' ? 'آخرين' : 'more'}</span>
+            <span className="font-mono text-[10px] text-ink-soft/55 ms-3 uppercase tracking-[0.18em]">
+              +{isAr ? toArabicDigits(337) : '337'} {isAr ? 'آخرين' : 'more'}
+            </span>
           </div>
         </div>
 
-        {/* Conversion */}
-        <div className="bg-background-light dark:bg-background-dark rounded-2xl sm:rounded-3xl shadow-neu-flat p-5 sm:p-6 md:p-8 transition-transform hover:-translate-y-1 duration-300">
-          <span className="text-[10px] sm:text-xs font-bold text-text-muted uppercase tracking-wider">{dir === 'rtl' ? 'معدل التحويل' : 'Conversion Rate'}</span>
+        {/* Conversion — sage accent */}
+        <div className="bg-paper border border-ink/10 border-t-[3px] border-t-sage rounded-[14px] p-6 sm:p-7 shadow-card transition-all duration-200 ease-numu hover:-translate-y-0.5 hover:shadow-md">
+          <span className="font-mono text-[10px] font-semibold text-ink-soft/60 uppercase tracking-[0.18em]">
+            {isAr ? 'معدل التحويل' : 'Conversion Rate'}
+          </span>
           <div className="flex items-end gap-3 mt-3">
-            <p className="text-3xl font-black text-text-main dark:text-white">3.2%</p>
-            <span className="text-xs font-bold text-primary mb-1">+0.4%</span>
+            <p className="font-display text-4xl font-bold text-navy tabular-nums leading-none">
+              {isAr ? toArabicDigits('3.2') : '3.2'}%
+            </p>
+            <span className="font-mono text-[11px] font-semibold text-sage mb-1">
+              +{isAr ? toArabicDigits('0.4') : '0.4'}%
+            </span>
           </div>
-          <div className="mt-4 rounded-full shadow-neu-pressed overflow-hidden h-3">
-            <div className="h-full w-[64%] bg-brand-gradient rounded-full" />
+          <div className="mt-4 bg-bone rounded-[2px] overflow-hidden h-1.5">
+            <div className="h-full w-[64%] bg-sage rounded-[2px]" />
           </div>
-          <p className="text-[10px] text-text-muted mt-2">{dir === 'rtl' ? 'أعلى من المتوسط بـ 1.8%' : '1.8% above industry average'}</p>
+          <p className="font-mono text-[10px] text-ink-soft/55 mt-2 uppercase tracking-[0.18em]">
+            {isAr
+              ? `أعلى من المتوسط بـ ${toArabicDigits('1.8')}٪`
+              : '1.8% above avg'}
+          </p>
         </div>
       </div>
     </div>

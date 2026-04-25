@@ -1,57 +1,88 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SideNav from '../components/SideNav';
 import Hero, { HeroStats } from '../components/Hero';
-import Preview from '../components/Preview';
-import Features from '../components/Features';
-import ImportShowcase from '../components/ImportShowcase';
-import AIShowcase from '../components/AIShowcase';
-import MultiChannelShowcase from '../components/MultiChannelShowcase';
 import CookieConsent from '../components/CookieConsent';
-import PricingSection from '../components/PricingSection';
-import Integrations from '../components/Integrations';
-import Testimonials from '../components/Testimonials';
-import BetaProgram from '../components/BetaProgram';
-import WaitlistSection from '../components/WaitlistSection';
-import CTA from '../components/CTA';
 import Footer from '../components/Footer';
 import { NavItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useLandingConfig } from '../contexts/LandingConfigContext';
 import { useSEO } from '../hooks/useSEO';
 
+/**
+ * Below-the-fold sections are lazy-loaded. Only Hero + Navbar + SideNav
+ * ship in the main chunk — everything else splits out so first paint
+ * lands faster and Lighthouse's initial bundle-size penalty drops.
+ */
+const Preview = lazy(() => import('../components/Preview'));
+const HowItWorks = lazy(() => import('../components/HowItWorks'));
+const Features = lazy(() => import('../components/Features'));
+const CODFirst = lazy(() => import('../components/CODFirst'));
+const TrustNetwork = lazy(() => import('../components/TrustNetwork'));
+const ShowcaseTabs = lazy(() => import('../components/ShowcaseTabs'));
+const Integrations = lazy(() => import('../components/Integrations'));
+const Comparison = lazy(() => import('../components/Comparison'));
+const ObjectionHandler = lazy(() => import('../components/ObjectionHandler'));
+const SavingsStrip = lazy(() => import('../components/SavingsStrip'));
+const PricingSection = lazy(() => import('../components/PricingSection'));
+const Testimonials = lazy(() => import('../components/Testimonials'));
+const BetaProgram = lazy(() => import('../components/BetaProgram'));
+const FAQ = lazy(() => import('../components/FAQ'));
+const CTA = lazy(() => import('../components/CTA'));
+const ContactSection = lazy(() => import('../components/ContactSection'));
+
+// Placeholder while a below-fold chunk is in-flight — reserves ~300px so
+// scroll position doesn't jump when the chunk boots.
+const SectionFallback: React.FC = () => (
+  <div className="min-h-[300px] bg-transparent" aria-hidden="true" />
+);
+
 const Home: React.FC = () => {
   const [activeSectionId, setActiveSectionId] = useState<string>('hero');
   const sectionRefs = useRef<Map<string, HTMLElement>>(new Map());
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { isSectionVisible } = useLandingConfig();
   const location = useLocation();
 
   useSEO({
-    title: 'NUMU — Build Your Online Store in Egypt & MENA',
-    description: 'Launch your e-commerce store with bilingual Arabic-English support, Egyptian payment gateways (Paymob, Fawry), Bosta shipping, and ETA e-invoicing. Start selling online in Egypt, Saudi Arabia, and UAE today.',
+    title:
+      language === 'ar'
+        ? 'نُمُو — افتح متجرك الإلكتروني في مصر والشرق الأوسط · ٠٪ عمولة'
+        : 'numu — Arabic-first e-commerce platform for Egypt & MENA · 0% commission',
+    description:
+      language === 'ar'
+        ? 'افتح متجرك الإلكتروني في ١٥ دقيقة. واجهة عربي، بيموب وفوري وبوسطة وفاتورة إلكترونية كلها جوّا. ٠٪ عمولة على الأوردرات. اشتراك شفّاف من ٩٩ جنيه/شهر. للتجار في مصر والسعودية والإمارات.'
+        : 'Launch your online store in 15 minutes. Arabic-first storefront, Paymob + Fawry + Bosta + ETA e-invoicing built in. Zero commission on orders. Transparent pricing from 99 EGP/mo. Built for merchants in Egypt, Saudi Arabia, UAE.',
     canonical: 'https://numueg.app/',
   });
 
-  const allNavItems: NavItem[] = useMemo(() => [
-    { id: 'hero', label: t('nav.home') },
-    { id: 'preview', label: t('nav.preview') },
-    { id: 'features', label: t('nav.features') },
-    { id: 'import-showcase', label: t('nav.integrations') },
-    { id: 'ai-showcase', label: t('features.ai.title') },
-    { id: 'multichannel-showcase', label: t('features.multichannel.title') },
-    { id: 'integrations', label: t('nav.integrations') },
-    { id: 'testimonials', label: t('nav.testimonials') },
-    { id: 'beta-program', label: t('nav.beta') },
-    { id: 'waitlist', label: t('nav.waitlist') },
-    { id: 'cta', label: t('nav.cta') },
-    { id: 'footer', label: t('nav.footer') },
-  ], [t]);
+  const allNavItems: NavItem[] = useMemo(
+    () => [
+      { id: 'hero', label: t('nav.home') },
+      { id: 'how-it-works', label: t('nav.how') },
+      { id: 'preview', label: t('nav.preview') },
+      { id: 'features', label: t('nav.features') },
+      { id: 'cod-first', label: t('nav.cod') },
+      { id: 'trust-network', label: t('nav.trust_network') },
+      { id: 'showcase', label: t('nav.showcase') },
+      { id: 'integrations', label: t('nav.integrations') },
+      { id: 'comparison', label: t('nav.compare') },
+      { id: 'objections', label: t('nav.objections') },
+      { id: 'pricing', label: t('nav.pricing') },
+      { id: 'testimonials', label: t('nav.testimonials') },
+      { id: 'founders-100', label: t('nav.founders') },
+      { id: 'faq', label: t('nav.faq') },
+      { id: 'cta', label: t('nav.cta') },
+      { id: 'contact', label: t('nav.contact') },
+      { id: 'footer', label: t('nav.footer') },
+    ],
+    [t],
+  );
 
   const navItems = useMemo(
     () => allNavItems.filter((item) => isSectionVisible(item.id)),
-    [allNavItems, isSectionVisible]
+    [allNavItems, isSectionVisible],
   );
 
   useEffect(() => {
@@ -77,7 +108,7 @@ const Home: React.FC = () => {
         root: null,
         rootMargin: '0px',
         threshold: 0.3,
-      }
+      },
     );
 
     const currentRefs = sectionRefs.current;
@@ -103,7 +134,7 @@ const Home: React.FC = () => {
       <SideNav activeId={activeSectionId} items={navItems} />
 
       <main className="w-full scroll-smooth">
-        {/* Hero - dark background, dashboard overlaps into light */}
+        {/* Hero — stays in main chunk for fastest first paint */}
         {isSectionVisible('hero') && (
           <section id="hero">
             <Hero />
@@ -112,87 +143,153 @@ const Home: React.FC = () => {
 
         {/* Stats bridge — sits in the light section right after the hero */}
         {isSectionVisible('hero') && (
-          <div className="bg-background-light relative z-10 -mt-24 sm:-mt-32 lg:-mt-40">
-            <div className="max-w-6xl mx-auto px-4">
+          <div className="bg-background-light relative z-10 -mt-14 sm:-mt-20 lg:-mt-24">
+            <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-10">
               <HeroStats />
             </div>
           </div>
         )}
 
-        {/* Preview - neumorphic light */}
-        {isSectionVisible('preview') && (
-          <section id="preview" className="py-16 sm:py-24 bg-background-alt">
-            <Preview />
-          </section>
-        )}
+        <Suspense fallback={<SectionFallback />}>
+          {/* How It Works — clarity first, before features */}
+          {isSectionVisible('how-it-works') && (
+            <section
+              id="how-it-works"
+              className="py-12 sm:py-16 bg-background-alt"
+            >
+              <HowItWorks />
+            </section>
+          )}
 
-        {/* Features */}
-        {isSectionVisible('features') && (
-          <section id="features" className="py-16 sm:py-24 bg-background-light">
-            <Features />
-          </section>
-        )}
+          {/* Preview — bento dashboard */}
+          {isSectionVisible('preview') && (
+            <section id="preview" className="py-12 sm:py-16 bg-background-light">
+              <Preview />
+            </section>
+          )}
 
-        {/* Import showcase */}
-        {isSectionVisible('import-showcase') && (
-          <section id="import-showcase" className="py-16 sm:py-24 bg-background-alt">
-            <ImportShowcase />
-          </section>
-        )}
+          {/* Features — 6 full-bleed brand-color cards */}
+          {isSectionVisible('features') && (
+            <section
+              id="features"
+              className="py-12 sm:py-16 bg-background-alt"
+            >
+              <Features />
+            </section>
+          )}
 
-        {/* AI showcase */}
-        {isSectionVisible('ai-showcase') && (
-          <section id="ai-showcase" className="py-16 sm:py-24 bg-background-light">
-            <AIShowcase />
-          </section>
-        )}
+          {/* COD-first — context for Trust Network. Frames COD as the
+              default order type (95% of EG orders) instead of a plugin. */}
+          {isSectionVisible('cod-first') && (
+            <section
+              id="cod-first"
+              className="py-12 sm:py-16 bg-background-light"
+              aria-label="Cash on Delivery is numu's default"
+            >
+              <CODFirst />
+            </section>
+          )}
 
-        {/* Multi-channel */}
-        {isSectionVisible('multichannel-showcase') && (
-          <section id="multichannel-showcase" className="py-16 sm:py-24 bg-background-alt">
-            <MultiChannelShowcase />
-          </section>
-        )}
+          {/* Trust Network — COD fraud shield (the moat) */}
+          {isSectionVisible('trust-network') && (
+            <section
+              id="trust-network"
+              className="py-12 sm:py-16 bg-background-alt"
+              aria-label="numu Trust Network"
+            >
+              <TrustNetwork />
+            </section>
+          )}
 
-        {/* Integrations */}
-        {isSectionVisible('integrations') && (
-          <section id="integrations" className="py-16 sm:py-24 bg-background-light">
-            <Integrations />
-          </section>
-        )}
+          {/* Showcase tabs — merges Import + AI + MultiChannel */}
+          {isSectionVisible('showcase') && (
+            <section
+              id="showcase"
+              className="py-12 sm:py-16 bg-background-alt"
+            >
+              <ShowcaseTabs />
+            </section>
+          )}
 
-        {/* Pricing */}
-        <section id="pricing" className="py-16 sm:py-24 bg-background-alt">
-          <PricingSection />
-        </section>
+          {/* Integrations */}
+          {isSectionVisible('integrations') && (
+            <section
+              id="integrations"
+              className="py-12 sm:py-16 bg-background-light"
+            >
+              <Integrations />
+            </section>
+          )}
 
-        {/* Testimonials */}
-        {isSectionVisible('testimonials') && (
-          <section id="testimonials" className="py-16 sm:py-24 bg-background-light">
-            <Testimonials />
+          {/* Comparison — "No Tricks" */}
+          <section
+            id="comparison"
+            className="py-12 sm:py-16 bg-background-alt"
+          >
+            <Comparison />
           </section>
-        )}
 
-        {/* Beta Program */}
-        {isSectionVisible('beta-program') && (
-          <section id="beta-program" className="py-16 sm:py-24 bg-background-light">
-            <BetaProgram />
-          </section>
-        )}
+          {/* Objection handler — before Pricing, disarm objections */}
+          {isSectionVisible('objections') && (
+            <section
+              id="objections"
+              className="py-12 sm:py-16 bg-background-light"
+            >
+              <ObjectionHandler />
+            </section>
+          )}
 
-        {/* Waitlist */}
-        {isSectionVisible('waitlist') && (
-          <section id="waitlist" className="py-16 sm:py-24 bg-background-alt">
-            <WaitlistSection />
+          {/* Savings strip — ROI math right above price. Shares bg with
+              Objections above + Pricing below so the paper panel inside
+              reads as an elevated card, not a bg swap. */}
+          <section id="savings" className="pb-8 sm:pb-10 bg-background-light">
+            <SavingsStrip />
           </section>
-        )}
 
-        {/* CTA */}
-        {isSectionVisible('cta') && (
-          <section id="cta" className="py-16 sm:py-24 bg-background-light">
-            <CTA />
+          {/* Pricing */}
+          <section id="pricing" className="py-12 sm:py-16 bg-background-light">
+            <PricingSection />
           </section>
-        )}
+
+          {/* Testimonials */}
+          {isSectionVisible('testimonials') && (
+            <section
+              id="testimonials"
+              className="py-12 sm:py-16 bg-background-alt"
+            >
+              <Testimonials />
+            </section>
+          )}
+
+          {/* Founder's 100 — repurposed BetaProgram */}
+          {isSectionVisible('founders-100') && (
+            <section
+              id="founders-100"
+              className="py-12 sm:py-16 bg-background-light"
+            >
+              <BetaProgram />
+            </section>
+          )}
+
+          {/* FAQ */}
+          {isSectionVisible('faq') && (
+            <section id="faq" className="py-12 sm:py-16 bg-background-alt">
+              <FAQ />
+            </section>
+          )}
+
+          {/* Closing CTA */}
+          {isSectionVisible('cta') && (
+            <section id="cta" className="py-12 sm:py-16 bg-background-light">
+              <CTA />
+            </section>
+          )}
+
+          {/* Contact — 3 channels (WhatsApp / Email / Sales) */}
+          <section id="contact" className="py-12 sm:py-16 bg-background-alt">
+            <ContactSection />
+          </section>
+        </Suspense>
 
         {/* Footer */}
         {isSectionVisible('footer') && (
