@@ -82,12 +82,17 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
+<<<<<<< Updated upstream
         {/* Center: Links (Desktop) */}
+=======
+        {/* Center links — Free tools is a real page, not a scroll anchor,
+            so it routes via <Link>. Testimonials lives in footer + Home
+            section only. */}
+>>>>>>> Stashed changes
         <div className="hidden lg:flex items-center gap-8">
           {[
             { id: 'features', label: t('nav.features') },
             { id: 'integrations', label: t('nav.integrations') },
-            { id: 'testimonials', label: t('nav.testimonials') },
             { id: 'cta', label: t('nav.cta') },
           ].map((item) => (
             <a
@@ -101,12 +106,19 @@ const Navbar: React.FC = () => {
               {item.label}
             </a>
           ))}
+<<<<<<< Updated upstream
           <Link
             to="/contact"
             className={`font-medium text-sm transition-colors ${
               scrolled ? 'text-text-muted hover:text-primary' : 'text-white/60 hover:text-white'
             }`}
           >
+=======
+          <Link to="/tools" className={navLinkBase}>
+            {t('footer.tools')}
+          </Link>
+          <Link to="/contact" className={navLinkBase}>
+>>>>>>> Stashed changes
             {t('footer.contact')}
           </Link>
         </div>
@@ -177,6 +189,7 @@ const Navbar: React.FC = () => {
             className="fixed inset-0 z-[-1] pointer-events-auto lg:hidden"
             onClick={() => setIsMenuOpen(false)}
           />
+<<<<<<< Updated upstream
           <div className="absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 p-3 sm:p-4 bg-background-light/95 backdrop-blur-xl dark:bg-background-dark/95 rounded-2xl shadow-neu-floating border border-white/20 pointer-events-auto lg:hidden flex flex-col gap-1 animate-slide-down">
             <a onClick={(e) => handleNavClick(e, 'features')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#features">{t('nav.features')}</a>
             <a onClick={(e) => handleNavClick(e, 'integrations')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#integrations">{t('nav.integrations')}</a>
@@ -184,6 +197,45 @@ const Navbar: React.FC = () => {
             <a onClick={(e) => handleNavClick(e, 'beta-program')} className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors cursor-pointer" href="#beta-program">{language === 'ar' ? 'برنامج البيتا' : 'Beta Program'}</a>
             <a onClick={(e) => handleNavClick(e, 'waitlist')} className="text-primary font-bold text-base sm:text-lg p-3 hover:bg-primary/5 rounded-xl transition-colors cursor-pointer" href="#waitlist">{language === 'ar' ? 'انضم للقائمة' : 'Join Waitlist'}</a>
             <Link to="/contact" className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsMenuOpen(false)}>
+=======
+          <div className="absolute top-full left-3 right-3 sm:left-4 sm:right-4 mt-2 p-3 sm:p-4 bg-cream border border-ink/10 shadow-card rounded-[10px] pointer-events-auto lg:hidden flex flex-col gap-0.5 animate-fade-in-up">
+            {[
+              { id: 'features', label: t('nav.features') },
+              { id: 'integrations', label: t('nav.integrations') },
+              { id: 'beta-program', label: language === 'ar' ? 'برنامج البيتا' : 'Beta Program' },
+            ].map((item) => (
+              <a
+                key={item.id}
+                onClick={(e) => handleNavClick(e, item.id)}
+                href={`#${item.id}`}
+                className="text-ink font-medium text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors cursor-pointer"
+              >
+                {item.label}
+              </a>
+            ))}
+            <Link
+              to="/tools"
+              className="text-ink font-medium text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t('footer.tools')}
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setIsMenuOpen(false);
+                openWaitlist();
+              }}
+              className="text-navy font-semibold text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors cursor-pointer text-start"
+            >
+              {language === 'ar' ? 'انضم للقائمة' : 'Join Waitlist'}
+            </button>
+            <Link
+              to="/contact"
+              className="text-ink font-medium text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+>>>>>>> Stashed changes
               {t('footer.contact')}
             </Link>
             <Link to="/login" className="text-text-main font-medium text-base sm:text-lg p-3 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsMenuOpen(false)}>
