@@ -1,58 +1,193 @@
-<div align="center">
-  # 🚀 NUMU Landing Page & Auth Gateway
-  
-  *The public marketing website and top-of-funnel authentication gateway for NUMU — "Shopify for Egypt".*
-</div>
+# NUMU Landing Page & Auth Gateway
 
-## 📖 Overview
+The public marketing site at `numueg.app` and the **authentication gateway** for the entire NUMU ecosystem. Visitors land here, learn what NUMU does, and sign up; on success they're handed off to the merchant dashboard.
 
-This is the primary marketing site for **NUMU**, a multi-tenant SaaS e-commerce platform purpose-built for the Egyptian and MENA market. It showcases platform features, converts visitors into merchants, and serves as the authentication gateway (Login & Sign Up) for the entire NUMU ecosystem. Upon successful authentication, users are seamlessly redirected to their merchant dashboard.
+NUMU is a multi-tenant SaaS e-commerce platform purpose-built for the Egyptian and MENA market — *"Shopify for Egypt"*.
 
-## ✨ Key Features
+---
 
-- **Neumorphic Design System:** A custom, soft UI shadow system (`neu-flat`, `neu-pressed`, `neu-floating`) providing a modern, tactile feel.
-- **Interactive Physics Animations:** Uses **Matter.js** for an engaging, split-screen "Ballpit" animation during the authentication flow.
-- **Fully Bilingual (i18n):** Native support for both English and Egyptian Arabic (Masri) to cater directly to our local market.
-- **Seamless Authentication:** Secure, cookie-based authentication utilizing CSRF double-submit patterns via the core `NUMU-api`.
-- **Dynamic Scroll:** Full-page snap-scrolling on desktop & natural fluid scrolling on mobile devices.
-- **API-Configurable Sections:** Content visibility (Hero, Features, MultiChannelShowcase, Integrations, Testimonials) is controlled dynamically via backend configuration (`numu-admin`).
+## Table of contents
 
-## 🛠 Tech Stack
+- [System context](#system-context)
+- [Tech stack](#tech-stack)
+- [Page sections](#page-sections)
+- [Auth handoff](#auth-handoff)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Environment variables](#environment-variables)
+- [Design system](#design-system)
+- [SEO & schema](#seo--schema)
 
-- **Framework:** React 19
-- **Language:** TypeScript 5.8 
-- **Build Tool:** Vite 6
-- **Routing:** React Router v7
-- **Styling:** Tailwind CSS (CDN-based structure)
-- **Physics/Animation:** Matter.js
+---
 
-## 🚀 Getting Started Locally
+## System context
 
-### Prerequisites
-- Node.js (v18+)
-- The primary `NUMU-api` backend must be running locally to handle auth requests.
+```mermaid
+flowchart LR
+  V([Visitor]) -- numueg.app --> LP[numu-landing-page · this repo]
+  LP -- "GET /public/landing-config" --> API[NUMU-api]
+  LP -- "POST /auth/register · /auth/login" --> API
+  API -- Set-Cookie httpOnly --> LP
+  LP -- redirect on success --> MH[numo-merchant-hub]
+  MH -- "GET /auth/me" --> API
+```
 
-### Installation & Setup
+This site never persists any data of its own. Section visibility is fetched at runtime from `NUMU-api` (controlled from `numu-admin`) and auth is fully delegated to the backend.
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-2. **Environment Variables:**
-   Create a `.env` file (if not using the global workspace launcher) with the following standard configurations:
-   ```env
-   VITE_API_URL=http://localhost:8000/api/v1
-   VITE_DASHBOARD_URL=http://localhost:8080
-   ```
-3. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
-   *The app will automatically run on **port 3090**: [http://localhost:3090](http://localhost:3090).*
+---
 
-## 🏗 Platform Architecture Context
+## Tech stack
 
-This repository is one of 5 independent projects within the broader NUMU monorepo:
-- Communicates directly with **`NUMU-api`** (Python/FastAPI) to validate credentials and attach `httpOnly` session cookies.
-- Redirects successfully authenticated requests to **`numo-merchant-hub`** (React SPA on port 8080).
+| Layer | Choice |
+|-------|--------|
+| Framework | React 19 |
+| Language | TypeScript 5.8 |
+| Build | Vite 6 |
+| Routing | react-router-dom 7 |
+| Styling | Tailwind CSS (CDN) — neumorphic system |
+| Animation | Matter.js (physics-based "Ballpit" on auth pages) |
+| Fonts | Reem Kufi · Tajawal · Space Grotesk · JetBrains Mono |
+| Package manager | npm |
 
+---
+
+## Page sections
+
+The home page is a full-page snap-scroll on desktop and natural scroll on mobile. Each section renders only if `landing-config` enables it.
+
+```mermaid
+flowchart TB
+  H[Hero] --> P[Preview · interactive chart]
+  P --> F[Features · 7 cards]
+  F --> IS[ImportShowcase · Instagram import]
+  IS --> AI[AIShowcase · AI descriptions]
+  AI --> MC[MultiChannelShowcase]
+  MC --> IN[Integrations · orbital diagram]
+  IN --> T[Testimonials]
+  T --> CTA[Call to action]
+  CTA --> FT[Footer]
+```
+
+---
+
+## Auth handoff
+
+```mermaid
+sequenceDiagram
+    actor V as Visitor
+    participant LP as Landing Page
+    participant API as NUMU-api
+    participant MH as Merchant Hub
+
+    V->>LP: open /signup
+    LP->>API: GET /auth/csrf-token
+    API-->>LP: csrfToken (in JS memory)
+
+    V->>LP: submit form
+    LP->>API: POST /auth/register (X-CSRF-Token)
+    API-->>LP: Set-Cookie: access · refresh (httpOnly)
+    LP->>LP: window.location = VITE_DASHBOARD_URL
+
+    V->>MH: arrives at dashboard (cookies sent)
+    MH->>API: GET /auth/me
+    API-->>MH: user profile
+    MH-->>V: rendered dashboard
+```
+
+---
+
+## Project structure
+
+```text
+numu-landing-page (1)/
+├── public/                   # NUMU brand kit assets
+│   ├── numu-mark-cream.webp  # Primary mark (cream paper bg)
+│   ├── numu-mark-navy.webp   # Inverted mark
+│   ├── favicon-cream*.png    # Cream-bg favicon set
+│   ├── apple-touch-icon*.png
+│   ├── llms.txt              # AI crawler hints
+│   ├── robots.txt
+│   └── sitemap.xml
+├── src/
+│   ├── components/           # Section components + UI primitives
+│   ├── contexts/             # LanguageContext (en + Egyptian Arabic)
+│   ├── hooks/                # useSEO · useLandingConfig · ...
+│   ├── pages/                # Home · Login · SignUp (lazy-loaded)
+│   ├── styles/
+│   └── App.tsx
+├── scripts/
+│   └── make-favicons.mjs     # Build script that regenerates the favicon set
+├── index.html                # Inline critical CSS · OG / Twitter / JSON-LD
+└── vite.config.ts
+```
+
+---
+
+## Getting started
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Configure environment
+cp .env.example .env
+
+# 3. Start the dev server (port 3090)
+npm run dev
+
+# 4. Build for production
+npm run build
+npm run preview
+```
+
+> The `NUMU-api` backend must be running locally (port 8000) for auth requests to resolve.
+
+---
+
+## Environment variables
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | NUMU-api base URL (e.g. `http://localhost:8000/api/v1`) |
+| `VITE_DASHBOARD_URL` | Merchant hub URL — destination after successful auth |
+
+---
+
+## Design system
+
+The landing page ships a **custom neumorphic shadow system** in Tailwind:
+
+| Class | Use |
+|-------|-----|
+| `neu-flat` | Surface card at rest |
+| `neu-pressed` | Pressed / active state |
+| `neu-floating` | Elevated action / CTA |
+
+Color foundation:
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| `background-light` | `#F5EFE6` | Cream paper ground |
+| `text-main` | `#0F1624` | Navy ink |
+| `accent` | brand saffron | Highlights & CTA |
+
+Type stack: Reem Kufi (display, both scripts) · Tajawal (Arabic body) · Space Grotesk (Latin body) · JetBrains Mono (labels).
+
+---
+
+## SEO & schema
+
+`index.html` ships three JSON-LD blocks at the document root:
+
+```mermaid
+flowchart LR
+  HTML[index.html] --> OG[Open Graph + Twitter Card]
+  HTML --> Org[JSON-LD · Organization]
+  HTML --> SA[JSON-LD · SoftwareApplication]
+  HTML --> WS[JSON-LD · WebSite]
+  HTML --> FAQ[JSON-LD · FAQPage<br/>emitted by components/FAQ.tsx]
+```
+
+The FAQ schema is generated from the same items array that renders the visible copy, so the schema and on-page text never drift.
+
+Per-route overrides come from the `useSEO()` hook — each lazy-loaded page can replace `<title>`, description, canonical URL, and OG tags after JS boots.
