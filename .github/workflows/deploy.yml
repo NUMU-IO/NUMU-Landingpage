@@ -2,17 +2,16 @@ name: Deploy Landing Page
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, stage, prod]
 
 concurrency:
-  group: deploy-landing
+  group: deploy-landing-${{ github.ref_name }}
   cancel-in-progress: false
 
 env:
   NODE_VERSION: "20"
   DEPLOY_HOST: 188.166.156.151
   DEPLOY_USER: root
-  DEPLOY_PATH: /opt/numu/landing-page
 
 jobs:
   build-and-deploy:
@@ -30,12 +29,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Map the source branch → per-env deploy path + outbound URLs.
+      # Each env gets its own /opt/numu/landing-page{,-test,-stage}
+      # directory served by nginx; the nginx test/staging server blocks
+      # root from those dirs (see NUMU-api/docker/nginx/nginx.conf).
+      - name: Resolve deploy target for ${{ github.ref_name }}
+        id: target
+        run: |
+          case "${{ github.ref_name }}" in
+            dev)
+              echo "remote_path=/opt/numu/landing-page-test/" >> "$GITHUB_OUTPUT"
+              echo "dashboard_url=https://merchant-test.numueg.app" >> "$GITHUB_OUTPUT"
+              ;;
+            stage)
+              echo "remote_path=/opt/numu/landing-page-stage/" >> "$GITHUB_OUTPUT"
+              echo "dashboard_url=https://merchant-staging.numueg.app" >> "$GITHUB_OUTPUT"
+              ;;
+            prod)
+              echo "remote_path=/opt/numu/landing-page/" >> "$GITHUB_OUTPUT"
+              echo "dashboard_url=https://merchant.numueg.app" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::Unsupported branch ${{ github.ref_name }}"
+              exit 1
+              ;;
+          esac
+
       # Chrome is preinstalled on ubuntu-latest runners at /usr/bin/google-chrome.
       # The prerender script picks it up via the CHROME_PATH env var.
       - name: Build + prerender (SSG)
         env:
           CHROME_PATH: /usr/bin/google-chrome
-          VITE_DASHBOARD_URL: https://merchant.numueg.app
+          VITE_DASHBOARD_URL: ${{ steps.target.outputs.dashboard_url }}
         run: npm run build:ssg
 
       - name: Verify prerender produced per-route HTML
@@ -60,7 +85,7 @@ jobs:
         with:
           switches: -avz --delete
           path: dist/
-          remote_path: ${{ env.DEPLOY_PATH }}/
+          remote_path: ${{ steps.target.outputs.remote_path }}
           remote_host: ${{ env.DEPLOY_HOST }}
           remote_user: ${{ env.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
@@ -73,4 +98,4 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             docker exec numu-nginx-staging nginx -s reload
-            echo "Landing page deployed successfully"
+            echo "Landing page deployed (branch=${{ github.ref_name }}) → ${{ steps.target.outputs.remote_path }}"
