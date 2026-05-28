@@ -115,17 +115,60 @@ export const translations: Record<string, string> = {
   'contact.message_placeholder': 'How can we help you?',
   'contact.send': 'Send Message',
   'contact.success': 'Thank you! Your message has been sent. We\'ll get back to you soon.',
+  'contact.error': 'Something went wrong. Please try again or email us directly.',
   'contact.or_reach': 'Or reach us directly',
   'contact.email_us': 'Email us',
   'contact.follow': 'Follow us',
+  'contact.phone': 'Phone Number',
+  'contact.phone_placeholder': '+20 1XX XXX XXXX',
+  'contact.country': 'Country',
+  'contact.country_placeholder': 'e.g. Egypt',
+  'contact.city': 'City',
+  'contact.city_placeholder': 'e.g. Cairo',
+
+  // Refund Policy
+  'refund.badge': 'Shop with Confidence',
+  'refund.title': 'Refund Policy',
+  'refund.subtitle': 'Your satisfaction is our priority. We make returns simple and hassle-free.',
+  'refund.card1_title': '14-Day Returns',
+  'refund.card1_desc': 'Return any unused item in its original condition within 14 days of delivery for a full refund.',
+  'refund.card2_title': 'Quality Guarantee',
+  'refund.card2_desc': 'Received a defective or damaged product? We\'ll replace it or issue a full refund — no questions asked.',
+  'refund.card3_title': 'Fast Refunds',
+  'refund.card3_desc': 'Approved refunds are processed within 5–7 business days. We keep you updated every step of the way.',
+  'refund.view_full': 'View Full Policy',
+  'refund.section1_title': 'Return Eligibility',
+  'refund.section1_text': 'You can return any unused product in its original condition and packaging within 14 days of delivery. Items must have all tags attached and be free from signs of wear or use.',
+  'refund.section2_title': 'Quality Guarantee',
+  'refund.section2_text': 'If you receive a defective, damaged, or incorrect item, we will replace it or issue a full refund at no extra cost. Simply contact us within 48 hours of delivery with photos of the issue.',
+  'refund.section3_title': 'Refund Processing Time',
+  'refund.section3_text': 'Once your return is received and inspected, your refund will be processed within 5–7 business days. You will receive an email notification when the refund has been issued to your original payment method.',
+  'refund.section4_title': 'Return Shipping',
+  'refund.section4_text': 'For eligible returns, we arrange free pickup from your address. A courier will contact you to schedule a convenient pickup time. For defective items, return shipping is always free.',
+  'refund.section5_title': 'Non-Returnable Items',
+  'refund.section5_text': 'Personal care products, intimate accessories, items with removed tags or barcodes, and products that have been worn or washed cannot be returned. Sale items marked as final sale are also excluded.',
+  'refund.section6_title': 'Need Help?',
+  'refund.section6_text': 'Our support team is here to help with any return or refund questions. Reach out via email at hello@numueg.app or through our social media channels. We typically respond within 24 hours.',
 
   // Navbar
   'nav.home': 'Home',
   'nav.preview': 'Preview',
   'nav.product': 'Product',
   'nav.features': 'Features',
+  'nav.how': 'How it works',
   'nav.integrations': 'Integrations',
+  'nav.cod': 'COD',
+  'nav.trust_network': 'Trust Network',
+  'nav.showcase': 'Tools',
+  'nav.compare': 'Compare',
+  'nav.objections': 'Honest answers',
+  'nav.pricing': 'Pricing',
+  'nav.faq': 'FAQ',
+  'nav.founders': "Founder's 100",
+  'nav.contact': 'Contact',
   'nav.testimonials': 'Stories',
+  'nav.beta': 'Beta Program',
+  'nav.waitlist': 'Waitlist',
   'nav.cta': 'Start Now',
   'nav.footer': 'Connect',
   'nav.start_free': 'Start Free',
@@ -136,13 +179,28 @@ export const translations: Record<string, string> = {
   'hero.title_line2': 'E-Commerce',
   'hero.title_line3': 'in Egypt & MENA',
   'hero.subtitle': 'The only platform with built-in Paymob, Fawry, and Bosta integrations. Native Arabic support, ETA e-invoicing, and advanced COD workflows designed for local growth.',
-  'hero.cta_primary': 'Start Selling Today',
-  'hero.cta_secondary': 'Watch Demo',
+  'hero.cta_primary': 'Join the Beta',
+  'hero.cta_secondary': 'Try a Demo',
+  'demo.modal.title': 'Open your demo store in 30 seconds',
+  'demo.modal.subtitle': 'Free, no credit card. 7-day demo with sample products and orders.',
+  'demo.modal.email_placeholder': 'Your email',
+  'demo.modal.submit': 'Launch demo store',
+  'demo.modal.loading': 'Setting up your demo store...',
+  'demo.modal.error.rate_limit': 'Too many demos. Try again in an hour.',
+  'demo.modal.error.disposable': 'Please use a real email address.',
+  'demo.modal.error.turnstile': 'Bot verification failed. Please try again.',
+  'demo.modal.error.generic': 'Something went wrong. Please try again.',
   'hero.badge_eta': 'Supports EGP, SAR, AED',
   'hero.badge_whatsapp': 'Native Arabic Storefronts',
   'hero.badge_clean': 'Cash on Delivery Optimized',
   'hero.stats.sales': 'Total Sales',
   'hero.stats.users': 'New Users',
+  // Hero trust row — ETA is the #1 thing no foreign SaaS offers, so it
+  // leads; local payment + carrier wordmarks follow as typographic rails.
+  'hero.trust_eyebrow': 'Trusted stack',
+  'hero.trust_eta': 'ETA e-invoicing · government-certified',
+  'hero.trust_pay': 'Pay',
+  'hero.trust_ship': 'Ship',
 
   // Features
   'features.title': 'Built for the Way MENA Trades',
@@ -185,10 +243,16 @@ export const translations: Record<string, string> = {
   // Footer
   'footer.products': 'Products',
   'footer.integrations': 'Integrations',
+  'footer.apps': 'App Store',
+  'footer.themes': 'Themes',
+  'footer.developers': 'Developers',
+  'footer.tools': 'Free tools',
+  'footer.learn': 'Academy',
   'footer.pricing': 'Pricing',
   'footer.privacy': 'Privacy',
   'footer.terms': 'Terms',
   'footer.contact': 'Contact',
+  'footer.refund': 'Refund Policy',
   'footer.copyright': '© 2026 NUMU Inc. All rights reserved.',
 
   // Preview
@@ -349,17 +413,60 @@ export const translationsAr: Record<string, string> = {
   'contact.message_placeholder': 'إزاي نقدر نساعدك؟',
   'contact.send': 'ابعت الرسالة',
   'contact.success': 'شكراً! رسالتك اتبعتت. هنرد عليك في أقرب وقت.',
+  'contact.error': 'حصل مشكلة. حاول تاني أو ابعتلنا إيميل مباشرة.',
   'contact.or_reach': 'أو تواصل معانا مباشرة',
   'contact.email_us': 'ابعتلنا إيميل',
   'contact.follow': 'تابعنا',
+  'contact.phone': 'رقم الموبايل',
+  'contact.phone_placeholder': '+20 1XX XXX XXXX',
+  'contact.country': 'البلد',
+  'contact.country_placeholder': 'مثلاً مصر',
+  'contact.city': 'المدينة',
+  'contact.city_placeholder': 'مثلاً القاهرة',
+
+  // Refund Policy
+  'refund.badge': 'اشتري وانت مطمن',
+  'refund.title': 'سياسة الاسترجاع',
+  'refund.subtitle': 'رضاك أولويتنا. بنسهّل عملية الاسترجاع لأقصى درجة.',
+  'refund.card1_title': 'استرجاع خلال 14 يوم',
+  'refund.card1_desc': 'ارجع أي منتج مستخدمش وبحالته الأصلية خلال 14 يوم من الاستلام واسترد فلوسك كاملة.',
+  'refund.card2_title': 'ضمان الجودة',
+  'refund.card2_desc': 'وصلك منتج معيب أو متضرر؟ هنبدّله أو نرجعلك فلوسك كاملة — من غير أي أسئلة.',
+  'refund.card3_title': 'استرداد سريع',
+  'refund.card3_desc': 'المبالغ المسترجعة بتتحول خلال 5-7 أيام عمل. هنفضل نبلّغك بكل خطوة.',
+  'refund.view_full': 'عرض السياسة الكاملة',
+  'refund.section1_title': 'شروط الاسترجاع',
+  'refund.section1_text': 'تقدر ترجع أي منتج مستخدمش وبحالته الأصلية وتغليفه خلال 14 يوم من الاستلام. لازم تكون كل التاجز موجودة والمنتج مفيهوش أي علامات استخدام.',
+  'refund.section2_title': 'ضمان الجودة',
+  'refund.section2_text': 'لو وصلك منتج معيب أو متضرر أو غلط، هنبدّله أو نرجعلك فلوسك كاملة من غير أي تكلفة إضافية. كلمنا خلال 48 ساعة من الاستلام وابعتلنا صور المشكلة.',
+  'refund.section3_title': 'مدة معالجة الاسترداد',
+  'refund.section3_text': 'بعد ما نستلم المرتجع ونفحصه، هنعالج الاسترداد خلال 5-7 أيام عمل. هتوصلك رسالة على الإيميل لما المبلغ يترجع لطريقة الدفع الأصلية.',
+  'refund.section4_title': 'شحن المرتجعات',
+  'refund.section4_text': 'للمرتجعات المؤهلة، بنرتب استلام مجاني من عنوانك. مندوب الشحن هيتواصل معاك لتحديد ميعاد مناسب. للمنتجات المعيبة، شحن المرتجع دايماً مجاني.',
+  'refund.section5_title': 'منتجات مش قابلة للاسترجاع',
+  'refund.section5_text': 'منتجات العناية الشخصية والإكسسوارات الحميمية والمنتجات اللي اتشال منها التاجز أو الباركود والمنتجات اللي اتلبست أو اتغسلت مش بنقبل رجوعها. كمان منتجات التخفيضات المحددة كبيع نهائي مش بترجع.',
+  'refund.section6_title': 'محتاج مساعدة؟',
+  'refund.section6_text': 'فريق الدعم بتاعنا موجود يساعدك في أي سؤال عن الاسترجاع أو الاسترداد. كلمنا على الإيميل hello@numueg.app أو من خلال صفحاتنا على السوشيال ميديا. بنرد عادةً خلال 24 ساعة.',
 
   // Navbar
   'nav.home': 'الرئيسية',
   'nav.preview': 'نظرة سريعة',
   'nav.product': 'المنتج',
   'nav.features': 'المميزات',
+  'nav.how': 'إزاي بتشتغل',
   'nav.integrations': 'التكاملات',
+  'nav.cod': 'كاش',
+  'nav.trust_network': 'شبكة الثقة',
+  'nav.showcase': 'الأدوات',
+  'nav.compare': 'قارن',
+  'nav.objections': 'ردود صريحة',
+  'nav.pricing': 'الباقات',
+  'nav.faq': 'أسئلة شائعة',
+  'nav.founders': 'التاجر المؤسس',
+  'nav.contact': 'كلمنا',
   'nav.testimonials': 'قصص نجاح',
+  'nav.beta': 'برنامج البيتا',
+  'nav.waitlist': 'قائمة الانتظار',
   'nav.cta': 'ابدأ دلوقتي',
   'nav.footer': 'كلمونا',
   'nav.start_free': 'جرب ببلاش',
@@ -371,13 +478,27 @@ export const translationsAr: Record<string, string> = {
   'hero.title_line3': 'في مصر والشرق',
   'hero.title_line4': 'الأوسط',
   'hero.subtitle': 'المنصة الوحيدة اللي فيها كل حاجة: بيموب، فوري، وبوسطة. عربي 100%، فاتورة إلكترونية، وشغل الدفع عند الاستلام اللي ينجزك.',
-  'hero.cta_primary': 'ابدأ متجرك دلوقتي',
-  'hero.cta_secondary': 'شوف الفيديو',
+  'hero.cta_primary': 'انضم للبيتا',
+  'hero.cta_secondary': 'جرّب نسخة تجريبية',
+  'demo.modal.title': 'افتح متجرك التجريبي في ٣٠ ثانية',
+  'demo.modal.subtitle': 'مجاناً، بدون بطاقة. تجربة ٧ أيام مع منتجات وأوردرات تجريبية.',
+  'demo.modal.email_placeholder': 'بريدك الإلكتروني',
+  'demo.modal.submit': 'افتح المتجر التجريبي',
+  'demo.modal.loading': 'بنجهز متجرك...',
+  'demo.modal.error.rate_limit': 'حاول تاني بعد ساعة.',
+  'demo.modal.error.disposable': 'استخدم بريد حقيقي.',
+  'demo.modal.error.turnstile': 'فشل التحقق. حاول تاني.',
+  'demo.modal.error.generic': 'حصل مشكلة. حاول تاني.',
   'hero.badge_eta': 'بيدعم الجنيه، الريال، والدرهم',
   'hero.badge_whatsapp': 'واجهة عربي مظبوطة',
   'hero.badge_clean': 'متظبط للدفع عند الاستلام',
   'hero.stats.sales': 'إجمالي المبيعات',
   'hero.stats.users': 'تجار جدد',
+  // Hero trust row — Arabic
+  'hero.trust_eyebrow': 'أدواتك المعتمدة',
+  'hero.trust_eta': 'فاتورة إلكترونية · معتمدة من مصلحة الضرايب',
+  'hero.trust_pay': 'دفع',
+  'hero.trust_ship': 'شحن',
 
   // Features
   'features.title': 'متفصل عشان التجارة في منطقتنا',
@@ -420,10 +541,16 @@ export const translationsAr: Record<string, string> = {
   // Footer
   'footer.products': 'المنتجات',
   'footer.integrations': 'التكاملات',
+  'footer.apps': 'متجر التطبيقات',
+  'footer.themes': 'القوالب',
+  'footer.developers': 'المطورين',
+  'footer.tools': 'أدوات مجانية',
+  'footer.learn': 'الأكاديمية',
   'footer.pricing': 'الأسعار',
   'footer.privacy': 'الخصوصية',
   'footer.terms': 'الشروط',
   'footer.contact': 'كلمونا',
+  'footer.refund': 'سياسة الاسترجاع',
   'footer.copyright': '© 2026 شركة نمو. جميع الحقوق محفوظة.',
 
   // Preview
@@ -480,8 +607,23 @@ export const translationsAr: Record<string, string> = {
   'features.multichannel.desc': 'بيع من موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة.',
 };
 
+// Pick the initial language from the visitor's browser preference. AR is
+// the canonical default for Numu's Egyptian audience; we only fall to EN
+// when the browser explicitly signals a non-Arabic locale (Meta app-review
+// crawlers, MENA visitors with English browsers, etc.). Runs once on mount
+// — the toggle button still overrides the value at any time.
+const getInitialLanguage = (): Language => {
+  if (typeof navigator === 'undefined') return 'ar';
+  const langs = [navigator.language, ...(navigator.languages || [])]
+    .filter(Boolean)
+    .map((l) => l.toLowerCase());
+  if (langs.some((l) => l.startsWith('ar'))) return 'ar';
+  if (langs.some((l) => l.startsWith('en'))) return 'en';
+  return 'ar';
+};
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === 'en' ? 'ar' : 'en'));

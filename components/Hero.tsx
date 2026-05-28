@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useWaitlistModal } from "../contexts/WaitlistModalContext";
+import DemoStartModal from "./DemoStartModal";
 
 const AnimatedCounter: React.FC<{
   end: number;
@@ -30,243 +32,257 @@ const AnimatedCounter: React.FC<{
 
 const Hero: React.FC = () => {
   const [activeBar, setActiveBar] = useState(10);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
   const { t, dir } = useLanguage();
+  const { open: openWaitlist } = useWaitlistModal();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Real merchant hub colors
-  const dashBg = "#0d1117"; // hsl(225, 25%, 6%)
+  useEffect(() => {
+    if (searchParams.get("demo") === "1") {
+      setDemoModalOpen(true);
+      searchParams.delete("demo");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  // Merchant hub dashboard palette — lives inside a framed card on cream.
+  const dashBg = "#001F3F"; // navy-900
   const cardBg =
     "linear-gradient(168deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)";
-  const cardBorder = "rgba(255,255,255,0.06)";
-  const cardShadow =
-    "0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.12)";
-  const mutedText = "rgba(255,255,255,0.45)";
+  const cardBorder = "rgba(255,255,255,0.08)";
+  const mutedText = "rgba(255,255,255,0.55)";
   const foreText = "rgba(255,255,255,0.92)";
-  const primaryColor = "#3b82f6";
 
   return (
-    <div className="relative hero-bg pb-32 sm:pb-40 lg:pb-48">
-      {/* Dot grid texture - same as merchant hub auth */}
-      <div className="absolute inset-0 hero-dot-grid pointer-events-none" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-36 pb-20 lg:pb-28">
-        {/* Two-column hero: text + floating visuals */}
-        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 mb-12 lg:mb-16">
+    <div className="relative bg-cream paper-grain pb-14 sm:pb-20 lg:pb-24">
+      {/* Container — 1360px per brand-kit spec for brand surfaces */}
+      <div className="relative z-10 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-10 pt-24 sm:pt-28 lg:pt-32 pb-10 lg:pb-12">
+        {/* Text + ambient mark */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-10 mb-8 lg:mb-10">
           {/* Text side */}
           <div className="flex-1 text-center lg:text-start">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8 animate-fade-in-up">
-              <span className="size-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-[10px] sm:text-xs font-semibold text-white/60 tracking-wide uppercase">
-                {t("hero.built_for")}
+            {/* Eyebrow row — just the location mono label + the Start-Free
+                callout chip. Dropped the terracotta § 01 marker — it read
+                as an "orange underline" beneath the navbar at distance. */}
+            <div className="mb-5 flex flex-wrap items-center gap-3 animate-fade-in-up justify-center lg:justify-start">
+              <span className="eyebrow">
+                NUMUEG.APP · CAIRO · 2026
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-saffron/15 border border-saffron/40 rounded-[4px] font-mono text-[10px] uppercase tracking-[0.18em] font-semibold text-saffron">
+                <span className="size-1.5 rounded-full bg-saffron animate-pulse" aria-hidden="true" />
+                {dir === "rtl" ? "ابدأ مجانًا" : "Start Free"}
               </span>
             </div>
 
-            {/* Headline — each line is a separate block for clean Arabic spacing */}
-            <div
-              className="font-arabic font-extrabold text-white mb-6 animate-fade-in-up-1 flex flex-col pt-3 overflow-visible"
-              style={{ gap: "0.75rem" }}
+            {/* Headline — Reem Kufi, navy ink, one navy accent line + terracotta underline */}
+            <h1
+              className="font-display font-bold text-ink mb-5 animate-fade-in-up-1 flex flex-col tracking-tight"
+              style={{ gap: "0.3rem" }}
             >
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-                style={{ lineHeight: 1.6, paddingTop: '0.2em' }}
-              >
-                <span className="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent" style={{ WebkitBackgroundClip: 'text', paddingTop: '0.3em', display: 'inline-block' }}>
-                  {t("hero.title_line1").split(" ")[0]}
-                </span>{" "}
-                {t("hero.title_line1").split(" ").slice(1).join(" ")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-                style={{ lineHeight: 1.1 }}
-              >
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-[60px] leading-[1.05]">
+                {t("hero.title_line1")}
+              </span>
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-[60px] leading-[1.05] text-navy">
                 {t("hero.title_line2")}
-              </p>
-              <p
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-blue-300 via-blue-200 to-blue-400 bg-clip-text text-transparent pt-2"
-                style={{ lineHeight: 1.1 }}
-              >
+              </span>
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-[60px] leading-[1.05]">
                 {t("hero.title_line3")}
-                {t("hero.title_line4") !== "hero.title_line4" && t("hero.title_line4") ? " " + t("hero.title_line4") : ""}
-              </p>
-            </div>
+                {t("hero.title_line4") !== "hero.title_line4" && t("hero.title_line4")
+                  ? " " + t("hero.title_line4")
+                  : ""}
+              </span>
+            </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-white/50 leading-relaxed max-w-xl animate-fade-in-up-2 mx-auto lg:mx-0">
+            <p className="prose-body text-ink/75 max-w-xl animate-fade-in-up-2 mx-auto lg:mx-0">
               {t("hero.subtitle")}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 animate-fade-in-up-3 justify-center lg:justify-start">
-              <Link
-                to="/signup"
-                className="group bg-brand-gradient text-white font-bold py-3.5 px-8 rounded-2xl shadow-[5px_5px_10px_rgba(15,23,42,0.3),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
+            {/* CTAs — navy primary with saffron arrow accent + outlined secondary */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-7 animate-fade-in-up-3 justify-center lg:justify-start">
+              <button
+                type="button"
+                onClick={() => openWaitlist()}
+                className="group bg-navy text-cream font-semibold py-3.5 px-7 rounded-[4px] shadow-sm hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center gap-3 text-sm sm:text-base w-full sm:w-auto justify-center"
               >
                 <span>{t("hero.cta_primary")}</span>
-                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180 transition-transform">
-                  arrow_forward
+                <span
+                  aria-hidden="true"
+                  className="text-lg text-saffron group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform rtl:rotate-180"
+                >
+                  →
                 </span>
-              </Link>
-              <button className="text-white/60 hover:text-white font-bold py-3.5 px-8 rounded-2xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center">
-                <span className="material-symbols-outlined text-primary text-lg">
-                  play_circle
-                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDemoModalOpen(true)}
+                className="text-ink font-semibold py-3.5 px-7 rounded-[4px] border border-ink/15 hover:border-terracotta hover:text-terracotta hover:bg-terracotta/[0.04] transition-all duration-200 ease-numu flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
+              >
                 <span>{t("hero.cta_secondary")}</span>
               </button>
+              <DemoStartModal
+                isOpen={demoModalOpen}
+                onClose={() => setDemoModalOpen(false)}
+              />
             </div>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 animate-fade-in-up-4 justify-center lg:justify-start">
-              {[
-                { icon: "check_circle", text: t("hero.badge_eta") },
-                { icon: "check_circle", text: t("hero.badge_whatsapp") },
-                { icon: "check_circle", text: t("hero.badge_clean") },
-              ].map((badge, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 text-white/40 text-xs sm:text-sm"
+            {/* Trust row — ETA e-invoicing is the #1 differentiator no
+                foreign SaaS offers (audit §4.1), so it leads. Local payment
+                + carrier wordmarks follow as typographic rails — Egyptian
+                merchants scan for these names above the fold before they
+                scroll (audit §4.8–9). Pure type, no logo images, keeps
+                the hero lean. */}
+            <div className="mt-8 sm:mt-9 animate-fade-in-up-4 flex flex-col items-center lg:items-start gap-3 sm:gap-3.5">
+              <span className="eyebrow text-ink-soft/60">
+                § {t("hero.trust_eyebrow")}
+              </span>
+
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-terracotta/[0.06] border border-terracotta/30 rounded-[4px]">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  className="size-3.5 shrink-0 text-terracotta"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <span className="material-symbols-outlined text-primary text-sm">
-                    {badge.icon}
-                  </span>
-                  <span>{badge.text}</span>
+                  <path d="M3 8.5l3.2 3.2L13 4.8" />
+                </svg>
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-terracotta">
+                  {t("hero.trust_eta")}
+                </span>
+              </span>
+
+              <dl className="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 font-mono text-[11px] tracking-wide text-ink/70 items-center lg:items-start">
+                <div className="flex items-center gap-2">
+                  <dt className="uppercase tracking-[0.18em] text-ink-soft/55 font-semibold">
+                    {t("hero.trust_pay")}
+                  </dt>
+                  <dd className="flex items-center gap-1.5">
+                    <span className="font-semibold text-ink">Paymob</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">Fawry</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">Vodafone Cash</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">InstaPay</span>
+                  </dd>
                 </div>
-              ))}
+                <div className="flex items-center gap-2">
+                  <dt className="uppercase tracking-[0.18em] text-ink-soft/55 font-semibold">
+                    {t("hero.trust_ship")}
+                  </dt>
+                  <dd className="flex items-center gap-1.5">
+                    <span className="font-semibold text-ink">Bosta</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">Aramex</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">ShipBlu</span>
+                    <span aria-hidden="true" className="text-ink-soft/40">·</span>
+                    <span className="font-semibold text-ink">Khazenly</span>
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
 
-          {/* Floating visuals side — hidden on mobile */}
-          <div className="hidden lg:flex flex-1 items-center justify-center relative h-[480px] animate-fade-in-up-3">
-            {/* Floating order notification */}
+          {/* Ambient wordmark side — cream ground, multi-accent capsules */}
+          <div className="hidden lg:flex flex-1 items-center justify-center relative h-[380px] animate-fade-in-up-3">
+            {/* Floating order capsule — sage accent (success/paid) */}
             <div
-              className="absolute top-8 end-0 p-3.5 rounded-xl flex items-center gap-3 animate-float z-10"
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                backdropFilter: "blur(30px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-              }}
+              className="absolute top-2 end-0 z-10 px-4 py-3 bg-paper border border-ink/10 border-s-[3px] border-s-sage flex items-center gap-3 shadow-card rounded-[4px]"
+              style={{ maxWidth: 240 }}
             >
-              <div className="size-10 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                <span className="material-symbols-outlined text-emerald-400">
-                  shopping_cart
+              <div className="size-9 rounded-[4px] bg-sage/15 flex items-center justify-center">
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-xs font-semibold text-sage"
+                >
+                  +1
                 </span>
               </div>
-              <div>
-                <p className="text-[12px] font-semibold text-white/90">
+              <div className="min-w-0">
+                <p className="text-[12px] font-semibold text-ink truncate">
                   {t("preview.new_order")}
                 </p>
-                <p className="text-[10px] text-white/40">
-                  {dir === "rtl" ? "القاهرة • EGP 1,300" : "Cairo • EGP 1,300"}
+                <p className="font-mono text-[10px] text-ink-soft/60 uppercase tracking-wide">
+                  {dir === "rtl" ? "القاهرة · EGP ١٣٠٠" : "Cairo · EGP 1,300"}
                 </p>
               </div>
             </div>
 
-            {/* Large NUMU symbol as ambient bg element */}
-            <div className="relative">
-              {/* Colorful glow behind the logo */}
-              <div
-                className="absolute inset-0 scale-150 blur-[60px] rounded-full opacity-30"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(30,64,175,0.6), rgba(99,102,241,0.3) 50%, transparent 70%)",
-                }}
-              />
+            {/* Arabic wordmark — N mark + نُمُو on a single baseline, nothing
+                else. No saffron Latinisation (read as an "orange line" at
+                low zoom), no terracotta underline. Cleaner, louder. */}
+            <div
+              className="relative flex items-center justify-center gap-8 select-none animate-float"
+              aria-hidden="true"
+            >
               <img
-                src="/numu-symbol-white.webp"
+                src="/numu-mark-cream.webp"
                 alt=""
-                width="256"
-                height="256"
-                className="h-48 sm:h-64 w-auto object-contain animate-float relative"
-                style={{ animationDelay: "1s" }}
-                decoding="async"
+                className="h-40 xl:h-52 w-auto object-contain"
+                width="220"
+                height="464"
               />
+              <span className="font-display font-bold text-navy leading-[0.9] text-[160px] xl:text-[200px]">
+                نُمُو
+              </span>
             </div>
 
-            {/* Floating revenue card */}
+            {/* Revenue capsule — saffron accent (warmth / offer / revenue) */}
             <div
-              className="absolute bottom-12 start-0 p-3.5 rounded-xl animate-float z-10"
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                backdropFilter: "blur(30px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-                animationDelay: "2s",
-              }}
+              className="absolute bottom-4 start-0 z-10 px-4 py-3 bg-paper border border-ink/10 border-s-[3px] border-s-saffron shadow-card rounded-[4px] animate-float"
+              style={{ animationDelay: "2s" }}
             >
-              <p className="text-[10px] text-white/40 mb-1">
+              <p className="font-mono text-[10px] text-ink-soft/60 uppercase tracking-[0.18em] mb-1">
                 {dir === "rtl" ? "إيرادات اليوم" : "Today's Revenue"}
               </p>
-              <p className="text-lg font-black text-white/90 tabular-nums">
-                EGP 24,800
+              <p className="text-xl font-bold text-navy tabular-nums leading-none">
+                {dir === "rtl" ? "EGP ٢٤,٨٠٠" : "EGP 24,800"}
               </p>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="material-symbols-outlined text-emerald-400 text-xs">
-                  trending_up
-                </span>
-                <span className="text-[10px] font-semibold text-emerald-400">
-                  +18%
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-[11px] font-semibold text-sage"
+                >
+                  ↑ {dir === "rtl" ? "١٨%" : "18%"}
                 </span>
               </div>
             </div>
 
-            {/* Floating shipping badge */}
-            <div
-              className="absolute top-1/2 start-4 p-2.5 rounded-lg animate-float"
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                backdropFilter: "blur(30px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                animationDelay: "4s",
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-orange-400 text-sm rtl:-scale-x-100">
-                  local_shipping
-                </span>
-                <span className="text-[10px] font-semibold text-white/70">
-                  Bosta
-                </span>
-                <span className="size-1.5 rounded-full bg-emerald-400" />
-              </div>
-            </div>
+            {/* Bosta capsule removed — two floating capsules (order +
+                revenue) is enough motion; the third was noise. */}
           </div>
         </div>
 
-        {/* ===== REAL MERCHANT HUB DASHBOARD MOCKUP ===== */}
+        {/* ===== Dashboard mockup — framed card on cream ===== */}
         <div className="animate-fade-in-up-5">
           <div className="relative max-w-5xl mx-auto">
-            {/* Glow behind */}
-            <div className="absolute -inset-4 bg-primary/8 rounded-[2rem] blur-2xl pointer-events-none" />
-
             <div
-              className="relative rounded-2xl overflow-hidden"
-              style={{
-                background: dashBg,
-                boxShadow:
-                  "0 20px 60px -12px rgba(0,0,0,0.6), 0 0 80px rgba(30,64,175,0.06)",
-              }}
+              className="relative rounded-[14px] overflow-hidden numu-mockup-frame"
+              style={{ background: dashBg }}
             >
-              {/* Window chrome - reversed for RTL feel */}
+              {/* Window chrome */}
               <div
                 className="flex items-center gap-2 px-5 py-3"
                 style={{ borderBottom: `1px solid ${cardBorder}` }}
               >
                 <div className="flex gap-1.5">
-                  <div className="size-3 rounded-full bg-emerald-500/80" />
-                  <div className="size-3 rounded-full bg-yellow-500/80" />
-                  <div className="size-3 rounded-full bg-red-500/80" />
+                  <div className="size-3 rounded-full bg-sage/80" />
+                  <div className="size-3 rounded-full bg-saffron/80" />
+                  <div className="size-3 rounded-full bg-terracotta/80" />
                 </div>
                 <div className="flex-1 flex justify-center">
                   <div
-                    className="flex items-center gap-2 rounded-lg px-4 py-1"
+                    className="flex items-center gap-2 rounded-[4px] px-4 py-1"
                     style={{ background: "rgba(255,255,255,0.04)" }}
                   >
                     <span
-                      className="material-symbols-outlined text-xs"
+                      className="font-mono text-[11px] tracking-wide"
                       style={{ color: mutedText }}
                     >
-                      lock
-                    </span>
-                    <span className="text-[11px]" style={{ color: mutedText }}>
                       numueg.app/dashboard
                     </span>
                   </div>
@@ -274,45 +290,37 @@ const Hero: React.FC = () => {
                 <div className="w-[52px]" />
               </div>
 
-              {/* Dashboard content */}
               <div className="flex" style={{ direction: dir }}>
-                {/* Sidebar - matches real merchant hub */}
+                {/* Sidebar */}
                 <div
                   className="hidden md:flex flex-col w-[200px] py-4 px-3 gap-0.5 shrink-0"
                   style={{ borderInlineEnd: `1px solid ${cardBorder}` }}
                 >
-                  {/* Logo */}
+                  {/* Sidebar brand */}
                   <div className="flex items-center gap-2.5 px-3 py-2 mb-4">
                     <div
-                      className="size-7 rounded-lg flex items-center justify-center"
-                      style={{ background: "rgba(255,255,255,0.92)" }}
+                      className="size-7 rounded-[4px] flex items-center justify-center font-display font-bold text-[12px]"
+                      style={{ background: "#F5EFE6", color: dashBg }}
                     >
-                      <span
-                        className="text-[10px] font-black"
-                        style={{ color: dashBg }}
-                      >
-                        N
-                      </span>
+                      N
                     </div>
                     <span
-                      className="text-xs font-semibold"
+                      className="font-display text-xs font-semibold tracking-tight"
                       style={{ color: foreText }}
                     >
-                      NUMU
+                      numu
                     </span>
                   </div>
 
-                  {/* Active item */}
+                  {/* Active nav */}
                   <div
-                    className="flex items-center gap-2.5 px-3 py-[7px] rounded-lg mb-0.5"
+                    className="flex items-center gap-2.5 px-3 py-[7px] rounded-[4px] mb-0.5"
                     style={{ background: "rgba(255,255,255,0.08)" }}
                   >
                     <span
-                      className="material-symbols-outlined text-[15px]"
-                      style={{ color: foreText }}
-                    >
-                      dashboard
-                    </span>
+                      className="size-1.5 rounded-full bg-cream"
+                      aria-hidden="true"
+                    />
                     <span
                       className="text-[13px] font-medium"
                       style={{ color: foreText }}
@@ -321,190 +329,146 @@ const Hero: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Regular items */}
                   {[
-                    {
-                      icon: "shopping_bag",
-                      label: dir === "rtl" ? "الطلبات" : "Orders",
-                    },
-                    {
-                      icon: "inventory_2",
-                      label: dir === "rtl" ? "المنتجات" : "Products",
-                    },
-                    {
-                      icon: "category",
-                      label: dir === "rtl" ? "الأقسام" : "Categories",
-                    },
-                    {
-                      icon: "people",
-                      label: dir === "rtl" ? "العملاء" : "Customers",
-                    },
-                  ].map((item, i) => (
+                    dir === "rtl" ? "الطلبات" : "Orders",
+                    dir === "rtl" ? "المنتجات" : "Products",
+                    dir === "rtl" ? "الأقسام" : "Categories",
+                    dir === "rtl" ? "العملاء" : "Customers",
+                  ].map((label, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-2.5 px-3 py-[7px] rounded-lg hover:bg-white/[0.04] transition-colors"
+                      className="flex items-center gap-2.5 px-3 py-[7px] rounded-[4px] hover:bg-white/[0.04] transition-colors"
                     >
                       <span
-                        className="material-symbols-outlined text-[15px]"
-                        style={{ color: mutedText }}
-                      >
-                        {item.icon}
-                      </span>
+                        className="size-1.5 rounded-full bg-white/20"
+                        aria-hidden="true"
+                      />
                       <span
                         className="text-[13px] font-medium"
                         style={{ color: mutedText }}
                       >
-                        {item.label}
+                        {label}
                       </span>
                     </div>
                   ))}
 
-                  {/* Group label */}
                   <div className="px-3 mt-4 mb-2">
                     <span
-                      className="text-[10px] font-semibold uppercase tracking-[0.12em]"
-                      style={{ color: "rgba(255,255,255,0.2)" }}
+                      className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+                      style={{ color: "rgba(255,255,255,0.3)" }}
                     >
-                      {dir === "rtl" ? "إحصائيات" : "Insights"}
+                      § {dir === "rtl" ? "إحصائيات" : "Insights"}
                     </span>
                   </div>
                   {[
-                    {
-                      icon: "bar_chart",
-                      label: dir === "rtl" ? "التقارير" : "Analytics",
-                    },
-                    {
-                      icon: "local_shipping",
-                      label: dir === "rtl" ? "الشحن" : "Shipping",
-                    },
-                    {
-                      icon: "receipt_long",
-                      label: dir === "rtl" ? "الفواتير" : "Invoices",
-                    },
-                  ].map((item, i) => (
+                    dir === "rtl" ? "التقارير" : "Analytics",
+                    dir === "rtl" ? "الشحن" : "Shipping",
+                    dir === "rtl" ? "الفواتير" : "Invoices",
+                  ].map((label, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-2.5 px-3 py-[7px] rounded-lg hover:bg-white/[0.04] transition-colors"
+                      className="flex items-center gap-2.5 px-3 py-[7px] rounded-[4px] hover:bg-white/[0.04] transition-colors"
                     >
                       <span
-                        className="material-symbols-outlined text-[15px]"
-                        style={{ color: mutedText }}
-                      >
-                        {item.icon}
-                      </span>
+                        className="size-1.5 rounded-full bg-white/20"
+                        aria-hidden="true"
+                      />
                       <span
                         className="text-[13px] font-medium"
                         style={{ color: mutedText }}
                       >
-                        {item.label}
+                        {label}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                {/* Main content area */}
+                {/* Main */}
                 <div className="flex-1 p-4 sm:p-5 min-w-0">
-                  {/* Greeting */}
                   <div className="mb-5">
                     <h3
-                      className="text-sm sm:text-[15px] font-semibold mb-0.5"
+                      className="font-display text-sm sm:text-[15px] font-semibold mb-0.5"
                       style={{ color: foreText }}
                     >
                       {dir === "rtl"
                         ? "صباح الخير، أحمد"
                         : "Good morning, Ahmed"}
                     </h3>
-                    <p className="text-[11px]" style={{ color: mutedText }}>
+                    <p
+                      className="font-mono text-[11px] tracking-wide"
+                      style={{ color: mutedText }}
+                    >
                       {dir === "rtl"
-                        ? "عندك 8 طلبات جديدة النهاردة"
-                        : "You have 8 new orders today"}
+                        ? "عندك ٨ طلبات جديدة النهاردة"
+                        : "8 new orders today"}
                     </p>
                   </div>
 
-                  {/* KPI Cards - glass cards matching merchant hub */}
+                  {/* KPI row */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
                     {[
                       {
                         label: dir === "rtl" ? "الإيرادات" : "Revenue",
-                        value: "EGP 24,800",
-                        change: "+18%",
-                        icon: "trending_up",
+                        value: dir === "rtl" ? "EGP ٢٤,٨٠٠" : "EGP 24,800",
+                        change: dir === "rtl" ? "+١٨%" : "+18%",
                       },
                       {
                         label: dir === "rtl" ? "الطلبات" : "Orders",
-                        value: "156",
-                        change: "+12%",
-                        icon: "shopping_cart",
+                        value: dir === "rtl" ? "١٥٦" : "156",
+                        change: dir === "rtl" ? "+١٢%" : "+12%",
                       },
                       {
                         label: dir === "rtl" ? "العملاء" : "Customers",
-                        value: "2,340",
-                        change: "+8%",
-                        icon: "group",
+                        value: dir === "rtl" ? "٢,٣٤٠" : "2,340",
+                        change: dir === "rtl" ? "+٨%" : "+8%",
                       },
                       {
                         label: dir === "rtl" ? "معدل التحويل" : "Conversion",
-                        value: "3.2%",
-                        change: "+0.4%",
-                        icon: "speed",
+                        value: dir === "rtl" ? "٣.٢%" : "3.2%",
+                        change: dir === "rtl" ? "+٠.٤%" : "+0.4%",
                       },
                     ].map((kpi, i) => (
                       <div
                         key={i}
-                        className="rounded-xl p-3 sm:p-4"
+                        className="rounded-[10px] p-3 sm:p-4"
                         style={{
                           background: cardBg,
                           border: `1px solid ${cardBorder}`,
-                          boxShadow: cardShadow,
                         }}
                       >
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="mb-2">
                           <span
-                            className="text-[11px] font-medium uppercase tracking-wider"
+                            className="font-mono text-[10px] font-medium uppercase tracking-[0.18em]"
                             style={{ color: mutedText }}
                           >
                             {kpi.label}
                           </span>
-                          <span
-                            className="material-symbols-outlined text-sm"
-                            style={{ color: "rgba(255,255,255,0.15)" }}
-                          >
-                            {kpi.icon}
-                          </span>
                         </div>
                         <p
-                          className="text-lg sm:text-2xl font-bold tracking-tight tabular-nums leading-none mb-1"
+                          className="font-display text-lg sm:text-2xl font-bold tracking-tight tabular-nums leading-none mb-1"
                           style={{ color: foreText }}
                         >
                           {kpi.value}
                         </p>
-                        <span className="text-[11px] font-semibold text-emerald-400">
+                        <span className="font-mono text-[11px] font-semibold text-sage">
                           {kpi.change}
-                        </span>
-                        <span
-                          className="text-[10px] ms-1"
-                          style={{ color: mutedText }}
-                        >
-                          {dir === "rtl" ? "من أمس" : "vs yesterday"}
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Chart + Recent Orders */}
+                  {/* Chart + Recent orders */}
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
-                    {/* Revenue Chart */}
                     <div
-                      className="lg:col-span-3 rounded-xl p-4"
+                      className="lg:col-span-3 rounded-[10px] p-4"
                       style={{
                         background: cardBg,
                         border: `1px solid ${cardBorder}`,
-                        boxShadow: cardShadow,
                       }}
                     >
                       <div className="flex items-center justify-between mb-4">
                         <span
-                          className="text-[13px] font-semibold"
+                          className="font-display text-[13px] font-semibold"
                           style={{ color: foreText }}
                         >
                           {dir === "rtl" ? "الإيرادات" : "Revenue"}
@@ -513,17 +477,13 @@ const Hero: React.FC = () => {
                           {["7d", "30d", "90d"].map((p, i) => (
                             <span
                               key={p}
-                              className="text-[10px] px-2.5 py-0.5 rounded-md font-medium"
+                              className="font-mono text-[10px] px-2.5 py-0.5 rounded-[4px] font-medium uppercase tracking-wide"
                               style={{
                                 background:
                                   i === 0
                                     ? "rgba(255,255,255,0.1)"
                                     : "transparent",
                                 color: i === 0 ? foreText : mutedText,
-                                boxShadow:
-                                  i === 0
-                                    ? "0 1px 2px rgba(0,0,0,0.2)"
-                                    : "none",
                               }}
                             >
                               {p}
@@ -531,7 +491,6 @@ const Hero: React.FC = () => {
                           ))}
                         </div>
                       </div>
-                      {/* Chart bars */}
                       <div
                         className="flex items-end gap-[3px] h-24 sm:h-32"
                         onMouseLeave={() => setActiveBar(10)}
@@ -542,37 +501,25 @@ const Hero: React.FC = () => {
                           <div
                             key={i}
                             onMouseEnter={() => setActiveBar(i)}
-                            className="flex-1 rounded-t-[3px] transition-all duration-300 cursor-pointer"
+                            className="flex-1 rounded-t-[2px] transition-all duration-200 cursor-pointer"
                             style={{
                               height: `${h}%`,
                               background:
                                 activeBar === i
-                                  ? `linear-gradient(180deg, ${primaryColor}, #1e3a8a)`
-                                  : `rgba(59, 130, 246, ${0.08 + h / 600})`,
-                              boxShadow:
-                                activeBar === i
-                                  ? `0 0 12px rgba(59,130,246,0.4)`
-                                  : "none",
+                                  ? "#F5EFE6"
+                                  : `rgba(245, 239, 230, ${0.18 + h / 600})`,
                             }}
                           />
                         ))}
                       </div>
                       <div className="flex justify-between mt-2">
                         {(dir === "rtl"
-                          ? [
-                              "جمعة",
-                              "خميس",
-                              "أربعاء",
-                              "ثلاثاء",
-                              "إثنين",
-                              "أحد",
-                              "سبت",
-                            ]
+                          ? ["جمعة", "خميس", "أربعاء", "ثلاثاء", "إثنين", "أحد", "سبت"]
                           : ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]
                         ).map((d) => (
                           <span
                             key={d}
-                            className="text-[9px]"
+                            className="font-mono text-[9px] tracking-wide"
                             style={{ color: mutedText }}
                           >
                             {d}
@@ -581,17 +528,15 @@ const Hero: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Recent Orders */}
                     <div
-                      className="lg:col-span-2 rounded-xl p-4"
+                      className="lg:col-span-2 rounded-[10px] p-4"
                       style={{
                         background: cardBg,
                         border: `1px solid ${cardBorder}`,
-                        boxShadow: cardShadow,
                       }}
                     >
                       <span
-                        className="text-[13px] font-semibold block mb-3"
+                        className="font-display text-[13px] font-semibold block mb-3"
                         style={{ color: foreText }}
                       >
                         {dir === "rtl" ? "آخر الطلبات" : "Recent Orders"}
@@ -599,48 +544,48 @@ const Hero: React.FC = () => {
                       <div className="space-y-1">
                         {[
                           {
-                            id: "#1284",
+                            id: dir === "rtl" ? "#١٢٨٤" : "#1284",
                             name: dir === "rtl" ? "فاطمة أحمد" : "Fatma Ahmed",
-                            amount: "EGP 450",
-                            status: "Delivered",
-                            statusColor:
-                              "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+                            amount: dir === "rtl" ? "EGP ٤٥٠" : "EGP 450",
+                            status: dir === "rtl" ? "مسلَّم" : "Delivered",
+                            statusClass:
+                              "text-sage bg-sage/10 border-sage/30",
                           },
                           {
-                            id: "#1283",
+                            id: dir === "rtl" ? "#١٢٨٣" : "#1283",
                             name: dir === "rtl" ? "محمد علي" : "Mohamed Ali",
-                            amount: "EGP 1,200",
-                            status: "Shipped",
-                            statusColor:
-                              "text-blue-400 bg-blue-500/10 border-blue-500/20",
+                            amount: dir === "rtl" ? "EGP ١,٢٠٠" : "EGP 1,200",
+                            status: dir === "rtl" ? "مشحون" : "Shipped",
+                            statusClass:
+                              "text-navy-100 bg-navy-100/10 border-navy-100/20",
                           },
                           {
-                            id: "#1282",
+                            id: dir === "rtl" ? "#١٢٨٢" : "#1282",
                             name: dir === "rtl" ? "سارة حسن" : "Sara Hassan",
-                            amount: "EGP 320",
-                            status: "Processing",
-                            statusColor:
-                              "text-amber-400 bg-amber-500/10 border-amber-500/20",
+                            amount: dir === "rtl" ? "EGP ٣٢٠" : "EGP 320",
+                            status: dir === "rtl" ? "قيد التجهيز" : "Processing",
+                            statusClass:
+                              "text-saffron bg-saffron/10 border-saffron/30",
                           },
                           {
-                            id: "#1281",
+                            id: dir === "rtl" ? "#١٢٨١" : "#1281",
                             name: dir === "rtl" ? "أحمد يوسف" : "Ahmed Youssef",
-                            amount: "EGP 890",
-                            status: "Pending",
-                            statusColor:
-                              "text-white/40 bg-white/5 border-white/10",
+                            amount: dir === "rtl" ? "EGP ٨٩٠" : "EGP 890",
+                            status: dir === "rtl" ? "معلَّق" : "Pending",
+                            statusClass:
+                              "text-white/50 bg-white/5 border-white/10",
                           },
                         ].map((order, i) => (
                           <div
                             key={i}
-                            className="flex items-center gap-3 rounded-lg p-2 -mx-1 hover:bg-white/[0.03] transition-colors"
+                            className="flex items-center gap-3 rounded-[4px] p-2 -mx-1 hover:bg-white/[0.03] transition-colors"
                           >
                             <div
                               className="size-7 rounded-full flex items-center justify-center"
                               style={{ background: "rgba(255,255,255,0.06)" }}
                             >
                               <span
-                                className="text-[10px] font-semibold"
+                                className="font-display text-[10px] font-semibold"
                                 style={{ color: mutedText }}
                               >
                                 {order.name[0]}
@@ -649,26 +594,26 @@ const Hero: React.FC = () => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
                                 <span
-                                  className="text-[13px] font-semibold tabular-nums"
+                                  className="font-mono text-[12px] font-semibold tabular-nums"
                                   style={{ color: foreText }}
                                 >
                                   {order.id}
                                 </span>
                                 <span
-                                  className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full border ${order.statusColor}`}
+                                  className={`font-mono text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-[2px] border ${order.statusClass}`}
                                 >
                                   {order.status}
                                 </span>
                               </div>
                               <p
-                                className="text-[11px]"
+                                className="text-[11px] truncate"
                                 style={{ color: mutedText }}
                               >
                                 {order.name}
                               </p>
                             </div>
                             <span
-                              className="text-[13px] font-semibold tabular-nums shrink-0"
+                              className="font-display text-[13px] font-semibold tabular-nums shrink-0"
                               style={{ color: foreText }}
                             >
                               {order.amount}
@@ -682,29 +627,24 @@ const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Floating notification */}
+            {/* Overlapping notification capsule */}
             <div
-              className="absolute -end-3 sm:end-6 top-16 sm:top-20 p-3 rounded-xl animate-float hidden sm:flex items-center gap-3"
+              className="absolute -end-3 sm:end-6 top-12 sm:top-16 p-3 rounded-[4px] hidden sm:flex items-center gap-3 animate-float"
               style={{
-                background: "rgba(13,17,23,0.9)",
-                backdropFilter: "blur(20px)",
-                border: `1px solid ${cardBorder}`,
-                boxShadow: cardShadow,
+                background: "rgba(245, 239, 230, 0.95)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(15, 22, 36, 0.12)",
+                boxShadow: "var(--shadow-card)",
               }}
             >
-              <div className="size-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <span className="material-symbols-outlined text-emerald-400 text-sm">
-                  shopping_cart
-                </span>
+              <div className="size-8 rounded-[4px] bg-sage/15 flex items-center justify-center">
+                <span className="font-mono text-[11px] font-semibold text-sage">+1</span>
               </div>
               <div>
-                <p
-                  className="text-[11px] font-semibold"
-                  style={{ color: foreText }}
-                >
+                <p className="text-[11px] font-semibold text-ink">
                   {t("preview.new_order")}
                 </p>
-                <p className="text-[9px]" style={{ color: mutedText }}>
+                <p className="font-mono text-[9px] text-ink-soft/60 uppercase tracking-[0.18em]">
                   {t("preview.new_order_time")}
                 </p>
               </div>
@@ -712,40 +652,55 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Clean hard cut — no gradient, the dashboard mockup bridges the gap */}
     </div>
   );
 };
 
-// Stats bar — exported separately to sit in the light section
+// Stats bar — each stat gets a different accent color per brand-kit palette
 export const HeroStats: React.FC = () => {
   const { dir } = useLanguage();
+  const stats = [
+    {
+      value: 1000,
+      suffix: "+",
+      label: dir === "rtl" ? "تاجر" : "Merchants",
+      color: "text-navy",
+    },
+    {
+      value: 50000,
+      suffix: "+",
+      label: dir === "rtl" ? "طلب" : "Orders Processed",
+      color: "text-saffron",
+    },
+    {
+      value: 99,
+      suffix: "%",
+      label: dir === "rtl" ? "وقت تشغيل" : "Uptime",
+      color: "text-sage",
+    },
+  ];
   return (
-    <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 py-10 sm:py-14">
-      {[
-        {
-          value: 1000,
-          suffix: "+",
-          label: dir === "rtl" ? "تاجر" : "Merchants",
-        },
-        {
-          value: 50000,
-          suffix: "+",
-          label: dir === "rtl" ? "طلب" : "Orders Processed",
-        },
-        {
-          value: 99,
-          suffix: "%",
-          label: dir === "rtl" ? "وقت تشغيل" : "Uptime",
-        },
-      ].map((stat, i) => (
-        <div key={i} className="text-center">
-          <p className="text-2xl sm:text-3xl font-black text-text-main">
-            <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-          </p>
-          <p className="text-xs text-text-muted mt-1">{stat.label}</p>
-        </div>
+    <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 py-8 sm:py-10">
+      {stats.map((stat, i) => (
+        <React.Fragment key={i}>
+          <div className="text-center">
+            <p
+              className={`font-display text-3xl sm:text-4xl font-bold tabular-nums tracking-tight leading-none ${stat.color}`}
+            >
+              <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+            </p>
+            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/70">
+              {stat.label}
+            </p>
+          </div>
+          {/* Bone divider between stats — brand-kit neutral */}
+          {i < stats.length - 1 && (
+            <span
+              className="hidden sm:block w-px h-10 bg-bone"
+              aria-hidden="true"
+            />
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

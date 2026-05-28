@@ -1,40 +1,13 @@
 import path from 'path';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 
-/**
- * Injects Content-Security-Policy meta tag only in production builds.
- */
-function vitePluginCSP(): Plugin {
-  return {
-    name: 'numu-csp',
-    transformIndexHtml(html, ctx) {
-      if (ctx.server) return html;
-      return {
-        html,
-        tags: [
-          {
-            tag: 'meta',
-            attrs: {
-              'http-equiv': 'Content-Security-Policy',
-              content: [
-                "default-src 'self'",
-                "script-src 'self'",
-                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-                "font-src 'self' https://fonts.gstatic.com",
-                "img-src 'self' data: blob: https: https://numueg.app",
-                "connect-src 'self' https://numueg.app https://*.numueg.app https://*.sentry.io https://*.ingest.sentry.io",
-                "worker-src 'self' blob:",
-              ].join('; ') + ';',
-            },
-            injectTo: 'head',
-          },
-        ],
-      };
-    },
-  };
-}
+// CSP is delivered as an HTTP response header from nginx (see
+// NUMU-api/docker/nginx/nginx.conf → `set $landing_csp`). Don't emit a
+// <meta http-equiv="Content-Security-Policy"> here — two sources drift apart
+// and browsers intersect them, so the stricter one wins and you lose headers
+// like `frame-ancestors` that can only be set via HTTP header.
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -63,7 +36,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    vitePluginCSP(),
     // Pre-compress assets with Brotli (best) and gzip (fallback)
     ...(mode === 'production' ? [
       viteCompression({ algorithm: 'brotliCompress', threshold: 1024 }),
@@ -85,7 +57,6 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/matter-js')) return 'matter';
           if (id.includes('node_modules/@sentry')) return 'sentry';
           if (id.includes('node_modules/react-router') || id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) return 'vendor';
         },

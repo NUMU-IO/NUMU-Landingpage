@@ -55,11 +55,11 @@ const ImportShowcase: React.FC = () => {
       <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
         {/* Text side */}
         <div className="lg:w-1/2 text-center lg:text-start">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full shadow-neu-pressed-sm mb-4 w-fit mx-auto lg:mx-0">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper border border-ink/10 mb-4 w-fit mx-auto lg:mx-0">
             <span className="material-symbols-outlined text-primary text-sm">share</span>
             <span className="text-[10px] sm:text-xs font-semibold text-text-muted tracking-wide uppercase">Social Commerce</span>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-text-main dark:text-white mb-3 sm:mb-4 tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-text-main dark:text-white mb-3 sm:mb-4 tracking-tight">
             {t('import.title')}
           </h2>
           <p className="text-text-muted text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0">
@@ -72,14 +72,14 @@ const ImportShowcase: React.FC = () => {
                 onClick={() => { setActiveStep(idx); setIsPaused(true); setTimeout(() => setIsPaused(false), 5000); }}
                 className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-300 text-start ${
                   activeStep === idx
-                    ? 'shadow-neu-pressed bg-background-light scale-[1.02]'
+                    ? 'bg-cream border border-ink/10 bg-background-light scale-[1.02]'
                     : 'hover:bg-background-alt/50'
                 }`}
               >
                 <div className={`size-10 sm:size-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                   activeStep === idx
-                    ? 'bg-brand-gradient text-white shadow-neu-primary'
-                    : 'shadow-neu-flat-sm text-primary'
+                    ? 'bg-navy text-white shadow-card'
+                    : 'shadow-card text-primary'
                 }`}>
                   <span className="material-symbols-outlined text-lg sm:text-xl">{step.icon}</span>
                 </div>
@@ -104,7 +104,7 @@ const ImportShowcase: React.FC = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           <div className="relative">
-            <div className="relative w-[260px] sm:w-[280px] md:w-[300px] h-[520px] sm:h-[560px] md:h-[600px] bg-white rounded-[2.5rem] border-[6px] border-gray-800 shadow-neu-floating overflow-hidden">
+            <div className="relative w-[260px] sm:w-[280px] md:w-[300px] h-[520px] sm:h-[560px] md:h-[600px] bg-white rounded-[2.5rem] border-[6px] border-gray-800 shadow-modal-panel overflow-hidden">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-800 rounded-b-2xl z-20"></div>
               <div className="h-10 bg-white flex items-end justify-between px-6 pb-1">
                 <span className="text-[10px] font-semibold text-gray-800">9:41</span>
@@ -142,7 +142,7 @@ const ImportShowcase: React.FC = () => {
                     ))}
                   </div>
                   <div className="mt-3">
-                    <div className="bg-brand-gradient text-white text-xs font-bold py-2.5 rounded-xl text-center flex items-center justify-center gap-1.5">
+                    <div className="bg-navy text-white text-xs font-bold py-2.5 rounded-xl text-center flex items-center justify-center gap-1.5">
                       <span className="material-symbols-outlined text-sm">cloud_download</span>
                       <span>Import 6 Products</span>
                     </div>
@@ -155,8 +155,8 @@ const ImportShowcase: React.FC = () => {
                   transform: `translateX(${activeStep === 1 ? '0' : activeStep > 1 ? (dir === 'rtl' ? '100%' : '-100%') : (dir === 'rtl' ? '-100%' : '100%')})`,
                 }}>
                   <div className="flex items-center gap-2 mb-3 px-1">
-                    <div className="size-6 rounded-md bg-brand-gradient flex items-center justify-center">
-                      <span className="text-white text-[8px] font-black">N</span>
+                    <div className="size-6 rounded-md bg-navy flex items-center justify-center">
+                      <span className="text-white text-[8px] font-bold">N</span>
                     </div>
                     <span className="text-xs font-bold text-gray-800">NUMU Dashboard</span>
                   </div>
@@ -166,7 +166,7 @@ const ImportShowcase: React.FC = () => {
                       <span className="text-[10px] font-bold text-primary">{activeStep === 1 ? '6/6' : '0/6'}</span>
                     </div>
                     <div className="h-2 bg-white rounded-full overflow-hidden">
-                      <div className="h-full bg-brand-gradient rounded-full transition-all duration-[2500ms] ease-out" style={{ width: `${progressWidth}%` }}></div>
+                      <div className="h-full bg-navy rounded-full transition-all duration-[2500ms] ease-out" style={{ width: `${progressWidth}%` }}></div>
                     </div>
                   </div>
                   <div className="flex-1 space-y-2 overflow-hidden">
@@ -241,7 +241,7 @@ const ImportShowcase: React.FC = () => {
                   onClick={() => { setActiveStep(idx); setIsPaused(true); setTimeout(() => setIsPaused(false), 5000); }}
                   className={`rounded-full transition-all duration-300 ${
                     activeStep === idx
-                      ? 'w-8 h-2.5 bg-brand-gradient'
+                      ? 'w-8 h-2.5 bg-navy'
                       : 'size-2.5 bg-primary/20 hover:bg-primary/40'
                   }`}
                 ></button>
