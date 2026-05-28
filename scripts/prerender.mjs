@@ -159,6 +159,19 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/data-deletion',
+    extraJsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'NUMU', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: 'User Data Deletion', item: `${SITE}/data-deletion` },
+        ],
+      },
+    ],
+  },
 ];
 
 const CHROME_PATHS = [
