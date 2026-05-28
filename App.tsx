@@ -19,6 +19,7 @@ const Waitlist = lazy(() => import('./pages/Waitlist'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
+const DataDeletion = lazy(() => import('./pages/DataDeletion'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Refund = lazy(() => import('./pages/Refund'));
 const Apps = lazy(() => import('./pages/Apps'));
@@ -61,6 +62,7 @@ const App: React.FC = () => {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/data-deletion" element={<DataDeletion />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/refund" element={<Refund />} />
             <Route path="/apps" element={<Apps />} />

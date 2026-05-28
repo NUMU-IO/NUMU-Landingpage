@@ -609,8 +609,23 @@ export const translationsAr: Record<string, string> = {
   'features.multichannel.desc': 'بيع من موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة.',
 };
 
+// Pick the initial language from the visitor's browser preference. AR is
+// the canonical default for Numu's Egyptian audience; we only fall to EN
+// when the browser explicitly signals a non-Arabic locale (Meta app-review
+// crawlers, MENA visitors with English browsers, etc.). Runs once on mount
+// — the toggle button still overrides the value at any time.
+const getInitialLanguage = (): Language => {
+  if (typeof navigator === 'undefined') return 'ar';
+  const langs = [navigator.language, ...(navigator.languages || [])]
+    .filter(Boolean)
+    .map((l) => l.toLowerCase());
+  if (langs.some((l) => l.startsWith('ar'))) return 'ar';
+  if (langs.some((l) => l.startsWith('en'))) return 'en';
+  return 'ar';
+};
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === 'en' ? 'ar' : 'en'));
