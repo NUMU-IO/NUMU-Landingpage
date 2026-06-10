@@ -44,8 +44,9 @@ This site never persists any data of its own. Section visibility is fetched at r
 | Language | TypeScript 5.8 |
 | Build | Vite 6 |
 | Routing | react-router-dom 7 |
-| Styling | Tailwind CSS (CDN) — neumorphic system |
-| Animation | Matter.js (physics-based "Ballpit" on auth pages) |
+| Styling | Tailwind CSS 3 (PostCSS) · Lightningcss minifier — neumorphic system |
+| Animation | Custom lightweight "Ballpit" physics on auth pages (Matter.js was removed) |
+| Prerender | Puppeteer SSG (`npm run build:ssg`) — 8 routes + per-route JSON-LD |
 | Fonts | Reem Kufi · Tajawal · Space Grotesk · JetBrains Mono |
 | Package manager | npm |
 
@@ -112,11 +113,15 @@ numu-landing-page (1)/
 │   ├── components/           # Section components + UI primitives
 │   ├── contexts/             # LanguageContext (en + Egyptian Arabic)
 │   ├── hooks/                # useSEO · useLandingConfig · ...
-│   ├── pages/                # Home · Login · SignUp (lazy-loaded)
+│   ├── pages/                # ~21 lazy-loaded routes: Home · Login · VerifyEmail ·
+│   │                         #   Waitlist · Pricing · Privacy · Terms · DataDeletion ·
+│   │                         #   Contact · Refund · Apps · Themes · Developers · Learn ·
+│   │                         #   Tools (+ store-names · profit-margin · invoice · ai-description)
 │   ├── styles/
 │   └── App.tsx
 ├── scripts/
-│   └── make-favicons.mjs     # Build script that regenerates the favicon set
+│   ├── make-favicons.mjs     # Regenerates the favicon set
+│   └── prerender.mjs         # Puppeteer SSG: prerenders 8 routes + injects JSON-LD
 ├── index.html                # Inline critical CSS · OG / Twitter / JSON-LD
 └── vite.config.ts
 ```
@@ -136,7 +141,8 @@ cp .env.example .env
 npm run dev
 
 # 4. Build for production
-npm run build
+npm run build          # SPA build
+npm run build:ssg      # build + Puppeteer prerender (deploy artifact)
 npm run preview
 ```
 
