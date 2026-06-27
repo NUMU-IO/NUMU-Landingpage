@@ -128,6 +128,16 @@ const Contact: React.FC = () => {
                   support@numueg.app
                 </span>
               </a>
+              <span className="hidden sm:block w-px h-4 bg-bone" aria-hidden="true" />
+              <span className="flex items-center gap-2 text-sm text-ink-soft/85">
+                <span
+                  className="size-1.5 rounded-full bg-terracotta"
+                  aria-hidden="true"
+                />
+                <span className="font-mono text-[12px] tracking-wide">
+                  {t('contact.location')}
+                </span>
+              </span>
             </div>
           </div>
         </div>

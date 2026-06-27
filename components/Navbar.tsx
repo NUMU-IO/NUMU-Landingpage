@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { useSignupModal } from '../contexts/SignupModalContext';
 
 const Navbar: React.FC = () => {
   const { t, language, toggleLanguage } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -96,12 +96,13 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        {/* Center links */}
+        {/* Center links — Free tools is a real page, not a scroll anchor,
+            so it routes via <Link>. Testimonials lives in footer + Home
+            section only. */}
         <div className="hidden lg:flex items-center gap-8">
           {[
             { id: 'features', label: t('nav.features') },
             { id: 'integrations', label: t('nav.integrations') },
-            { id: 'testimonials', label: t('nav.testimonials') },
             { id: 'cta', label: t('nav.cta') },
           ].map((item) => (
             <a
@@ -113,6 +114,9 @@ const Navbar: React.FC = () => {
               {item.label}
             </a>
           ))}
+          <Link to="/tools" className={navLinkBase}>
+            {t('footer.tools')}
+          </Link>
           <Link to="/contact" className={navLinkBase}>
             {t('footer.contact')}
           </Link>
@@ -167,10 +171,10 @@ const Navbar: React.FC = () => {
           {/* Primary CTA — flat navy on cream, square radius */}
           <button
             type="button"
-            onClick={() => openWaitlist()}
+            onClick={() => openSignup()}
             className="group bg-navy text-cream text-xs sm:text-sm font-semibold py-2 px-3 sm:py-2.5 sm:px-5 md:px-6 rounded-[4px] hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
           >
-            <span>{language === 'ar' ? 'انضم للبيتا' : 'Join Beta'}</span>
+            <span>{language === 'ar' ? 'أنشئ متجرك' : 'Start free'}</span>
             {/* Saffron arrow accent — echoes hero CTA */}
             <span
               aria-hidden="true"
@@ -219,7 +223,6 @@ const Navbar: React.FC = () => {
             {[
               { id: 'features', label: t('nav.features') },
               { id: 'integrations', label: t('nav.integrations') },
-              { id: 'testimonials', label: t('nav.testimonials') },
               { id: 'beta-program', label: language === 'ar' ? 'برنامج البيتا' : 'Beta Program' },
             ].map((item) => (
               <a
@@ -231,15 +234,22 @@ const Navbar: React.FC = () => {
                 {item.label}
               </a>
             ))}
+            <Link
+              to="/tools"
+              className="text-ink font-medium text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t('footer.tools')}
+            </Link>
             <button
               type="button"
               onClick={() => {
                 setIsMenuOpen(false);
-                openWaitlist();
+                openSignup();
               }}
               className="text-navy font-semibold text-base p-3 hover:bg-navy/[0.04] rounded-[4px] transition-colors cursor-pointer text-start"
             >
-              {language === 'ar' ? 'انضم للقائمة' : 'Join Waitlist'}
+              {language === 'ar' ? 'أنشئ متجرك مجانًا' : 'Start free'}
             </button>
             <Link
               to="/contact"

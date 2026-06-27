@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { useSignupModal } from '../contexts/SignupModalContext';
 
 /**
  * numu Trust Network — COD fraud shield.
@@ -96,7 +96,7 @@ const accentMap: Record<
 
 const TrustNetwork: React.FC = () => {
   const { dir, language } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const isAr = language === 'ar';
 
   return (
@@ -371,7 +371,7 @@ const TrustNetwork: React.FC = () => {
           <div className="text-center">
             <button
               type="button"
-              onClick={() => openWaitlist()}
+              onClick={() => openSignup()}
               className="group inline-flex items-center gap-3 bg-cream text-navy font-semibold py-3.5 px-8 rounded-[4px] hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu text-sm sm:text-base"
             >
               <span>

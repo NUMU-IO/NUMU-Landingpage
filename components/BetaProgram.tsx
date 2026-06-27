@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { useSignupModal } from '../contexts/SignupModalContext';
 
 /**
  * Founder's 100 — real-scarcity urgency block.
@@ -111,7 +111,7 @@ const accentMap: Record<
 
 const BetaProgram: React.FC = () => {
   const { dir, language } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const isAr = language === 'ar';
   const [stats, setStats] = useState<{
     total_signups: number;
@@ -247,7 +247,7 @@ const BetaProgram: React.FC = () => {
       <div className="text-center">
         <button
           type="button"
-          onClick={() => openWaitlist()}
+          onClick={() => openSignup()}
           className="group inline-flex items-center gap-3 bg-navy text-cream font-semibold py-3.5 px-8 rounded-[4px] shadow-card hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu text-sm sm:text-base"
         >
           <span>
