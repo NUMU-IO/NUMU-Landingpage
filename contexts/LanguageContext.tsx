@@ -180,7 +180,7 @@ export const translations: Record<string, string> = {
   'hero.title_line2': 'E-Commerce',
   'hero.title_line3': 'in Egypt & MENA',
   'hero.subtitle': 'The only platform with built-in Paymob, Fawry, and Bosta integrations. Native Arabic support, ETA e-invoicing, and advanced COD workflows designed for local growth.',
-  'hero.cta_primary': 'Join the Beta',
+  'hero.cta_primary': 'Create your free store',
   'hero.cta_secondary': 'Try a Demo',
   'demo.modal.title': 'Open your demo store in 30 seconds',
   'demo.modal.subtitle': 'Free, no credit card. 7-day demo with sample products and orders.',
@@ -480,7 +480,7 @@ export const translationsAr: Record<string, string> = {
   'hero.title_line3': 'في مصر والشرق',
   'hero.title_line4': 'الأوسط',
   'hero.subtitle': 'المنصة الوحيدة اللي فيها كل حاجة: بيموب، فوري، وبوسطة. عربي 100%، فاتورة إلكترونية، وشغل الدفع عند الاستلام اللي ينجزك.',
-  'hero.cta_primary': 'انضم للبيتا',
+  'hero.cta_primary': 'أنشئ متجرك مجانًا',
   'hero.cta_secondary': 'جرّب نسخة تجريبية',
   'demo.modal.title': 'افتح متجرك التجريبي في ٣٠ ثانية',
   'demo.modal.subtitle': 'مجاناً، بدون بطاقة. تجربة ٧ أيام مع منتجات وأوردرات تجريبية.',
@@ -609,20 +609,10 @@ export const translationsAr: Record<string, string> = {
   'features.multichannel.desc': 'بيع من موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة.',
 };
 
-// Pick the initial language from the visitor's browser preference. AR is
-// the canonical default for Numu's Egyptian audience; we only fall to EN
-// when the browser explicitly signals a non-Arabic locale (Meta app-review
-// crawlers, MENA visitors with English browsers, etc.). Runs once on mount
-// — the toggle button still overrides the value at any time.
-const getInitialLanguage = (): Language => {
-  if (typeof navigator === 'undefined') return 'ar';
-  const langs = [navigator.language, ...(navigator.languages || [])]
-    .filter(Boolean)
-    .map((l) => l.toLowerCase());
-  if (langs.some((l) => l.startsWith('ar'))) return 'ar';
-  if (langs.some((l) => l.startsWith('en'))) return 'en';
-  return 'ar';
-};
+// Arabic is the landing's primary language — it always loads in Arabic for
+// every visitor regardless of browser locale (Numu's audience is Egypt/MENA).
+// The navbar toggle still lets anyone switch to English at any time.
+const getInitialLanguage = (): Language => 'ar';
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);

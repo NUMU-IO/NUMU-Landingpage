@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { useSignupModal } from '../contexts/SignupModalContext';
 
 /**
  * How It Works — 3-step editorial tiles. Matches the brand-kit tagline
@@ -94,7 +94,7 @@ const accentMap: Record<
 
 const HowItWorks: React.FC = () => {
   const { language } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const isAr = language === 'ar';
 
   return (
@@ -175,7 +175,7 @@ const HowItWorks: React.FC = () => {
       <div className="text-center">
         <button
           type="button"
-          onClick={() => openWaitlist()}
+          onClick={() => openSignup()}
           className="group inline-flex items-center gap-3 bg-navy text-cream font-semibold py-3.5 px-7 rounded-[4px] shadow-card hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu text-sm sm:text-base"
         >
           <span>{isAr ? 'ابدأ دلوقتي' : 'Start now'}</span>

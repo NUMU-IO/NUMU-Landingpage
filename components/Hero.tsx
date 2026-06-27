@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import { useWaitlistModal } from "../contexts/WaitlistModalContext";
+import { useSignupModal } from "../contexts/SignupModalContext";
 import DemoStartModal from "./DemoStartModal";
 
 const AnimatedCounter: React.FC<{
@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
   const [activeBar, setActiveBar] = useState(10);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const { t, dir } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -43,7 +43,12 @@ const Hero: React.FC = () => {
       searchParams.delete("demo");
       setSearchParams(searchParams, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+    if (searchParams.get("signup") === "1") {
+      openSignup();
+      searchParams.delete("signup");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams, openSignup]);
 
   // Merchant hub dashboard palette — lives inside a framed card on cream.
   const dashBg = "#001F3F"; // navy-900
@@ -101,7 +106,7 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-7 animate-fade-in-up-3 justify-center lg:justify-start">
               <button
                 type="button"
-                onClick={() => openWaitlist()}
+                onClick={() => openSignup()}
                 className="group bg-navy text-cream font-semibold py-3.5 px-7 rounded-[4px] shadow-sm hover:bg-navy-800 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center gap-3 text-sm sm:text-base w-full sm:w-auto justify-center"
               >
                 <span>{t("hero.cta_primary")}</span>

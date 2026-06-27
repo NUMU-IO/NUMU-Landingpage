@@ -24,8 +24,20 @@ export interface User {
   updated_at: string;
 }
 
+export interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+}
+
 export interface AuthResponse {
   user: User;
+  // The backend also returns the freshly-minted session tokens in the body
+  // (in addition to setting httpOnly cookies). The landing uses these to
+  // hand the new account off to the merchant hub via /token-handoff —
+  // the same cross-origin handoff the demo flow uses — instead of calling
+  // authenticated endpoints from the landing origin.
+  tokens?: AuthTokens;
 }
 
 export interface RegisterData {

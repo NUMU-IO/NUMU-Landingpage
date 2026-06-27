@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { useSignupModal } from '../contexts/SignupModalContext';
 
 /**
  * Closing CTA — full-bleed navy editorial panel with souk-tile accent,
@@ -10,7 +10,7 @@ import { useWaitlistModal } from '../contexts/WaitlistModalContext';
  */
 const CTA: React.FC = () => {
   const { language } = useLanguage();
-  const { open: openWaitlist } = useWaitlistModal();
+  const { open: openSignup } = useSignupModal();
   const isAr = language === 'ar';
 
   return (
@@ -57,8 +57,8 @@ const CTA: React.FC = () => {
 
           <p className="prose-body text-cream/80 max-w-xl mx-auto mb-4">
             {isAr
-              ? 'انضم لبرنامج التاجر المؤسس. وصول مبكر، دعم أولوية، وشهر Premium مجاناً.'
-              : 'Join the founder merchant program. Early access, priority support, free month of Premium.'}
+              ? 'سجّل دلوقتي وافتح متجرك في دقايق. وصول مبكر، دعم أولوية، وشهر Premium مجاناً.'
+              : 'Sign up now and launch your store in minutes. Early access, priority support, free month of Premium.'}
           </p>
 
           {/* Terracotta hairline — editorial signature */}
@@ -68,13 +68,13 @@ const CTA: React.FC = () => {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto sm:inline-flex">
-            {/* Primary — cream on navy, saffron arrow, opens waitlist modal */}
+            {/* Primary — cream on navy, saffron arrow, opens the signup modal */}
             <button
               type="button"
-              onClick={() => openWaitlist()}
+              onClick={() => openSignup()}
               className="group bg-cream text-navy font-semibold py-3.5 px-7 rounded-[4px] text-sm sm:text-base hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu flex items-center gap-3 w-full sm:w-auto justify-center"
             >
-              <span>{isAr ? 'انضم لقائمة الانتظار' : 'Join the Waitlist'}</span>
+              <span>{isAr ? 'أنشئ متجرك مجانًا' : 'Create your free store'}</span>
               <span
                 aria-hidden="true"
                 className="text-lg text-terracotta group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform rtl:rotate-180"
@@ -83,12 +83,12 @@ const CTA: React.FC = () => {
               </span>
             </button>
 
-            {/* Secondary — outlined cream */}
+            {/* Secondary — outlined cream, existing-account login */}
             <Link
-              to="/signup"
+              to="/login"
               className="border border-cream/25 text-cream font-semibold py-3.5 px-7 rounded-[4px] text-sm sm:text-base hover:bg-cream/5 hover:border-saffron/60 hover:text-saffron transition-all duration-200 ease-numu flex items-center gap-2 w-full sm:w-auto justify-center"
             >
-              <span>{isAr ? 'عندي كود دعوة' : 'I have an invite code'}</span>
+              <span>{isAr ? 'عندي حساب بالفعل' : 'I already have an account'}</span>
             </Link>
           </div>
 
