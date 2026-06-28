@@ -7,6 +7,7 @@ import { SignupModalProvider } from './contexts/SignupModalContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
 import SignupModal from './components/SignupModal';
 import ContactModal from './components/ContactModal';
@@ -85,6 +86,7 @@ const App: React.FC = () => {
         <SignupModal />
         <WaitlistModal />
         <ContactModal />
+        <Analytics />
         </ContactModalProvider>
         </SignupModalProvider>
         </WaitlistModalProvider>
