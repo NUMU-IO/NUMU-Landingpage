@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLanguage } from "../contexts/LanguageContext";
+import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
@@ -14,8 +15,10 @@ interface DemoStartModalProps {
 
 const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
   const { t, language, dir } = useLanguage();
+  const { days: trialDays } = useTrialMeta();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [magicLinkSent, setMagicLinkSent] = useState(false);
@@ -70,6 +73,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
         body: JSON.stringify({
           name: name.trim(),
           email,
+          whatsapp: whatsapp.trim() || null,
           language,
           turnstile_token: turnstileToken,
         }),
@@ -153,7 +157,13 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
           <div className="inline-flex items-center gap-2 bg-saffron/15 border border-saffron/40 rounded-[4px] px-3 py-1 mb-4">
             <span className="size-1.5 rounded-full bg-saffron animate-pulse" aria-hidden="true" />
             <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
-              {magicLinkSent ? (isAr ? 'لينك مبعوت' : 'LINK SENT') : (isAr ? 'تجربة ٣٠ يوم' : '30-DAY TRIAL')}
+              {magicLinkSent
+                ? isAr
+                  ? "لينك مبعوت"
+                  : "LINK SENT"
+                : isAr
+                  ? `تجربة ${toArabicDigits(String(trialDays))} يوم`
+                  : `${trialDays}-DAY TRIAL`}
             </span>
           </div>
           <h2 className="font-display text-2xl sm:text-[28px] font-bold text-cream tracking-tight">
@@ -203,6 +213,23 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t("demo.modal.email_placeholder")}
+                  disabled={loading}
+                  className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+                  dir="ltr"
+                />
+              </div>
+              {/* WhatsApp — optional on purpose: it's the lead channel
+                  that converts in Egypt, but forcing it costs signups. */}
+              <div>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  maxLength={20}
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  placeholder={
+                    isAr ? "رقم الواتساب (اختياري)" : "WhatsApp number (optional)"
+                  }
                   disabled={loading}
                   className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
                   dir="ltr"
@@ -299,8 +326,8 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
 
             <p className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-cream/50 mt-4">
               {isAr
-                ? "بالدخول بجوجل بتحصل على تجربة ٣٠ يوم مباشرة"
-                : "Google sign-up gets you a 30-day trial instantly"}
+                ? `بالدخول بجوجل بتحصل على تجربة ${toArabicDigits(String(trialDays))} يوم مباشرة`
+                : `Google sign-up gets you a ${trialDays}-day trial instantly`}
             </p>
           </>
         )}

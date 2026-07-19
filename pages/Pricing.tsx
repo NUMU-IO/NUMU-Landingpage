@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../lib/trialInfo';
 import PricingSection from '../components/PricingSection';
 import FAQ from '../components/FAQ';
 
@@ -20,8 +21,8 @@ const Pricing: React.FC = () => {
       ? 'الباقات — نُمُو · ٠٪ عمولة، يبدأ من ٩٩ جنيه/شهر'
       : 'Pricing — numu · 0% commission, from 99 EGP/month',
     description: isAr
-      ? 'باقات شفّافة من نُمُو — منصة التجارة الإلكترونية عربي الأول لمصر والشرق الأوسط. ستارتر بـ ٩٩ جنيه/شهر، ٠٪ عمولة على الأوردرات، تجربة مجانية ٣٠ يوم، بدون بطاقة ائتمان.'
-      : 'Transparent plans for numu — Arabic-first commerce for Egypt & MENA. 99 EGP/month Starter, zero commission on orders, 30-day free trial, no credit card.',
+      ? `باقات شفّافة من نُمُو — منصة التجارة الإلكترونية عربي الأول لمصر والشرق الأوسط. اشتراك شهري بدون عمولة، أو "ادفع وأنت تنمو" بدون اشتراك، وتجربة مجانية ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم بدون بطاقة ائتمان.`
+      : `Transparent plans for numu — Arabic-first commerce for Egypt & MENA. Zero-commission subscriptions or Pay as you Grow with no monthly fee, plus a ${DEFAULT_TRIAL_DAYS}-day free trial, no credit card.`,
     canonical: 'https://numueg.app/pricing',
   });
 

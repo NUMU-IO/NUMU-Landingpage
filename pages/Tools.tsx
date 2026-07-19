@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
 
 /**
  * Free tools hub — audit §2.6. This is the highest-leverage SEO moat
@@ -279,7 +280,7 @@ const Tools: React.FC = () => {
           </h2>
           <p className="prose-body text-cream/75 max-w-xl mx-auto mb-6">
             {isAr
-              ? "نُمُو بيجمع كل حاجة — متجر، دفع، شحن، فواتير، AI — في لوحة واحدة. ابدأ مجاناً ٣٠ يوم."
+              ? `نُمُو بيجمع كل حاجة — متجر، دفع، شحن، فواتير، AI — في لوحة واحدة. ابدأ مجاناً ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم.`
               : "numu bundles every tool — storefront, payments, shipping, invoices, AI — into one dashboard. Free for 30 days."}
           </p>
           <Link
