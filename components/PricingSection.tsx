@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSignupModal, PlanIntent } from "../contexts/SignupModalContext";
 import DemoStartModal from "./DemoStartModal";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -16,8 +17,10 @@ interface Plan {
   price_monthly: number;
   price_annual: number;
   currency: string;
-  cta: string;
+  cta: string; // try_demo | subscribe | signup_payg | contact
   popular: boolean;
+  /** Pay-as-you-Grow only — live admin-controlled rate (e.g. 3). */
+  commission_percent?: number;
   features: PlanFeature[];
 }
 
@@ -27,9 +30,16 @@ interface Promo {
   text_ar: string;
 }
 
+interface TrialMeta {
+  enabled: boolean;
+  days: number;
+  visible: boolean;
+}
+
 interface PricingData {
   plans: Plan[];
   promo?: Promo;
+  trial?: TrialMeta;
 }
 
 // Arabic-Indic numeral converter for RTL price display
@@ -39,6 +49,7 @@ const toArabicDigits = (s: string): string =>
 const PricingSection: React.FC = () => {
   const { language } = useLanguage();
   const isAr = language === "ar";
+  const { open: openSignup } = useSignupModal();
   const [data, setData] = useState<PricingData | null>(null);
   const [annual, setAnnual] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
@@ -172,6 +183,11 @@ const PricingSection: React.FC = () => {
           const isFree = plan.price_monthly === 0;
           const isCustom = plan.price_monthly === -1;
           const isPopular = plan.popular;
+          const isPayg = plan.key === "payg";
+          // Trial length comes from the admin-controlled signup settings
+          // (falls back to 30 for older API payloads).
+          const trialDays = String(data.trial?.days ?? 30);
+          const paygPct = String(plan.commission_percent ?? 3);
 
           const priceRaw = isCustom
             ? isAr
@@ -188,10 +204,14 @@ const PricingSection: React.FC = () => {
           const price =
             isAr && !isCustom && !isFree ? toArabicDigits(priceRaw) : priceRaw;
 
-          const period = isFree
+          const period = isPayg
             ? isAr
-              ? `تجربة مجانية ${toArabicDigits("30")} يوم`
-              : "30-day free trial"
+              ? `${toArabicDigits(paygPct)}٪ فقط على كل طلب مدفوع`
+              : `Only ${paygPct}% per paid order`
+            : isFree
+            ? isAr
+              ? `تجربة مجانية ${toArabicDigits(trialDays)} يوم`
+              : `${trialDays}-day free trial`
             : isCustom
               ? isAr
                 ? "حسب متطلباتك ونطاق عملك"
@@ -204,7 +224,11 @@ const PricingSection: React.FC = () => {
                   ? "جنيه/شهر"
                   : "EGP/month";
 
-          const subtitle = isFree
+          const subtitle = isPayg
+            ? isAr
+              ? "بدون اشتراك شهري — ادفع وأنت تنمو"
+              : "No monthly subscription — pay as you grow"
+            : isFree
             ? isAr
               ? "بدون بطاقة ائتمان"
               : "No credit card needed"
@@ -284,12 +308,28 @@ const PricingSection: React.FC = () => {
                   {isFree || isCustom ? period : subtitle}
                 </p>
 
-                {/* CTA */}
+                {/* CTA — each card does what it says:
+                    try_demo → demo modal (name+email, throwaway tenant);
+                    subscribe / signup_payg → real signup carrying the plan
+                    intent (payg auto-activates at store creation);
+                    contact → contact page. */}
                 <div className="mb-6">
-                  {(plan.cta === "try_demo" || plan.cta === "subscribe") && (
+                  {(plan.cta === "try_demo" ||
+                    plan.cta === "subscribe" ||
+                    plan.cta === "signup_payg") && (
                     <button
                       type="button"
-                      onClick={() => setDemoOpen(true)}
+                      onClick={() =>
+                        plan.cta === "try_demo"
+                          ? setDemoOpen(true)
+                          : openSignup(
+                              plan.cta === "signup_payg"
+                                ? "payg"
+                                : (["starter", "pro"].includes(plan.key)
+                                    ? (plan.key as PlanIntent)
+                                    : null),
+                            )
+                      }
                       className={`group w-full font-semibold py-3.5 rounded-[4px] text-sm transition-all duration-200 ease-numu flex items-center justify-center gap-2 ${
                         isPopular
                           ? "bg-cream text-navy hover:bg-cream/90 active:scale-[0.985]"
@@ -297,13 +337,21 @@ const PricingSection: React.FC = () => {
                       }`}
                     >
                       <span>
-                        {isFree
+                        {plan.cta === "try_demo"
                           ? isAr
-                            ? "ابدأ مجاناً"
-                            : "Start free"
-                          : isAr
-                            ? "ابدأ الآن"
-                            : "Get started"}
+                            ? "جرّب الآن"
+                            : "Try now"
+                          : isPayg
+                            ? isAr
+                              ? "ابدأ مجاناً وانمو"
+                              : "Start free & grow"
+                            : isFree
+                              ? isAr
+                                ? "ابدأ مجاناً"
+                                : "Start free"
+                              : isAr
+                                ? "ابدأ الآن"
+                                : "Start now"}
                       </span>
                       <span
                         aria-hidden="true"

@@ -14,6 +14,7 @@ interface DemoStartModalProps {
 
 const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
   const { t, language, dir } = useLanguage();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,6 +68,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
+          name: name.trim(),
           email,
           language,
           turnstile_token: turnstileToken,
@@ -178,8 +180,22 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
           </button>
         ) : (
           <>
-            {/* Form */}
+            {/* Form — name + email both required so every demo lead is
+                attributable to a person, not just an inbox. */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  required
+                  minLength={2}
+                  maxLength={120}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={isAr ? "اسمك بالكامل" : "Your full name"}
+                  disabled={loading}
+                  className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+                />
+              </div>
               <div>
                 <input
                   type="email"

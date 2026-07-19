@@ -46,6 +46,8 @@ export interface RegisterData {
   first_name: string;
   last_name: string;
   phone?: string;
+  /** Pricing card the visitor clicked before signing up (payg auto-activates). */
+  plan_intent?: "payg" | "starter" | "pro";
 }
 
 /** POST with CSRF header, auto-retry once on CSRF failure, then refresh token. */
