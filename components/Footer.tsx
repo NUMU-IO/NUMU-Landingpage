@@ -39,9 +39,14 @@ const Footer: React.FC = () => {
     }
   };
 
+  // These URLs are also the Organization `sameAs` set in index.html — the two
+  // must stay identical. They disagreed until 2026-08-06 (footer said
+  // instagram.com/numu_eg, which does not exist; the live account is
+  // @numueg_), which shipped a dead link to users and pointed Google's entity
+  // resolution at a profile that isn't ours.
   const socials = [
     {
-      href: 'https://www.instagram.com/numu_eg/',
+      href: 'https://www.instagram.com/numueg_/',
       label: 'Follow numu on Instagram',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -50,7 +55,7 @@ const Footer: React.FC = () => {
       ),
     },
     {
-      href: 'https://x.com/numueg',
+      href: 'https://x.com/Numuegy',
       label: 'Follow numu on X',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +64,9 @@ const Footer: React.FC = () => {
       ),
     },
     {
-      href: 'https://www.linkedin.com/in/numueg',
+      // /company/, not /in/ — the latter is a personal-profile URL, so as an
+      // Organization `sameAs` it asks Google to equate the company with a person.
+      href: 'https://www.linkedin.com/company/numueg',
       label: 'Connect with numu on LinkedIn',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
