@@ -63,22 +63,14 @@ jobs:
           VITE_DASHBOARD_URL: ${{ steps.target.outputs.dashboard_url }}
         run: npm run build:ssg
 
+      # `build:ssg` already runs this, so it is belt-and-braces — but it keeps the
+      # gate visible as its own red step in the Actions UI. The route list lives in
+      # dist/prerender-manifest.json (written by prerender.mjs), never here: the
+      # previous hardcoded list silently omitted /apps, /themes, /developers,
+      # /learn and all four /tools/* pages, so nothing caught that they shipped
+      # as un-prerendered SPA shells.
       - name: Verify prerender produced per-route HTML
-        run: |
-          set -e
-          for route in "" pricing contact privacy terms refund data-deletion 404; do
-            file="dist/${route}/index.html"
-            [ "$route" = "" ] && file="dist/index.html"
-            if [ ! -f "$file" ]; then
-              echo "::error::Missing prerendered file: $file"
-              exit 1
-            fi
-            if ! grep -q "x-numu-prerendered" "$file"; then
-              echo "::error::$file is not a prerendered document (missing marker)"
-              exit 1
-            fi
-            echo "OK: $file"
-          done
+        run: node scripts/verify-prerender.mjs
 
       - name: Deploy to server via rsync
         uses: burnett01/rsync-deployments@7.0.1

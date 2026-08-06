@@ -10,6 +10,9 @@ const Footer: React.FC = () => {
   const links = [
     { key: 'footer.products', href: '/pricing', hash: 'preview' },
     { key: 'footer.themes', href: '/themes' },
+    // Sitewide link so /stores is reachable by crawl, not just from sitemap.xml —
+    // it is in turn the only path Googlebot has to any <sub>.numueg.app storefront.
+    { key: 'footer.stores', href: '/stores' },
     { key: 'footer.apps', href: '/apps' },
     { key: 'footer.tools', href: '/tools' },
     { key: 'footer.learn', href: '/learn' },

@@ -16,6 +16,31 @@ const DIST = join(process.cwd(), 'dist');
 const PORT = 4173;
 const SITE = 'https://numueg.app';
 
+/** The four free tools, as [path, name] — kept in one place so /tools's
+ *  ItemList and each tool's own WebApplication block can't drift apart. */
+const TOOLS = [
+  ['/tools/store-names', 'Store Name Generator'],
+  ['/tools/profit-margin', 'Profit Margin Calculator'],
+  ['/tools/invoice', 'Invoice Generator'],
+  ['/tools/ai-description', 'AI Product Description Writer'],
+];
+
+/** BreadcrumbList builder: crumb('Apps', '/apps') or crumb(parent, parentPath, leaf, leafPath). */
+function crumb(...pairs) {
+  const items = [['NUMU', '/']];
+  for (let i = 0; i < pairs.length; i += 2) items.push([pairs[i], pairs[i + 1]]);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map(([name, path], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: `${SITE}${path}`,
+    })),
+  };
+}
+
 /**
  * Per-route prerender config.
  *
@@ -116,6 +141,47 @@ const ROUTES = [
       },
     ],
   },
+  ...[
+    ['/apps', 'Apps'],
+    ['/themes', 'Themes'],
+    ['/developers', 'Developers'],
+    ['/learn', 'Learn'],
+    ['/stores', 'Stores'],
+  ].map(([path, name]) => ({ path, extraJsonLd: [crumb(name, path)] })),
+  {
+    path: '/tools',
+    extraJsonLd: [
+      crumb('Free Tools', '/tools'),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Free e-commerce tools for Egyptian merchants',
+        itemListElement: TOOLS.map(([path, name], i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name,
+          url: `${SITE}${path}`,
+        })),
+      },
+    ],
+  },
+  ...TOOLS.map(([path, name]) => ({
+    path,
+    extraJsonLd: [
+      crumb('Free Tools', '/tools', name, path),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name,
+        url: `${SITE}${path}`,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Any',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'EGP' },
+        provider: { '@type': 'Organization', name: 'NUMU', url: SITE },
+      },
+    ],
+  })),
   {
     path: '/privacy',
     extraJsonLd: [
@@ -184,11 +250,42 @@ const CHROME_PATHS = [
   '/usr/bin/chromium',
 ].filter(Boolean);
 
-function findChrome() {
+/**
+ * Resolve a launchable browser.
+ *
+ * Local dev (Windows) and GitHub Actions (`/usr/bin/google-chrome`) have a
+ * system Chrome. Vercel's build container does not — and `apt-get` isn't an
+ * option there — so we fall back to @sparticuz/chromium, a statically-linked
+ * Chromium built for Amazon Linux / Lambda, which is exactly what Vercel runs.
+ *
+ * Without this fallback the build silently degrades to plain `vite build`
+ * output: 15 URLs all serving the homepage shell with `canonical=/`, which is
+ * what kept 14 of 15 pages out of Google's index.
+ */
+async function resolveBrowser() {
   for (const p of CHROME_PATHS) {
-    if (existsSync(p)) return p;
+    if (existsSync(p)) {
+      return {
+        executablePath: p,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        source: p,
+      };
+    }
   }
-  throw new Error('Chrome not found. Install Chrome or set CHROME_PATH env var.');
+
+  try {
+    const { default: chromium } = await import('@sparticuz/chromium');
+    return {
+      executablePath: await chromium.executablePath(),
+      args: chromium.args,
+      source: '@sparticuz/chromium',
+    };
+  } catch (err) {
+    throw new Error(
+      'No Chrome found and @sparticuz/chromium could not be loaded ' +
+        `(${err.message}). Install Chrome, set CHROME_PATH, or run \`npm i\`.`,
+    );
+  }
 }
 
 /**
@@ -207,8 +304,8 @@ function injectRouteMeta(html, route) {
 }
 
 async function main() {
-  const chromePath = findChrome();
-  console.log(`Using Chrome: ${chromePath}`);
+  const browserConfig = await resolveBrowser();
+  console.log(`Using Chrome: ${browserConfig.source}`);
 
   // `detached: true` puts the server into its own process group so we can
   // kill the whole group later — killing just the shell wrapper leaves the
@@ -223,9 +320,9 @@ async function main() {
   await new Promise((r) => setTimeout(r, 2000));
 
   const browser = await puppeteer.launch({
-    executablePath: chromePath,
+    executablePath: browserConfig.executablePath,
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: browserConfig.args,
   });
 
   // Render all routes first, then write — otherwise the preview server's SPA
@@ -277,7 +374,16 @@ async function main() {
     console.log(`  → Saved: ${outFile}`);
   }
 
-  console.log('\n✅ Prerender complete!');
+  // Manifest so verify-prerender.mjs checks exactly what we rendered — a second
+  // hand-maintained route list in CI is how /apps, /themes, /tools/* and the
+  // rest went unverified (and therefore unprerendered) for months.
+  writeFileSync(
+    join(DIST, 'prerender-manifest.json'),
+    JSON.stringify({ routes: ROUTES.map((r) => r.path) }, null, 2),
+    'utf-8',
+  );
+
+  console.log(`\n✅ Prerender complete — ${rendered.length} routes.`);
 }
 
 main()

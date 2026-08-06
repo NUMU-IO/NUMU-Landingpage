@@ -160,4 +160,30 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://numueg.app/refund" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://numueg.app/refund" />
   </url>
+  <url>
+    <loc>https://numueg.app/data-deletion</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://numueg.app/data-deletion" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://numueg.app/data-deletion" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://numueg.app/data-deletion" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://numueg.app/data-deletion" />
+  </url>
+  <!--
+    /stores is the crawl entry point for merchant storefronts. Every store lives
+    on its own <sub>.numueg.app host, so Googlebot has no path to any of them
+    from here unless something links out — which is why vionne.numueg.app came
+    back "URL is unknown to Google" despite being fully indexable on its own.
+  -->
+  <url>
+    <loc>https://numueg.app/stores</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://numueg.app/stores" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://numueg.app/stores" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://numueg.app/stores" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://numueg.app/stores" />
+  </url>
 </urlset>

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:ssg": "vite build && node scripts/prerender.mjs",
+    "build:ssg": "vite build && node scripts/prerender.mjs && node scripts/verify-prerender.mjs",
     "preview": "vite preview",
     "start": "serve dist -s -l 8080",
     "convert:logos": "node scripts/convert-logos.mjs"
@@ -21,6 +21,7 @@
     "serve": "^14.2.4"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^131.0.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.11",
     "@types/node": "^22.14.0",
