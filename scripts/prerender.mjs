@@ -26,6 +26,7 @@ const TOOLS = [
   ['/tools/invoice', 'Invoice Generator'],
   ['/tools/ai-description', 'AI Product Description Writer'],
   ['/tools/vat', 'VAT Calculator'],
+  ['/tools/cod', 'COD & RTO Cost Calculator'],
 ];
 
 /** BreadcrumbList builder: crumb('Apps', '/apps') or crumb(parent, parentPath, leaf, leafPath). */
