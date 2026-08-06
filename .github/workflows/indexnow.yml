@@ -1,0 +1,46 @@
+name: IndexNow submit
+
+# Announces numueg.app's pages to IndexNow — one POST that fans out to Bing,
+# DuckDuckGo, Yandex and Seznam. Bing matters most here: it is what backs
+# ChatGPT search, and the /tools/* pages are the only surface on this site that
+# earns traffic from people who have never heard of NUMU.
+#
+# Storefronts have had this since the SEO tier-1 work (NUMU-api pings each
+# store's /api/indexnow on publish). The marketing site never did, so a new
+# tool page reached Bing only whenever it next chose to recrawl.
+#
+# Why its own workflow rather than a step in deploy.yml: deploy.yml rsyncs to
+# the droplet, but production numueg.app is served from Vercel via its Git
+# integration. Neither this repo's CI nor Vercel notifies the other, so the
+# submission is triggered separately once the new build is confirmed live —
+# which the script verifies by reading the key file and sitemap off the
+# production host rather than trusting a local dist/.
+
+on:
+  workflow_dispatch:
+  # Give Vercel time to finish building and promote the deployment before we
+  # announce URLs that may still be serving the previous build. IndexNow asks
+  # you not to submit unchanged URLs; announcing stale ones is the same waste.
+  schedule:
+    - cron: "30 6 * * 1"
+
+concurrency:
+  group: indexnow-landing
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    name: Submit sitemap URLs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # No dependencies: the script uses global fetch only. Nothing to install,
+      # so there is no lockfile drift to trip over on a job whose whole purpose
+      # is to run reliably and unattended.
+      - name: Submit to IndexNow
+        run: node scripts/indexnow-submit.mjs
