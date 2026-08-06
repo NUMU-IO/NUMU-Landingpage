@@ -273,12 +273,29 @@ async function resolveBrowser() {
     }
   }
 
+  // @sparticuz/chromium gates unpacking its bundled shared libraries on actually
+  // running inside Lambda (helper.js: isRunningInAwsLambdaNode20 reads
+  // AWS_LAMBDA_JS_RUNTIME / AWS_EXECUTION_ENV / CODEBUILD_BUILD_IMAGE). Vercel's
+  // build container is Amazon Linux 2023 but sets none of them, so the package
+  // happily unpacks chromium.br to /tmp/chromium and then skips al2023.tar.br —
+  // and the binary dies with `libnss3.so: cannot open shared object file`.
+  //
+  // Declaring the runtime is not a workaround for a safety check; it is telling
+  // the package which libc flavour it is on, and AL2023 is the true answer for
+  // this image. It must be set BEFORE the import: setupLambdaEnvironment() runs
+  // at module scope and is what puts /tmp/al2023/lib on LD_LIBRARY_PATH.
+  process.env.AWS_LAMBDA_JS_RUNTIME ??= 'nodejs20.x';
+
   try {
     const { default: chromium } = await import('@sparticuz/chromium');
     return {
       executablePath: await chromium.executablePath(),
-      args: chromium.args,
-      source: '@sparticuz/chromium',
+      // Drop --single-process. It exists to dodge a `prctl(PR_SET_NO_NEW_PRIVS)`
+      // failure under Lambda's seccomp profile, which does not apply in a build
+      // container — and it makes Chrome flaky when pages are opened and closed in
+      // a loop, which is precisely what prerendering 18 routes does.
+      args: chromium.args.filter((a) => a !== '--single-process'),
+      source: '@sparticuz/chromium (AL2023)',
     };
   } catch (err) {
     throw new Error(
