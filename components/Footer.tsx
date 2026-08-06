@@ -64,14 +64,11 @@ const Footer: React.FC = () => {
       ),
     },
     {
-      // Resolved from the app's share link (facebook.com/share/1E23JcZVrb/…),
-      // which is a redirect that identifies no account and is therefore useless
-      // as a `sameAs`. This is the canonical target it resolves to.
-      //
-      // TODO: this is a personal profile (/people/<name>/<id>/), not a Page.
-      // Converting to a Facebook Page makes it the right entity type for an
-      // Organization and is a prerequisite for Business Profile linking.
-      href: 'https://www.facebook.com/people/Numueg/61578432101606/',
+      // The username URL, which Facebook itself reports as og:url. Not the
+      // share redirect (facebook.com/share/1E23JcZVrb/…), which identifies no
+      // account, and not the /people/<name>/<id>/ form that redirect resolves
+      // to — a numeric id carries no brand signal, whereas the username does.
+      href: 'https://www.facebook.com/Numuegy/',
       label: 'Follow numu on Facebook',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
