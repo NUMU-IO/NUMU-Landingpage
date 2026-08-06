@@ -33,6 +33,7 @@ const ToolStoreNames = lazy(() => import('./pages/tools/StoreNameGenerator'));
 const ToolProfitMargin = lazy(() => import('./pages/tools/ProfitMarginCalculator'));
 const ToolInvoice = lazy(() => import('./pages/tools/InvoiceGenerator'));
 const ToolAIDescription = lazy(() => import('./pages/tools/AIDescription'));
+const ToolVat = lazy(() => import('./pages/tools/VatCalculator'));
 const Learn = lazy(() => import('./pages/Learn'));
 const Stores = lazy(() => import('./pages/Stores'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -78,6 +79,7 @@ const App: React.FC = () => {
             <Route path="/tools/profit-margin" element={<ToolProfitMargin />} />
             <Route path="/tools/invoice" element={<ToolInvoice />} />
             <Route path="/tools/ai-description" element={<ToolAIDescription />} />
+            <Route path="/tools/vat" element={<ToolVat />} />
             <Route path="/learn" element={<Learn />} />
             {/* Crawl entry point for merchant storefronts — see pages/Stores.tsx */}
             <Route path="/stores" element={<Stores />} />

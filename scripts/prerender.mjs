@@ -16,13 +16,16 @@ const DIST = join(process.cwd(), 'dist');
 const PORT = 4173;
 const SITE = 'https://numueg.app';
 
-/** The four free tools, as [path, name] — kept in one place so /tools's
- *  ItemList and each tool's own WebApplication block can't drift apart. */
+/** The free tools, as [path, name] — kept in one place so /tools's ItemList and
+ *  each tool's own WebApplication block can't drift apart. Adding a tool here
+ *  gets it prerendered and schema'd; it still needs a route in App.tsx, a card
+ *  in pages/Tools.tsx, and a sitemap.xml entry. */
 const TOOLS = [
   ['/tools/store-names', 'Store Name Generator'],
   ['/tools/profit-margin', 'Profit Margin Calculator'],
   ['/tools/invoice', 'Invoice Generator'],
   ['/tools/ai-description', 'AI Product Description Writer'],
+  ['/tools/vat', 'VAT Calculator'],
 ];
 
 /** BreadcrumbList builder: crumb('Apps', '/apps') or crumb(parent, parentPath, leaf, leafPath). */

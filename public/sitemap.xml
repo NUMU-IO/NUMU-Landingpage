@@ -121,6 +121,16 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://numueg.app/tools/ai-description" />
   </url>
   <url>
+    <loc>https://numueg.app/tools/vat</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://numueg.app/tools/vat" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://numueg.app/tools/vat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://numueg.app/tools/vat" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://numueg.app/tools/vat" />
+  </url>
+  <url>
     <loc>https://numueg.app/learn</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
