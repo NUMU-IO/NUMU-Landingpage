@@ -64,6 +64,22 @@ const Footer: React.FC = () => {
       ),
     },
     {
+      // Resolved from the app's share link (facebook.com/share/1E23JcZVrb/…),
+      // which is a redirect that identifies no account and is therefore useless
+      // as a `sameAs`. This is the canonical target it resolves to.
+      //
+      // TODO: this is a personal profile (/people/<name>/<id>/), not a Page.
+      // Converting to a Facebook Page makes it the right entity type for an
+      // Organization and is a prerequisite for Business Profile linking.
+      href: 'https://www.facebook.com/people/Numueg/61578432101606/',
+      label: 'Follow numu on Facebook',
+      icon: (
+        <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M22.675 0h-21.35C.595 0 0 .593 0 1.325v21.351C0 23.407.595 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+        </svg>
+      ),
+    },
+    {
       // /company/, not /in/ — the latter is a personal-profile URL, so as an
       // Organization `sameAs` it asks Google to equate the company with a person.
       href: 'https://www.linkedin.com/company/numueg',
