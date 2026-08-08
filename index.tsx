@@ -2,7 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { initCSRF } from './services/csrf';
+import { initMonitoring } from './services/heronsignal';
 import './index.css';
+
+// Real-user monitoring starts before render (and before the CSRF round-trip)
+// so a failure in either one still lands in a session. The tracker itself is
+// injected asynchronously, so this costs nothing on the critical path.
+initMonitoring();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

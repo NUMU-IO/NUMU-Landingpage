@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWaitlistModal } from '../contexts/WaitlistModalContext';
+import { captureError, event, log } from '../services/heronsignal';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://numueg.app/api/v1';
 
@@ -48,6 +49,13 @@ const WaitlistModal: React.FC = () => {
   useEffect(() => {
     if (ctxRef) setLocalRef(ctxRef);
   }, [ctxRef]);
+
+  // Funnel step 1 of 2. Pairs with `waitlist_joined` below so the drop-off
+  // between opening the modal and actually submitting is measurable.
+  useEffect(() => {
+    if (!isOpen) return;
+    event('waitlist_opened', { referred: Boolean(localRef), language });
+  }, [isOpen, localRef, language]);
 
   // Load stats once when modal first opens
   useEffect(() => {
@@ -100,6 +108,10 @@ const WaitlistModal: React.FC = () => {
           json?.detail ||
           (isAr ? 'حدث خطأ' : 'Something went wrong');
         setError(msg);
+        // A rejected signup is a silent conversion loss: the visitor sees an
+        // inline message and leaves. Logging the status + reason makes the
+        // pattern visible (validation vs. duplicate vs. 5xx).
+        log('warn', 'Waitlist signup rejected', { status: res.status, reason: msg });
         return;
       }
 
@@ -107,8 +119,15 @@ const WaitlistModal: React.FC = () => {
       setReferralCode(data.referral_code);
       setPosition(data.position);
       setSubmitted(true);
-    } catch {
+      // Funnel step 2 of 2.
+      event('waitlist_joined', {
+        referred: Boolean(localRef),
+        position: data.position ?? null,
+        language,
+      });
+    } catch (err) {
       setError(isAr ? 'حدث خطأ، حاول مرة أخرى' : 'Something went wrong, try again');
+      captureError(err instanceof Error ? err : new Error('Waitlist request failed'));
     } finally {
       setLoading(false);
     }
