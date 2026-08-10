@@ -17,10 +17,30 @@ const PORT = 4173;
 const SITE = 'https://numueg.app';
 
 // Public, unauthenticated API calls the prerendered pages make (today only
-// the store directory that /stores is built from). Matched against the
-// request URL and fulfilled from Node — see the interception handler below
-// for why the browser cannot fetch these itself.
-const API_PROXY_RE = /^https:\/\/numueg\.app\/api\/v1\/public\//;
+// the store directory /stores is built from), matched BY PATH and fulfilled
+// from Node — see the interception handler for why the browser cannot fetch
+// them itself.
+//
+// Path, not full URL, because `.env` ships `VITE_API_URL=/api/v1`: in the
+// browser that is same-origin against numueg.app and works, but here the
+// app is served from http://localhost:4173, so the very same call resolves
+// to http://localhost:4173/api/v1/... — a path the static preview server
+// does not have. Matching the absolute production URL therefore matched
+// nothing at all.
+const API_PATH_RE = /^\/api\/v1\/public\//;
+const API_ORIGIN = SITE;
+
+/** The real API URL to serve an intercepted request from, or null. */
+function apiTargetFor(requestUrl) {
+  let parsed;
+  try {
+    parsed = new URL(requestUrl);
+  } catch {
+    return null;
+  }
+  if (!API_PATH_RE.test(parsed.pathname)) return null;
+  return `${API_ORIGIN}${parsed.pathname}${parsed.search}`;
+}
 
 /** Fetch JSON as text for `req.respond`. Throws so the caller can fall back
  *  to `req.continue()` — a directory blip must never fail the whole build. */
@@ -394,20 +414,40 @@ async function main() {
         // Node's fetch has no same-origin policy, so proxying the request
         // here fixes it at build time only: no localhost origin has to be
         // added to the production CORS allowlist, and no app code changes.
-        if (API_PROXY_RE.test(req.url())) {
-          fetchJsonForPage(req.url())
-            .then((body) =>
-              req.respond({
+        const apiTarget = apiTargetFor(req.url());
+        if (apiTarget) {
+          fetchJsonForPage(apiTarget)
+            .then((body) => {
+              console.log(`  → API proxied: ${apiTarget} (${body.length}b)`);
+              return req.respond({
                 status: 200,
                 contentType: 'application/json; charset=utf-8',
                 headers: { 'Access-Control-Allow-Origin': '*' },
                 body,
-              }),
-            )
-            .catch(() => req.continue());
+              });
+            })
+            .catch((err) => {
+              console.warn(`  → API proxy FAILED: ${apiTarget} — ${err.message}`);
+              return req.continue();
+            });
           return;
         }
         req.continue();
+      });
+
+      // Surface in-page failures. A route whose data fetch dies renders an
+      // empty-but-valid page, which is indistinguishable from "there is
+      // legitimately nothing here" — that is exactly how /stores shipped
+      // with zero storefront links without anyone noticing.
+      page.on('console', (msg) => {
+        if (msg.type() === 'warning' || msg.type() === 'error') {
+          console.log(`  [page ${msg.type()}] ${msg.text().slice(0, 200)}`);
+        }
+      });
+      page.on('requestfailed', (r) => {
+        if (apiTargetFor(r.url())) {
+          console.warn(`  [page request failed] ${r.url()} — ${r.failure()?.errorText}`);
+        }
       });
 
       await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
