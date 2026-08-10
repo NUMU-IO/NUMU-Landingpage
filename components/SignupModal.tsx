@@ -23,7 +23,7 @@ const DASHBOARD_URL =
 const SignupModal: React.FC = () => {
   const { language, dir } = useLanguage();
   const isAr = language === "ar";
-  const { isOpen, close } = useSignupModal();
+  const { isOpen, close, planIntent } = useSignupModal();
   const navigate = useNavigate();
 
   const [fullName, setFullName] = useState("");
@@ -79,6 +79,10 @@ const SignupModal: React.FC = () => {
         password,
         first_name: firstName,
         last_name: lastName,
+        // Which pricing card brought them here. "payg" auto-activates
+        // Pay as you Grow when their store is created — no billing page
+        // detour; paid intents are recorded for attribution.
+        plan_intent: planIntent ?? undefined,
       });
       // Hand the freshly-created account off to the merchant hub via the
       // same /token-handoff bridge the demo flow uses, rather than calling

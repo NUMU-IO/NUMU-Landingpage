@@ -8,6 +8,5 @@ Disallow: /api/
 Disallow: /docs
 Disallow: /redoc
 Disallow: /openapi.json
-Crawl-delay: 10
 
 Sitemap: https://numueg.app/sitemap.xml

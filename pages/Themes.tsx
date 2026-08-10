@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
 import ThemePreview, { ThemeSpec } from "../components/ThemePreview";
 
 /**
@@ -218,8 +219,8 @@ const Themes: React.FC = () => {
       ? "متاجر جاهزة · قوالب نُمُو"
       : "Ready-made stores · numu themes",
     description: isAr
-      ? "متاجر عربية جاهزة للإطلاق — عطور، أزياء، جمال، طعام، إلكترونيات، مجوهرات. اختار القالب، ابدأ تجربة ٣٠ يوم مجاناً."
-      : "Arabic-first industry stores ready to launch — perfume, fashion, beauty, food, electronics, jewelry. Pick a theme, start a 30-day free trial.",
+      ? `متاجر عربية جاهزة للإطلاق — عطور، أزياء، جمال، طعام، إلكترونيات، مجوهرات. اختار القالب، ابدأ تجربة ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم مجاناً.`
+      : `Arabic-first industry stores ready to launch — perfume, fashion, beauty, food, electronics, jewelry. Pick a theme, start a ${DEFAULT_TRIAL_DAYS}-day free trial.`,
     canonical: "https://numueg.app/themes",
   });
 
@@ -294,8 +295,8 @@ const Themes: React.FC = () => {
         </h1>
         <p className="prose-body text-ink/75 max-w-2xl mx-auto">
           {isAr
-            ? "قوالب عربية كاملة بمنتجات وصور مبدئية. اختار واحد، بدّل المنتجات، وابدأ البيع — كل ده في تجربة ٣٠ يوم مجاناً."
-            : "Full Arabic storefronts preloaded with sample products and copy. Pick one, swap in your goods, and start selling — all inside a 30-day free trial."}
+            ? `قوالب عربية كاملة بمنتجات وصور مبدئية. اختار واحد، بدّل المنتجات، وابدأ البيع — كل ده في تجربة ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم مجاناً.`
+            : `Full Arabic storefronts preloaded with sample products and copy. Pick one, swap in your goods, and start selling — all inside a ${DEFAULT_TRIAL_DAYS}-day free trial.`}
         </p>
       </div>
 
@@ -434,7 +435,7 @@ const Themes: React.FC = () => {
 
         <div className="mt-10 bg-navy rounded-[14px] p-8 sm:p-10 text-center">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-saffron font-semibold">
-            § FREE 30-DAY TRIAL
+            § FREE {DEFAULT_TRIAL_DAYS}-DAY TRIAL
           </span>
           <h2 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-cream tracking-tight leading-tight mb-3">
             {isAr

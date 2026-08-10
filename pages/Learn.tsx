@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
 
 /**
  * /learn — Academy v1 index (audit §2.7). Ten short-form bilingual
@@ -509,8 +510,8 @@ const Learn: React.FC = () => {
           </h2>
           <p className="prose-body text-cream/75 max-w-xl mx-auto mb-6">
             {isAr
-              ? "افتح متجر تجربة ٣٠ يوم مجاناً. بوابات دفع، شحن، فواتير — جاهزين."
-              : "Start a 30-day trial. Payments, shipping, invoicing — already wired."}
+              ? `افتح متجر تجربة ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم مجاناً. بوابات دفع، شحن، فواتير — جاهزين.`
+              : `Start a ${DEFAULT_TRIAL_DAYS}-day trial. Payments, shipping, invoicing — already wired.`}
           </p>
           <Link
             to="/?demo=1"

@@ -10,6 +10,9 @@ const Footer: React.FC = () => {
   const links = [
     { key: 'footer.products', href: '/pricing', hash: 'preview' },
     { key: 'footer.themes', href: '/themes' },
+    // Sitewide link so /stores is reachable by crawl, not just from sitemap.xml —
+    // it is in turn the only path Googlebot has to any <sub>.numueg.app storefront.
+    { key: 'footer.stores', href: '/stores' },
     { key: 'footer.apps', href: '/apps' },
     { key: 'footer.tools', href: '/tools' },
     { key: 'footer.learn', href: '/learn' },
@@ -36,9 +39,14 @@ const Footer: React.FC = () => {
     }
   };
 
+  // These URLs are also the Organization `sameAs` set in index.html — the two
+  // must stay identical. They disagreed until 2026-08-06 (footer said
+  // instagram.com/numu_eg, which does not exist; the live account is
+  // @numueg_), which shipped a dead link to users and pointed Google's entity
+  // resolution at a profile that isn't ours.
   const socials = [
     {
-      href: 'https://www.instagram.com/numu_eg/',
+      href: 'https://www.instagram.com/numueg_/',
       label: 'Follow numu on Instagram',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -47,7 +55,7 @@ const Footer: React.FC = () => {
       ),
     },
     {
-      href: 'https://x.com/numueg',
+      href: 'https://x.com/Numuegy',
       label: 'Follow numu on X',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -56,7 +64,22 @@ const Footer: React.FC = () => {
       ),
     },
     {
-      href: 'https://www.linkedin.com/in/numueg',
+      // The username URL, which Facebook itself reports as og:url. Not the
+      // share redirect (facebook.com/share/1E23JcZVrb/…), which identifies no
+      // account, and not the /people/<name>/<id>/ form that redirect resolves
+      // to — a numeric id carries no brand signal, whereas the username does.
+      href: 'https://www.facebook.com/Numuegy/',
+      label: 'Follow numu on Facebook',
+      icon: (
+        <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M22.675 0h-21.35C.595 0 0 .593 0 1.325v21.351C0 23.407.595 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+        </svg>
+      ),
+    },
+    {
+      // /company/, not /in/ — the latter is a personal-profile URL, so as an
+      // Organization `sameAs` it asks Google to equate the company with a person.
+      href: 'https://www.linkedin.com/company/numueg',
       label: 'Connect with numu on LinkedIn',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">

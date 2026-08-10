@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useSEO } from "../../hooks/useSEO";
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../../lib/trialInfo";
 
 /**
  * Arabic-first store name generator — free SEO tool (audit §2.6).
@@ -437,8 +438,8 @@ const Tool: React.FC = () => {
           </h2>
           <p className="prose-body-sm text-cream/75 max-w-xl mx-auto mb-5">
             {isAr
-              ? "تجربة ٣٠ يوم مجاناً. بدون بطاقة. عربي ١٠٠٪."
-              : "30-day free trial. No card. Fully Arabic."}
+              ? `تجربة ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم مجاناً. بدون بطاقة. عربي ١٠٠٪.`
+              : `${DEFAULT_TRIAL_DAYS}-day free trial. No card. Fully Arabic.`}
           </p>
           <Link
             to="/?demo=1"

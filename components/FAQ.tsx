@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../lib/trialInfo';
 
 /**
  * FAQ section — emits its own FAQPage JSON-LD from the same `items` array
@@ -58,10 +59,8 @@ const items: FAQItem[] = [
   {
     q_en: 'Is there a free trial?',
     q_ar: 'فيه تجربة مجانية؟',
-    a_en:
-      'Yes. numu offers a 30-day free trial — no credit card required. You can start selling immediately and upgrade to a paid plan when ready.',
-    a_ar:
-      'أيوه. تجربة مجانية ٣٠ يوم — بدون بطاقة ائتمان. تقدر تبدأ البيع فوراً وتبقى تشترك لما تحب.',
+    a_en: `Yes. numu offers a ${DEFAULT_TRIAL_DAYS}-day free trial — no credit card required. You can start selling immediately and upgrade to a paid plan (or Pay as you Grow) when ready.`,
+    a_ar: `أيوه. تجربة مجانية ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم — بدون بطاقة ائتمان. تقدر تبدأ البيع فوراً وتبقى تشترك لما تحب — أو اختار "ادفع وأنت تنمو" بدون اشتراك.`,
   },
   {
     q_en: 'What is numu Trust Network?',
