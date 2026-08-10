@@ -16,6 +16,23 @@ const DIST = join(process.cwd(), 'dist');
 const PORT = 4173;
 const SITE = 'https://numueg.app';
 
+// Public, unauthenticated API calls the prerendered pages make (today only
+// the store directory that /stores is built from). Matched against the
+// request URL and fulfilled from Node — see the interception handler below
+// for why the browser cannot fetch these itself.
+const API_PROXY_RE = /^https:\/\/numueg\.app\/api\/v1\/public\//;
+
+/** Fetch JSON as text for `req.respond`. Throws so the caller can fall back
+ *  to `req.continue()` — a directory blip must never fail the whole build. */
+async function fetchJsonForPage(url) {
+  const res = await fetch(url, {
+    headers: { accept: 'application/json' },
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+  return await res.text();
+}
+
 /** The free tools, as [path, name] — kept in one place so /tools's ItemList and
  *  each tool's own WebApplication block can't drift apart. Adding a tool here
  *  gets it prerendered and schema'd; it still needs a route in App.tsx, a card
@@ -359,8 +376,38 @@ async function main() {
       await page.setRequestInterception(true);
       page.on('request', (req) => {
         const type = req.resourceType();
-        if (['image', 'font', 'media'].includes(type)) req.abort();
-        else req.continue();
+        if (['image', 'font', 'media'].includes(type)) {
+          req.abort();
+          return;
+        }
+        // Serve the public API from Node instead of the browser.
+        //
+        // The page runs at http://localhost:4173 here, so every call to
+        // https://numueg.app/api/v1/... is CROSS-ORIGIN and the API's CORS
+        // allowlist does not include this port (it has :5000, the dev
+        // server). The browser therefore dropped the response, Stores.tsx
+        // hit its .catch(), and /stores prerendered with an empty list —
+        // silently, because a directory that fails to load looks exactly
+        // like a directory with no approved stores. That is why /stores
+        // shipped 0 storefront links even after stores were approved.
+        //
+        // Node's fetch has no same-origin policy, so proxying the request
+        // here fixes it at build time only: no localhost origin has to be
+        // added to the production CORS allowlist, and no app code changes.
+        if (API_PROXY_RE.test(req.url())) {
+          fetchJsonForPage(req.url())
+            .then((body) =>
+              req.respond({
+                status: 200,
+                contentType: 'application/json; charset=utf-8',
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body,
+              }),
+            )
+            .catch(() => req.continue());
+          return;
+        }
+        req.continue();
       });
 
       await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
