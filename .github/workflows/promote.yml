@@ -1,10 +1,17 @@
 name: Promote to Production
 
+# Fast-forwards main to dev, which is what actually reaches numueg.app: pushing
+# main triggers the Vercel production deploy in deploy.yml.
+#
+# It used to merge dev into `prod`. Nothing has deployed that branch since May
+# 2026 — production moved to Vercel-off-main — so promoting was writing to a
+# branch no one reads, and reported success for a release that never shipped.
+
 on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: "Type 'yes' to confirm promotion to production"
+        description: "Type 'yes' to promote dev to production"
         required: true
         default: ""
 
@@ -14,13 +21,17 @@ concurrency:
 
 jobs:
   promote:
-    name: Promote dev → prod
+    name: Promote dev → main
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'yes'
+
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,16 +40,28 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge dev into prod
+      # --ff-only on purpose. A merge commit here would mean dev had diverged
+      # from main, and resolving that in CI — unattended, with no way to check
+      # the result — is how a release quietly ships something nobody reviewed.
+      # If this fails, merge main into dev locally, look at it, and re-run.
+      - name: Fast-forward main to dev
         run: |
-          git fetch origin prod
-          git checkout prod
-          git merge origin/dev --no-edit -m "promote: merge dev into prod"
-          git push origin prod
+          git fetch origin dev
+          if git merge-base --is-ancestor origin/main origin/dev; then
+            git merge --ff-only origin/dev
+            git push origin main
+          else
+            echo "::error::main is not an ancestor of dev — they have diverged."
+            echo "Merge main into dev locally, review the result, then re-run this."
+            exit 1
+          fi
 
       - name: Summary
         run: |
-          echo "### ✅ Promoted dev → prod" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Landing page production branch updated." >> $GITHUB_STEP_SUMMARY
-          echo "Commit: \`$(git rev-parse --short HEAD)\`" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Promoted dev → main"
+            echo ""
+            echo "Commit: \`$(git rev-parse --short HEAD)\`"
+            echo ""
+            echo "The production deploy runs in **Deploy Landing Page** on that push."
+          } >> "$GITHUB_STEP_SUMMARY"
