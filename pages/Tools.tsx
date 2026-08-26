@@ -98,6 +98,43 @@ const tools: Tool[] = [
       </>
     ),
   },
+  {
+    slug: "vat",
+    title_en: "VAT calculator (Egypt 14%)",
+    title_ar: "حاسبة ضريبة القيمة المضافة",
+    desc_en:
+      "Add 14% VAT to a price, or pull the VAT out of a VAT-inclusive one. Saudi 15% and custom rates too.",
+    desc_ar:
+      "أضف ضريبة ١٤٪ على السعر، أو استخرجها من سعر شامل الضريبة. وكمان ١٥٪ للسعودية ونسبة مخصصة.",
+    accent: "navy",
+    status: "live",
+    icon: (
+      <>
+        <path d="M8 16L16 8" />
+        <circle cx="9" cy="9" r="1.6" />
+        <circle cx="15" cy="15" r="1.6" />
+      </>
+    ),
+  },
+  {
+    slug: "cod",
+    title_en: "COD & RTO cost calculator",
+    title_ar: "حاسبة تكلفة الدفع عند الاستلام",
+    desc_en:
+      "What a delivered order really costs once refused ones are counted — plus the RTO rate where you start losing money.",
+    desc_ar:
+      "تكلفة الأوردر المتسلّم فعلاً بعد حساب المرتجعات — ونسبة المرتجعات اللي بتبدأ تخسر عندها.",
+    accent: "terracotta",
+    status: "live",
+    icon: (
+      <>
+        <path d="M3 7h11v8H3z" />
+        <path d="M14 10h4l3 3v2h-7z" />
+        <circle cx="7" cy="17" r="1.6" />
+        <circle cx="17" cy="17" r="1.6" />
+      </>
+    ),
+  },
 ];
 
 const accentBar: Record<string, string> = {

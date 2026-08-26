@@ -1,5 +1,6 @@
 import React, { ErrorInfo, ReactNode } from "react";
 import * as Sentry from "@sentry/react";
+import { captureError } from "../services/heronsignal";
 
 interface Props {
   children: ReactNode;
@@ -21,6 +22,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
     Sentry.captureException(error, {
       extra: { componentStack: errorInfo.componentStack },
     });
+    // Same error, session-scoped: HeronSignal ties it to the pages and clicks
+    // that preceded the white screen, which Sentry's stack trace alone can't show.
+    captureError(error);
   }
 
   render() {

@@ -37,7 +37,10 @@ const ToolStoreNames = lazy(() => import('./pages/tools/StoreNameGenerator'));
 const ToolProfitMargin = lazy(() => import('./pages/tools/ProfitMarginCalculator'));
 const ToolInvoice = lazy(() => import('./pages/tools/InvoiceGenerator'));
 const ToolAIDescription = lazy(() => import('./pages/tools/AIDescription'));
+const ToolVat = lazy(() => import('./pages/tools/VatCalculator'));
+const ToolCod = lazy(() => import('./pages/tools/CodCalculator'));
 const Learn = lazy(() => import('./pages/Learn'));
+const Stores = lazy(() => import('./pages/Stores'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 /* Secondary pages introduced by the v1 redesign — `pages/other-pages.md`. */
@@ -92,6 +95,8 @@ const App: React.FC = () => {
             <Route path="/tools/profit-margin" element={<ToolProfitMargin />} />
             <Route path="/tools/invoice" element={<ToolInvoice />} />
             <Route path="/tools/ai-description" element={<ToolAIDescription />} />
+            <Route path="/tools/vat" element={<ToolVat />} />
+            <Route path="/tools/cod" element={<ToolCod />} />
             <Route path="/learn" element={<Learn />} />
 
             {/* v1 redesign secondary pages */}
@@ -103,6 +108,8 @@ const App: React.FC = () => {
             <Route path="/about" element={<About />} />
             <Route path="/resources" element={<Resources />} />
 
+            {/* Crawl entry point for merchant storefronts - see pages/Stores.tsx */}
+            <Route path="/stores" element={<Stores />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -152,38 +152,22 @@ const Testimonials: React.FC = () => {
   const { t, language } = useLanguage();
   const isAr = language === "ar";
 
-  // Review / AggregateRating schema — lets Google show testimonial
-  // rich snippets. Uses only quotes that are verifiable and attributable.
-  const reviewSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "numu",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      bestRating: "5",
-      reviewCount: String(stories.length),
-    },
-    review: stories.map((s) => ({
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: "5",
-        bestRating: "5",
-      },
-      author: { "@type": "Person", name: s.name_en },
-      reviewBody: s.body_en,
-    })),
-  };
+  // No Review / AggregateRating schema here, deliberately.
+  //
+  // This block used to emit a hardcoded 4.9 aggregateRating with one 5-star
+  // Review per hardcoded testimonial. That is "self-serving review" markup —
+  // a business rating itself on its own site — which Google has explicitly
+  // disallowed since 2019. It earns no rich result, and inventing Person
+  // authors and a rating value that no customer supplied risks a structured-
+  // data manual action against the whole domain.
+  //
+  // The testimonials still render for humans; they just no longer claim to
+  // Google to be verified third-party reviews. If we want review stars in the
+  // SERP later, they have to come from a third-party platform (G2, Capterra,
+  // Trustpilot) that hosts and verifies the ratings itself.
 
   return (
     <div className="max-w-[1360px] mx-auto w-full px-4 sm:px-6 lg:px-10">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
       {/* Header */}
       <div className="mb-10 sm:mb-14 text-center">
         <div className="flex flex-wrap items-center justify-center gap-3 mb-5">

@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:ssg": "vite build && node scripts/prerender.mjs",
+    "build:ssg": "vite build && node scripts/prerender.mjs && node scripts/verify-prerender.mjs",
     "preview": "vite preview",
     "start": "serve dist -s -l 8080",
     "convert:logos": "node scripts/convert-logos.mjs",
     "gen:brand-icons": "node scripts/gen-brand-icons.mjs"
   },
   "dependencies": {
+    "@heronsignal/web": "^0.1.0",
     "@react-oauth/google": "^0.13.4",
     "@sentry/react": "^10.41.0",
     "@vercel/analytics": "^2.0.1",
@@ -25,6 +26,7 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^131.0.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.11",
     "@types/d3-geo": "^3.1.1",

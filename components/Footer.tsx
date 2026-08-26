@@ -12,6 +12,9 @@ const Footer: React.FC = () => {
   const links = [
     { key: 'footer.products', href: '/pricing', hash: 'preview' },
     { key: 'footer.themes', href: '/themes' },
+    // Sitewide link so /stores is reachable by crawl, not just from sitemap.xml —
+    // it is in turn the only path Googlebot has to any <sub>.numueg.app storefront.
+    { key: 'footer.stores', href: '/stores' },
     { key: 'footer.apps', href: '/apps' },
     { key: 'footer.tools', href: '/tools' },
     { key: 'footer.learn', href: '/learn' },
@@ -39,16 +42,17 @@ const Footer: React.FC = () => {
   };
 
   /**
-   * The three accounts numu actually runs, as supplied by the owner.
+   * The four accounts numu actually runs.
    *
-   * The previous list pointed at `instagram.com/numu_eg`,
-   * `linkedin.com/in/numueg` (a personal-profile URL) and `x.com/numueg` —
-   * none of which are the real accounts. X is gone rather than guessed at:
-   * an unverified social link is worse than no link.
+   * These URLs are also the Organization `sameAs` set in index.html and the
+   * two must stay identical - they are what tells Google which profiles are
+   * this brand's. Each is the canonical form of its account, not a share
+   * redirect (which identifies no account) and not a /in/ personal-profile
+   * URL (which would ask Google to equate the company with a person).
    *
-   * Instagram and Facebook render their own marks from `brandIcons.ts`.
-   * LinkedIn was withdrawn from simple-icons, so it keeps the genuine glyph
-   * already committed in this file rather than being redrawn.
+   * Instagram and Facebook render their official marks from `brandIcons.ts`.
+   * X and LinkedIn were withdrawn from simple-icons, so they keep the genuine
+   * glyphs committed here rather than being redrawn.
    */
   const socials: {
     href: string;
@@ -57,17 +61,26 @@ const Footer: React.FC = () => {
     icon?: React.ReactNode;
   }[] = [
     {
-      href: 'https://www.instagram.com/numueg_',
+      href: 'https://www.instagram.com/numueg_/',
       label: language === 'ar' ? 'نُمُو على إنستغرام' : 'numu on Instagram',
       brand: 'instagram',
     },
     {
-      href: 'https://www.facebook.com/share/1HUqWH3eEk/',
+      href: 'https://www.facebook.com/Numuegy/',
       label: language === 'ar' ? 'نُمُو على فيسبوك' : 'numu on Facebook',
       brand: 'facebook',
     },
     {
-      href: 'https://www.linkedin.com/company/numueg/',
+      href: 'https://x.com/Numuegy',
+      label: language === 'ar' ? 'نُمُو على إكس' : 'numu on X',
+      icon: (
+        <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      ),
+    },
+    {
+      href: 'https://www.linkedin.com/company/numueg',
       label: language === 'ar' ? 'نُمُو على لينكدإن' : 'numu on LinkedIn',
       icon: (
         <svg aria-hidden="true" className="size-5" fill="#0A66C2" viewBox="0 0 24 24">

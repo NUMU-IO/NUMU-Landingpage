@@ -50,6 +50,9 @@
     <!-- DNS prefetch for Sentry (lazy-loaded) -->
     <link rel="dns-prefetch" href="https://o1234.ingest.sentry.io" />
 
+    <!-- DNS prefetch for HeronSignal RUM (tracker injected async after boot) -->
+    <link rel="dns-prefetch" href="https://api.heronsignal.com" />
+
     <!-- Preload LCP candidate — navbar mark renders as soon as JS boots -->
     <link rel="preload" as="image" href="/numu-mark-cream.webp" fetchpriority="high" />
 
@@ -153,6 +156,7 @@
       {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "https://numueg.app/#organization",
         "name": "NUMU",
         "alternateName": "نمو",
         "url": "https://numueg.app",
@@ -162,11 +166,15 @@
           "@type": "Place",
           "name": "Cairo, Egypt"
         },
+        "foundingDate": "2025",
         "areaServed": ["EG", "SA", "AE", "KW", "QA", "BH", "OM"],
+        "knowsLanguage": ["ar", "en"],
+        "slogan": "Build your online store in Egypt and MENA",
         "sameAs": [
           "https://www.instagram.com/numueg_/",
-          "https://x.com/numueg",
-          "https://www.linkedin.com/in/numueg"
+          "https://x.com/Numuegy",
+          "https://www.linkedin.com/company/numueg",
+          "https://www.facebook.com/Numuegy/"
         ],
         "contactPoint": {
           "@type": "ContactPoint",
@@ -205,7 +213,8 @@
           "Social media product import"
         ],
         "screenshot": "https://numueg.app/og-image.png",
-        "url": "https://numueg.app"
+        "url": "https://numueg.app",
+        "publisher": { "@id": "https://numueg.app/#organization" }
       }
     </script>
 
@@ -214,15 +223,13 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "https://numueg.app/#website",
         "name": "NUMU",
+        "alternateName": "نُمُو",
         "url": "https://numueg.app",
         "description": "Build and grow your online store in Egypt and MENA with NUMU.",
         "inLanguage": ["en", "ar"],
-        "publisher": {
-          "@type": "Organization",
-          "name": "NUMU",
-          "url": "https://numueg.app"
-        }
+        "publisher": { "@id": "https://numueg.app/#organization" }
       }
     </script>
 
