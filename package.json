@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "build:ssg": "vite build && node scripts/prerender.mjs && node scripts/verify-prerender.mjs",
     "preview": "vite preview",
     "start": "serve dist -s -l 8080",
@@ -31,6 +32,8 @@
     "@tailwindcss/forms": "^0.5.11",
     "@types/d3-geo": "^3.1.1",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
     "@types/three": "^0.185.4",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.27",

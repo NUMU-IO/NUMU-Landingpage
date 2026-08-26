@@ -208,7 +208,11 @@ const Tools: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           {tools.map((tool) => {
             const isLive = tool.status === "live";
-            const CardTag = isLive ? Link : "div";
+            // Widened deliberately: TypeScript cannot see that `cardProps`
+            // carries `to` on exactly the branch where CardTag is Link, so it
+            // reports the router's required prop as missing on a card that
+            // always supplies it.
+            const CardTag = (isLive ? Link : "div") as React.ElementType;
             const cardProps = isLive
               ? { to: `/tools/${tool.slug}` }
               : { "aria-disabled": true };
