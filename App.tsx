@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
 import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
+import { DemoModalProvider } from './contexts/DemoModalContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -11,6 +12,9 @@ import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
 import SignupModal from './components/SignupModal';
 import ContactModal from './components/ContactModal';
+import GlobalDemoModal from './components/GlobalDemoModal';
+import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
+import ScrollToTop from './components/ScrollToTop';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
@@ -36,6 +40,15 @@ const ToolAIDescription = lazy(() => import('./pages/tools/AIDescription'));
 const Learn = lazy(() => import('./pages/Learn'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+/* Secondary pages introduced by the v1 redesign — `pages/other-pages.md`. */
+const Features = lazy(() => import('./pages/Features'));
+const IntegrationsPage = lazy(() => import('./pages/IntegrationsPage'));
+const ProductTour = lazy(() => import('./pages/ProductTour'));
+const TrustNetworkPage = lazy(() => import('./pages/TrustNetworkPage'));
+const Support = lazy(() => import('./pages/Support'));
+const About = lazy(() => import('./pages/About'));
+const Resources = lazy(() => import('./pages/Resources'));
+
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
     <div className="size-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
@@ -49,8 +62,10 @@ const App: React.FC = () => {
     <LanguageProvider>
       <LandingConfigProvider>
       <Router>
+        <ScrollToTop />
         <WaitlistModalProvider>
         <SignupModalProvider>
+        <DemoModalProvider>
         <ContactModalProvider>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -78,6 +93,16 @@ const App: React.FC = () => {
             <Route path="/tools/invoice" element={<ToolInvoice />} />
             <Route path="/tools/ai-description" element={<ToolAIDescription />} />
             <Route path="/learn" element={<Learn />} />
+
+            {/* v1 redesign secondary pages */}
+            <Route path="/features" element={<Features />} />
+            <Route path="/integrations" element={<IntegrationsPage />} />
+            <Route path="/product-tour" element={<ProductTour />} />
+            <Route path="/trust-network" element={<TrustNetworkPage />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/resources" element={<Resources />} />
+
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -86,8 +111,11 @@ const App: React.FC = () => {
         <SignupModal />
         <WaitlistModal />
         <ContactModal />
+        <GlobalDemoModal />
+        <LiquidGlassDefs />
         <Analytics />
         </ContactModalProvider>
+        </DemoModalProvider>
         </SignupModalProvider>
         </WaitlistModalProvider>
       </Router>

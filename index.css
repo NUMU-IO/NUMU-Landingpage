@@ -38,11 +38,24 @@
   --line-strong: rgba(15, 22, 36, 0.25);
   --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.04), 0 4px 12px hsl(0 0% 0% / 0.03);
 
-  /* Type */
-  --ff-display: "Reem Kufi", "Space Grotesk", system-ui, sans-serif;
-  --ff-latin:   "Space Grotesk", system-ui, sans-serif;
-  --ff-arabic:  "Tajawal", system-ui, sans-serif;
-  --ff-mono:    "JetBrains Mono", ui-monospace, Menlo, monospace;
+  /* Type — one stack, matching the merchant dashboard exactly
+     (numo-merchant-hub/tailwind.config.ts → fontFamily.sans). A merchant
+     moving from the marketing site into their store must not see the
+     typeface change under them.
+
+     Reem Kufi was removed on the owner's instruction. It had been the
+     display face for both scripts; the dashboard only ever used it as a
+     minor `brand` font, never for reading. This overrides the
+     `--ff-display: Reem Kufi` lock in numu-identity.md. */
+  --ff-display: "IBM Plex Sans Arabic", "Cairo", system-ui, -apple-system, sans-serif;
+  --ff-latin:   "IBM Plex Sans Arabic", "Cairo", system-ui, -apple-system, sans-serif;
+  --ff-arabic:  "IBM Plex Sans Arabic", "Cairo", system-ui, -apple-system, sans-serif;
+  /* JetBrains Mono carries no Arabic. Font fallback is resolved per glyph, so
+     naming the Arabic face second keeps Latin and digits monospaced while any
+     Arabic inside a mono label renders in the brand face instead of dropping
+     to whatever the OS happens to pick. Without this, every Arabic eyebrow on
+     the site was set in an unknown system font. */
+  --ff-mono:    "JetBrains Mono", "IBM Plex Sans Arabic", ui-monospace, Menlo, monospace;
 
   --ls-tight: -0.02em;
   --ls-wide:  0.08em;
@@ -50,6 +63,42 @@
 
   /* Motion */
   --ease-numu: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================================
+   Smooth scrolling
+
+   Apple's approach, not a JS scroll-hijacker: the browser keeps
+   ownership of the scroll, so the wheel, trackpad momentum, keyboard,
+   scrollbar drag and find-in-page all behave exactly as the OS intends.
+   What we add is `scroll-behavior: smooth` for programmatic jumps
+   (anchor links, skip links) and a scroll-padding so a target never
+   lands underneath the fixed header.
+
+   A JS smooth-scroll library (Lenis/locomotive) was deliberately NOT
+   used: it desynchronises from native momentum on macOS/iOS, breaks
+   `position: sticky` timing, fights `prefers-reduced-motion`, and adds
+   a rAF loop on every frame the page is visible.
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  /* Fixed header is 64px on mobile, 72px from sm up. */
+  scroll-padding-top: 80px;
+}
+@media (min-width: 640px) {
+  html { scroll-padding-top: 88px; }
+}
+
+/* Momentum scrolling inside overflow panes on iOS. */
+body {
+  -webkit-overflow-scrolling: touch;
+  /* Stops the horizontal rubber-band when a section bleeds past the edge. */
+  overflow-x: hidden;
+}
+
+/* Honour the OS setting — this is also required by WCAG 2.2. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 /* ============================================================
@@ -75,16 +124,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--ff-display);
   font-weight: 700;
-  letter-spacing: var(--ls-tight);
+  letter-spacing: -0.01em;
   color: var(--ink);
   text-wrap: balance;
 }
 
-[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3,
-[dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] h6 {
-  font-family: var(--ff-display);   /* Reem Kufi covers both scripts */
-  letter-spacing: 0;
-}
 
 /* ============================================================
    Eyebrow label — mono, uppercase, wide tracking
@@ -127,7 +171,7 @@ h1, h2, h3, h4, h5, h6 {
    Prose body — long-form paragraph styling. Drop onto any <p>
    that runs more than a line or two. Auto-switches font family,
    size, and leading based on `dir` — Arabic (Tajawal) needs
-   larger glyphs and more leading than Latin (Space Grotesk).
+   larger glyphs and more leading than Latin, even in one shared face.
    ============================================================ */
 .prose-body {
   font-family: var(--ff-latin);
@@ -182,6 +226,25 @@ h1, h2, h3, h4, h5, h6 {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ============================================================
+   Arabic and the Latin label style
+
+   The eyebrow/label pattern across the site is `font-mono` + `uppercase` +
+   wide `tracking`. All three are Latin typographic devices, and the tracking
+   is actively wrong for Arabic: the script is cursive, so letter-spacing
+   pulls joined letterforms apart and a correctly spelled word starts to look
+   broken. `uppercase` is simply a no-op for Arabic.
+
+   So in RTL the tracking is dropped. The monospace family is NOT dropped —
+   font fallback is resolved per glyph, so any Latin or digits inside the same
+   label still render in JetBrains Mono while the Arabic renders in IBM Plex
+   Sans Arabic (see `--ff-mono`).
+   ============================================================ */
+html[dir="rtl"] .font-mono,
+html[dir="rtl"] .eyebrow,
+html[dir="rtl"] .eyebrow-muted,
+html[dir="rtl"] .numu-capsule { letter-spacing: normal; }
+
+/* ============================================================
    Entrance animations (fade + small translate, no bounce)
    ============================================================ */
 @keyframes fadeInUp {
@@ -234,6 +297,190 @@ h1, h2, h3, h4, h5, h6 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* ============================================================
+   Liquid glass — the header surface
+
+   Layered the way real glass reads, per
+   https://kube.io/blog/liquid-glass-css-svg/:
+
+     1. refraction — an SVG displacement map bends the backdrop, so
+        content scrolling underneath warps at the edges instead of
+        just going soft;
+     2. blur + saturation — the frosting, and a saturation lift so
+        colours passing behind stay alive rather than going grey;
+     3. a specular rim — one bright hairline along the top edge and a
+        dim one along the bottom, which is what actually sells "this
+        is a pane of glass" rather than "this is a blurry box";
+     4. a very low-alpha tint, so the pane still reads on a white
+        backdrop where blur alone would vanish.
+
+   `backdrop-filter` only affects what is BEHIND the element, so the
+   nav labels and logo stay perfectly sharp through all of it.
+
+   Progressive enhancement, in three tiers:
+     • no `backdrop-filter`     → opaque cream, fully legible
+     • blur but no SVG filters  → frosted glass, no refraction (Safari)
+     • both                     → full liquid glass
+   ============================================================ */
+.numu-liquid-glass {
+  /* Tier 1 — the floor. Any browser gets a legible bar. */
+  background-color: rgba(245, 239, 230, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(15, 22, 36, 0.06),
+    0 1px 24px -12px rgba(0, 31, 63, 0.28);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .numu-liquid-glass {
+    /* Tier 2 — frosted. Tint drops because blur now carries the surface. */
+    background-color: rgba(245, 239, 230, 0.55);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    backdrop-filter: blur(14px) saturate(180%);
+  }
+}
+
+/* Tier 3 — refraction. Chromium honours an SVG filter reference inside
+   backdrop-filter; browsers that do not simply keep tier 2. */
+@supports (backdrop-filter: url("#numu-liquid-glass")) {
+  .numu-liquid-glass {
+    backdrop-filter: url("#numu-liquid-glass") blur(12px) saturate(180%);
+  }
+}
+
+/* Over the hero video the pane is dark-tinted instead, so cream nav text
+   keeps its contrast against bright frames of the footage. */
+.numu-liquid-glass-dark {
+  background-color: rgba(0, 31, 63, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(251, 246, 237, 0.16),
+    inset 0 -1px 0 rgba(0, 14, 29, 0.35);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .numu-liquid-glass-dark {
+    background-color: rgba(0, 31, 63, 0.16);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+  }
+}
+
+/* ── The same glass, for anything that drops out of the header ──
+   The mega panel and the language menu are physically continuous with the
+   bar they open from, so they are the same material. Two differences, both
+   forced by what sits behind them:
+
+     • more tint. The header floats over a video or a section edge; a panel
+       floats over body copy, and copy read through copy is unreadable. The
+       tint carries legibility while the blur still shows movement behind.
+     • a rim on all four edges, not just top and bottom. The header is a
+       full-bleed band with only two visible edges; a panel is an object
+       with a boundary all the way round.
+*/
+.numu-liquid-glass-panel {
+  /* Tier 1 — floor. */
+  background-color: rgba(245, 239, 230, 0.97);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(15, 22, 36, 0.05),
+    0 18px 40px -24px rgba(0, 31, 63, 0.35);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .numu-liquid-glass-panel {
+    /* Tier 2 — frosted, at the same tint as the bar so a dropdown reads as
+       the same pane of glass rather than a milkier cousin of it. Legibility
+       is bought with blur instead: a panel has body copy behind it, not a
+       section edge, and 30px of blur destroys the letterforms underneath far
+       more thoroughly than tint ever did — without making the glass opaque.
+       See the backdrop-root note in Navbar.tsx for why this works at all. */
+    background-color: rgba(245, 239, 230, 0.55);
+    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    backdrop-filter: blur(30px) saturate(190%);
+  }
+}
+
+@supports (backdrop-filter: url("#numu-liquid-glass")) {
+  .numu-liquid-glass-panel {
+    /* Tier 3 — refraction, same displacement field as the bar. */
+    backdrop-filter: url("#numu-liquid-glass") blur(28px) saturate(190%);
+  }
+}
+
+/* The displacement is a static field, but the blur still costs a
+   composite pass per frame. Users asking for less motion get the plain
+   tinted pane. */
+@media (prefers-reduced-motion: reduce) {
+  .numu-liquid-glass,
+  .numu-liquid-glass-dark,
+  .numu-liquid-glass-panel {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .numu-liquid-glass { background-color: rgba(245, 239, 230, 0.95); }
+  .numu-liquid-glass-dark { background-color: rgba(0, 31, 63, 0.4); }
+  .numu-liquid-glass-panel { background-color: rgba(245, 239, 230, 0.96); }
+}
+
+/* ============================================================
+   Neumorphic surfaces — deliberately understated
+
+   The brief is "smooth and simple, not bold". Classic neumorphism
+   pairs a hard light shadow with a hard dark one and ends up looking
+   like moulded plastic; that would fight the flat/editorial identity.
+
+   So this keeps only the part that reads as depth — a 1px light rim
+   along the top edge and a soft dark fade at the bottom — at very low
+   alpha. It reads as a surface catching light, not as an extruded
+   button, and it survives the cream/navy switch because both rims are
+   expressed relative to the surface they sit on.
+   ============================================================ */
+.numu-soft-navy {
+  background-image:
+    /* Very low-frequency sheen, so large navy panels are not flat fields. */
+    radial-gradient(120% 80% at 18% 0%, rgba(59, 101, 147, 0.16) 0%, rgba(0, 31, 63, 0) 58%),
+    radial-gradient(90% 70% at 92% 100%, rgba(0, 20, 41, 0.5) 0%, rgba(0, 31, 63, 0) 60%);
+  box-shadow:
+    inset 0 1px 0 rgba(251, 246, 237, 0.09),
+    inset 0 -1px 0 rgba(0, 14, 29, 0.45);
+}
+
+.numu-soft-cream {
+  background-image:
+    radial-gradient(120% 80% at 18% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(245, 239, 230, 0) 55%),
+    radial-gradient(90% 70% at 92% 100%, rgba(15, 22, 36, 0.045) 0%, rgba(245, 239, 230, 0) 60%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(15, 22, 36, 0.05);
+}
+
+/* ============================================================
+   Surface dot field
+
+   The light sections were reading as blank board. This is the same
+   idea as `.numu-navy-surface`'s dot grid, inverted for cream: ink at
+   ~3.5% on a 26px grid, which registers as texture at reading distance
+   without becoming a pattern you notice.
+
+   Sits under the content via a negative-z pseudo-element, so it never
+   intercepts pointer events and never tints the text.
+   ============================================================ */
+.numu-dot-surface {
+  position: relative;
+  isolation: isolate;
+}
+.numu-dot-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(15, 22, 36, 0.055) 1px, transparent 1px);
+  background-size: 26px 26px;
+  /* Follows the panel's rounded top edge instead of squaring it off. */
+  border-radius: inherit;
 }
 
 /* ============================================================

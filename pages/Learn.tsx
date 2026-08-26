@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import CookieConsent from "../components/CookieConsent";
 import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
 
 /**
@@ -319,37 +322,10 @@ const Learn: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-cream paper-grain" dir={dir}>
-      <nav className="flex items-center justify-between px-4 sm:px-8 lg:px-12 py-5 border-b border-ink/10 bg-cream/80 backdrop-blur-sm sticky top-0 z-10">
-        <Link
-          to="/"
-          className="flex items-center gap-2.5"
-          aria-label={isAr ? "نُمُو — الرئيسية" : "numu — home"}
-        >
-          <img
-            src="/numu-mark-cream.webp"
-            alt=""
-            className="h-8 w-auto object-contain"
-            width="40"
-            height="40"
-          />
-          {isAr ? (
-            <span className="font-display text-xl font-bold tracking-tight text-ink">
-              نُمُو
-            </span>
-          ) : (
-            <span className="font-display text-lg font-semibold tracking-tight text-ink lowercase">
-              numu
-            </span>
-          )}
-        </Link>
-        <Link
-          to="/"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/80 hover:text-navy transition-colors"
-        >
-          ← {isAr ? "الرئيسية" : "Home"}
-        </Link>
-      </nav>
+    <div className="relative min-h-screen bg-cream font-display" dir={dir}>
+      <Navbar />
+
+      <main id="main" className="bg-cream numu-dot-surface pt-24 sm:pt-28">
 
       <div className="relative z-10 text-center px-4 sm:px-6 pt-12 sm:pt-16 pb-10">
         <div className="inline-flex items-center gap-2 bg-saffron/15 border border-saffron/40 rounded-[4px] px-3 py-1 mb-5">
@@ -527,6 +503,14 @@ const Learn: React.FC = () => {
           </Link>
         </div>
       </div>
+      </main>
+
+      <footer className="relative bg-paper numu-dot-surface py-12 lg:py-16 -mt-8 sm:-mt-10
+        rounded-t-[32px] sm:rounded-t-[44px] border-t border-ink/[0.09]">
+        <Footer />
+      </footer>
+
+      <CookieConsent />
     </div>
   );
 };

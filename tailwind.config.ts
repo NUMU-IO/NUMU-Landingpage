@@ -3,7 +3,8 @@ import type { Config } from "tailwindcss";
 /**
  * Numu brand kit v1.0 (2026) — Navy palette, canonical for marketing.
  * Source of truth: .claude/skills/numu-design/colors_and_type.css
- * Navy on cream, flat/editorial, Reem Kufi + Tajawal + Space Grotesk.
+ * Navy on cream, flat/editorial. Typography matches the merchant dashboard:
+ * IBM Plex Sans Arabic for both scripts, JetBrains Mono for figures.
  */
 export default {
   content: [
@@ -61,10 +62,16 @@ export default {
           "linear-gradient(135deg, #003366 0%, #6B46C1 100%)",
       },
       fontFamily: {
-        display: ["Reem Kufi", "Space Grotesk", "system-ui", "sans-serif"],
-        arabic: ["Tajawal", "system-ui", "sans-serif"],
-        latin: ["Space Grotesk", "system-ui", "sans-serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "Menlo", "monospace"],
+        display: ["IBM Plex Sans Arabic", "Cairo", "system-ui", "sans-serif"],
+        arabic: ["IBM Plex Sans Arabic", "Cairo", "system-ui", "sans-serif"],
+        latin: ["IBM Plex Sans Arabic", "Cairo", "system-ui", "sans-serif"],
+        // JetBrains Mono carries no Arabic glyphs. Fallback is resolved per
+        // glyph, so naming the Arabic face second keeps Latin and digits
+        // monospaced while Arabic inside the same label renders in the brand
+        // face — instead of dropping through to whatever the OS picks, which
+        // is what every Arabic eyebrow on the site was doing.
+        // Keep in step with `--ff-mono` in index.css.
+        mono: ['"JetBrains Mono"', '"IBM Plex Sans Arabic"', "ui-monospace", "Menlo", "monospace"],
       },
       letterSpacing: {
         tight: "-0.02em",

@@ -28,11 +28,36 @@ const SITE = 'https://numueg.app';
  *   - extraJsonLd: BreadcrumbList / Product / ContactPage / etc.
  *   - x-numu-prerendered marker (verifies in CI that prerender ran)
  */
+/** Secondary pages added by the v1 redesign — prerendered so each is an
+ *  indexable document rather than an empty SPA shell. */
+const REDESIGN_ROUTES = [
+  ['/features', 'Features'],
+  ['/integrations', 'Integrations'],
+  ['/product-tour', 'Product tour'],
+  ['/trust-network', 'Trust Network'],
+  ['/support', 'Support'],
+  ['/about', 'About'],
+  ['/resources', 'Resources'],
+].map(([path, name]) => ({
+  path,
+  extraJsonLd: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'NUMU', item: `${SITE}/` },
+        { '@type': 'ListItem', position: 2, name, item: `${SITE}${path}` },
+      ],
+    },
+  ],
+}));
+
 const ROUTES = [
   {
     path: '/',
     extraJsonLd: [],
   },
+  ...REDESIGN_ROUTES,
   {
     path: '/pricing',
     extraJsonLd: [
@@ -206,6 +231,23 @@ function injectRouteMeta(html, route) {
   return html.replace('</head>', `    ${injection}\n</head>`);
 }
 
+/** Polls a URL until it answers, or the timeout elapses. */
+async function waitForServer(url, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  let lastErr;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url, { method: 'GET' });
+      if (res.ok || res.status === 404) return;
+      lastErr = new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      lastErr = err;
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
+  throw new Error(`Preview server never became ready at ${url}: ${lastErr}`);
+}
+
 async function main() {
   const chromePath = findChrome();
   console.log(`Using Chrome: ${chromePath}`);
@@ -213,14 +255,22 @@ async function main() {
   // `detached: true` puts the server into its own process group so we can
   // kill the whole group later — killing just the shell wrapper leaves the
   // `serve` grandchild alive with open pipes and Node never exits.
-  const server = spawn('npx', ['serve', DIST, '-s', '-l', String(PORT)], {
+  // DIST is quoted: this project's directory name contains a space and
+  // parentheses, and with `shell: true` on Windows an unquoted path is split
+  // by the shell, so `serve` never starts and every prerender fails with
+  // ERR_CONNECTION_REFUSED.
+  const distArg = process.platform === 'win32' ? `"${DIST}"` : DIST;
+  const server = spawn('npx', ['serve', distArg, '-s', '-l', String(PORT)], {
     stdio: 'ignore',
     shell: process.platform === 'win32',
     detached: process.platform !== 'win32',
   });
 
-  // Wait for server to be ready
-  await new Promise((r) => setTimeout(r, 2000));
+  // Wait for the server to actually answer, rather than sleeping a fixed
+  // interval and hoping. `npx serve` cold-starts well past 2s on Windows,
+  // which made this race and fail the whole prerender with
+  // ERR_CONNECTION_REFUSED.
+  await waitForServer(`http://localhost:${PORT}/`, 30000);
 
   const browser = await puppeteer.launch({
     executablePath: chromePath,
