@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+// Provider-carrying wrapper: Google Identity Services is fetched when this
+// modal opens, not on every page load. See components/GoogleAuthScope.tsx.
+import { GoogleSignInButton as GoogleLogin } from "./GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal } from "../contexts/SignupModalContext";
 import { register } from "../services/authApi";

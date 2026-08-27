@@ -134,6 +134,8 @@ const LeadCard: React.FC<{ story: Story }> = ({ story }) => {
       <div className="overflow-hidden border-b border-ink/10">
         <AssetSlot
           asset={story.asset}
+          /* Measured: 429 CSS px on desktop, full width on a phone. */
+          sizes="(min-width: 1024px) 440px, 100vw"
           ratio={16 / 10}
           alt={{
             ar: `متجر ${story.name} — ${b(story.category)}`,
@@ -196,7 +198,13 @@ const SurfaceCard: React.FC<{ surface: (typeof SURFACES)[number] }> = ({ surface
   return (
     <figure className="h-full flex flex-col bg-cream border border-ink/10 rounded-[10px] overflow-hidden">
       <div className="overflow-hidden border-b border-ink/10">
-        <AssetSlot asset={surface.asset} alt={surface.alt} ratio={16 / 9} />
+        <AssetSlot
+          asset={surface.asset}
+          alt={surface.alt}
+          /* Measured: 667 CSS px on desktop. */
+          sizes="(min-width: 1024px) 680px, 100vw"
+          ratio={16 / 9}
+        />
       </div>
       <figcaption className="flex flex-col flex-1 p-5 sm:p-6">
         <h3 className="font-display text-[17px]/[1.42] font-bold text-ink">{b(surface.title)}</h3>

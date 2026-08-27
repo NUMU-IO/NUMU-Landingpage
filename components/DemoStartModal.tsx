@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { GoogleLogin } from "@react-oauth/google";
+// See components/GoogleAuthScope.tsx — GIS loads with the modal, not the page.
+import { GoogleSignInButton as GoogleLogin } from "./GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
 

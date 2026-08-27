@@ -147,6 +147,8 @@ const PanelVisual: React.FC<{ tabKey: string; noEffects?: boolean }> = ({
         <div className={frameCls}>
           <AssetSlot
             asset="themeEngine"
+            /* Measured: 1118 CSS px in the tab panel on desktop. */
+            sizes="(min-width: 1280px) 1150px, 100vw"
             ratio={16 / 10}
             alt={{
               ar: 'محرر الثيم في نُمُو: اختيار الألوان والخطوط وأقسام المتجر.',
@@ -158,6 +160,7 @@ const PanelVisual: React.FC<{ tabKey: string; noEffects?: boolean }> = ({
         <div className={frameCls}>
           <AssetSlot
             asset="storefrontPreview"
+            sizes="(min-width: 1280px) 1150px, 100vw"
             ratio={16 / 10}
             alt={{
               ar: 'معاينة متجر عربي جاهز زي ما العميل بيشوفه.',
@@ -191,7 +194,12 @@ const PanelVisual: React.FC<{ tabKey: string; noEffects?: boolean }> = ({
 
   return (
     <div className={frameCls}>
-      <AssetSlot asset={entry.asset} ratio={16 / 9} alt={entry.alt} />
+      <AssetSlot
+        asset={entry.asset}
+        ratio={16 / 9}
+        alt={entry.alt}
+        sizes="(min-width: 1280px) 1150px, 100vw"
+      />
     </div>
   );
 };

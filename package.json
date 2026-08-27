@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "start": "serve dist -s -l 8080",
     "convert:logos": "node scripts/convert-logos.mjs",
-    "gen:brand-icons": "node scripts/gen-brand-icons.mjs"
+    "gen:brand-icons": "node scripts/gen-brand-icons.mjs",
+    "gen:image-variants": "node scripts/gen-image-variants.mjs",
+    "gen:font-css": "node scripts/fetch-font-css.mjs"
   },
   "dependencies": {
     "@heronsignal/web": "^0.1.0",
