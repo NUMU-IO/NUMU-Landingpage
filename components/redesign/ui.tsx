@@ -6,6 +6,7 @@ import { useDemoModal } from '../../contexts/DemoModalContext';
 import { CTA, Bi, Lang, pick } from './copy';
 import { Reveal } from './Reveal';
 import { ASSETS, AssetKey, IS_DEV } from './assets';
+import IMAGE_VARIANTS from './image-variants.json';
 
 /* ============================================================
    Bilingual text helper
@@ -273,14 +274,38 @@ export const AssetSlot: React.FC<{
   lazy?: boolean;
   /** Rendered instead of the neutral panel when the asset is missing. */
   fallback?: ReactNode;
-}> = ({ asset, alt, ratio = 16 / 10, className = '', imgClassName = '', lazy = true, fallback }) => {
+  /**
+   * How wide this slot actually renders, as a `sizes` value.
+   *
+   * Defaults to `100vw`, which never under-serves — but a slot in a two-up grid
+   * should say so, or the browser picks the largest rung for a 429 px box. The
+   * masters are 2000 px wide and were being painted at a quarter of that on
+   * every visit; `scripts/gen-image-variants.mjs` writes the smaller rungs and
+   * this attribute is what makes the browser choose between them.
+   */
+  sizes?: string;
+}> = ({
+  asset,
+  alt,
+  ratio = 16 / 10,
+  className = '',
+  imgClassName = '',
+  lazy = true,
+  fallback,
+  sizes = '100vw',
+}) => {
   const { b } = useBi();
   const entry = ASSETS[asset];
 
   if (entry.delivered) {
+    const rungs = (IMAGE_VARIANTS as Record<string, { w: number; src: string }[]>)[
+      entry.src
+    ];
+    const srcSet = rungs?.map((r) => `${r.src} ${r.w}w`).join(', ');
     return (
       <img
         src={entry.src}
+        {...(srcSet ? { srcSet, sizes } : {})}
         alt={b(alt)}
         loading={lazy ? 'lazy' : 'eager'}
         decoding="async"

@@ -6,7 +6,6 @@ import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
 import { DemoModalProvider } from './contexts/DemoModalContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
@@ -16,7 +15,11 @@ import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
 import ScrollToTop from './components/ScrollToTop';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+/* GOOGLE_CLIENT_ID moved to components/GoogleAuthScope.tsx.
+   Google Identity Services used to be mounted here, at the app root, which
+   fetched 99 KiB of third-party script and set nine Google cookies on every
+   page view — including for visitors who never went near sign-in. It now
+   mounts inside the three surfaces that render a Google button. */
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -61,7 +64,6 @@ const LoadingFallback = () => (
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <LanguageProvider>
       <LandingConfigProvider>
       <Router>
@@ -128,7 +130,6 @@ const App: React.FC = () => {
       </Router>
     </LandingConfigProvider>
     </LanguageProvider>
-    </GoogleOAuthProvider>
     </ErrorBoundary>
   );
 };

@@ -76,6 +76,8 @@ const CodOperations: React.FC = () => {
             <div className="overflow-hidden rounded-[4px] border border-cream/10 bg-navy-800">
               <AssetSlot
                 asset="ordersWorkflow"
+                /* Measured: 495 CSS px on desktop. */
+                sizes="(min-width: 1024px) 510px, 100vw"
                 ratio={16 / 10}
                 alt={{
                   ar: 'شاشة الأوردر في نُمُو وعليها إشارة الريسك والإجراءات المتاحة للتاجر.',

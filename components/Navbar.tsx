@@ -244,7 +244,11 @@ const Navbar: React.FC<{ transparentAtTop?: boolean }> = ({ transparentAtTop = f
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                 aria-expanded={isLangMenuOpen}
                 aria-haspopup="true"
-                aria-label={isAr ? 'تغيير اللغة' : 'Switch language'}
+                // WCAG 2.5.3 Label in Name: the accessible name has to CONTAIN the
+                // visible text. The button reads "AR", so an aria-label of just
+                // "تغيير اللغة" left a voice-control user with no way to say it —
+                // and failed axe's label-content-name-mismatch.
+                aria-label={isAr ? 'AR — تغيير اللغة' : 'EN — Switch language'}
                 className={`font-mono text-[11px] uppercase tracking-[0.16em] px-2.5 py-2 rounded-full
                   whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2
                   focus-visible:ring-saffron ${

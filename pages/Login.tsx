@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+// See components/GoogleAuthScope.tsx — GIS loads with this route, not the app.
+import { GoogleSignInButton as GoogleLogin } from "../components/GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { login, forgotPassword } from "../services/authApi";
 import { useSEO } from "../hooks/useSEO";

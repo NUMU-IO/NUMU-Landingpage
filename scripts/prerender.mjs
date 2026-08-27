@@ -8,7 +8,7 @@
  * fully-indexable document — not a copy of the homepage shell.
  */
 import { spawn } from 'child_process';
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
 
@@ -375,6 +375,58 @@ async function resolveBrowser() {
  * Inject route-specific JSON-LD and a prerender marker just before </head>.
  * Title / meta / canonical are already set by useSEO in each page component.
  */
+/**
+ * Read the modulepreload hints Vite itself put in the built template.
+ *
+ * These are the entry chunk's STATIC dependencies — the handful of files the
+ * browser genuinely needs before anything can run. Everything else that ends up
+ * in the captured DOM was appended at runtime; see `stripRuntimePreloads`.
+ */
+function templatePreloadHrefs() {
+  try {
+    const tpl = readFileSync(join(DIST, 'index.html'), 'utf-8');
+    return new Set(
+      [...tpl.matchAll(/<link[^>]+rel=["']modulepreload["'][^>]*>/gi)]
+        .map((m) => (m[0].match(/href=["']([^"']+)["']/i) || [])[1])
+        .filter(Boolean),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+/**
+ * Drop the `<link rel="modulepreload">` tags the APP added while puppeteer was
+ * looking at it.
+ *
+ * `page.content()` serializes the live DOM, so anything the running app
+ * appended to `<head>` is baked into the file we ship. Vite's `__vitePreload`
+ * appends one of these for every dynamically-imported chunk it resolves — and
+ * this page lazy-loads a component per homepage section — so the served HTML
+ * carried **18** of them. That is 18 extra High-priority script requests fired
+ * during HTML parse, competing for bandwidth with the two render-blocking
+ * stylesheets that actually gate First Contentful Paint. Measured on the
+ * desktop run: 21 scripts all queued at ~355 ms while `index.css` was still in
+ * flight, and FCP landed at 2.1 s against a 240 ms TTFB.
+ *
+ * Removing them does not remove the chunks — the lazy imports still fetch them,
+ * just after the entry has run, which is when they are first needed. Hydration
+ * of below-the-fold sections happens a beat later; first paint happens a lot
+ * sooner.
+ *
+ * The template's own hints are preserved: those are the entry's static graph,
+ * and dropping them would only trade this problem for a slower boot.
+ */
+function stripRuntimePreloads(html, allowed) {
+  return html.replace(
+    /<link[^>]+rel=["']modulepreload["'][^>]*>\s*/gi,
+    (tag) => {
+      const href = (tag.match(/href=["']([^"']+)["']/i) || [])[1];
+      return href && allowed.has(href) ? tag : '';
+    },
+  );
+}
+
 function injectRouteMeta(html, route) {
   const blocks = (route.extraJsonLd || [])
     .map((obj) => `<script type="application/ld+json">${JSON.stringify(obj)}</script>`)
@@ -436,6 +488,11 @@ async function main() {
   // Render all routes first, then write — otherwise the preview server's SPA
   // fallback will pick up an already-written (and marker-polluted) dist/index.html
   // when rendering later routes, cross-contaminating the output.
+  // Snapshot the template's own preload hints BEFORE the first capture — the
+  // loop below overwrites dist/index.html with the prerendered `/`.
+  const templatePreloads = templatePreloadHrefs();
+  console.log(`  Template modulepreloads kept: ${templatePreloads.size}`);
+
   const rendered = [];
   try {
     for (const route of ROUTES) {
@@ -505,6 +562,7 @@ async function main() {
       await new Promise((r) => setTimeout(r, 500));
 
       let html = await page.content();
+      html = stripRuntimePreloads(html, templatePreloads);
       html = injectRouteMeta(html, route);
       rendered.push({ route, html });
 
