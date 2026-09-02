@@ -7,6 +7,8 @@ import { GoogleSignInButton as GoogleLogin } from "./GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal } from "../contexts/SignupModalContext";
 import { register } from "../services/authApi";
+import { getAttribution } from "../lib/attribution";
+import { phoneError, toE164Eg } from "../lib/phone";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
@@ -30,6 +32,13 @@ const SignupModal: React.FC = () => {
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  // Required. Without it we have no way to reach a merchant who stalls
+  // mid-setup, and wallet warnings stay email-only.
+  const [phone, setPhone] = useState("");
+  // Default on: most merchants read WhatsApp on the number they just
+  // typed, so this is one tick rather than a second field for everyone.
+  const [waSame, setWaSame] = useState(true);
+  const [waPhone, setWaPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -69,6 +78,18 @@ const SignupModal: React.FC = () => {
       setError(isAr ? "اكتب اسمك بالكامل (الاسم الأول واسم العائلة)." : "Please enter your full name (first and last).");
       return;
     }
+    const e164 = toE164Eg(phone);
+    if (!e164) {
+      setError(phoneError(isAr));
+      return;
+    }
+    // Only validated when they actually said the numbers differ; an
+    // untouched field behind an unticked box is not an error.
+    const waE164 = waSame ? null : toE164Eg(waPhone);
+    if (!waSame && !waE164) {
+      setError(phoneError(isAr));
+      return;
+    }
     if (password.length < 12) {
       setError(isAr ? "كلمة المرور لازم تكون ١٢ حرف على الأقل." : "Password must be at least 12 characters.");
       return;
@@ -81,10 +102,18 @@ const SignupModal: React.FC = () => {
         password,
         first_name: firstName,
         last_name: lastName,
+        phone: e164,
+        whatsapp_same_as_phone: waSame,
+        whatsapp_phone: waE164 ?? undefined,
+        // The page's locale decides which language every merchant-facing
+        // message renders in from here on.
+        language: isAr ? "ar" : "en",
         // Which pricing card brought them here. "payg" auto-activates
         // Pay as you Grow when their store is created — no billing page
         // detour; paid intents are recorded for attribution.
         plan_intent: planIntent ?? undefined,
+        // UTMs + referrer captured on arrival, first touch within the tab.
+        attribution: getAttribution(),
       });
       // Hand the freshly-created account off to the merchant hub via the
       // same /token-handoff bridge the demo flow uses, rather than calling
@@ -169,7 +198,15 @@ const SignupModal: React.FC = () => {
                   method: "POST",
                   credentials: "include",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ id_token: credentialResponse.credential }),
+                  // Send whatever the form already holds. Google's token
+                  // carries no phone number, so this is the only chance to
+                  // attach one without making one-click into two steps —
+                  // and the API only writes it when the user has none.
+                  body: JSON.stringify({
+                    id_token: credentialResponse.credential,
+                    phone: toE164Eg(phone) || undefined,
+                    attribution: getAttribution(),
+                  }),
                 });
                 if (!res.ok) {
                   const errBody = await res.json().catch(() => null);
@@ -229,6 +266,52 @@ const SignupModal: React.FC = () => {
             className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
             dir="ltr"
           />
+          <div>
+            <input
+              type="tel"
+              required
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder={isAr ? "رقم الموبايل (واتساب)" : "Mobile number (WhatsApp)"}
+              disabled={loading}
+              className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+              dir="ltr"
+            />
+            <p className="mt-1.5 font-mono text-[10px] text-cream/45 leading-relaxed">
+              {isAr
+                ? "علشان نبعتلك تنبيهات المتجر ونساعدك على واتساب."
+                : "So we can send store alerts and help you on WhatsApp."}
+            </p>
+            <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={waSame}
+                onChange={(e) => setWaSame(e.target.checked)}
+                disabled={loading}
+                className="h-3.5 w-3.5 rounded-[2px] accent-saffron"
+              />
+              <span className="font-mono text-[10px] text-cream/60">
+                {isAr
+                  ? "ده نفس رقم الواتساب بتاعي"
+                  : "This is also my WhatsApp number"}
+              </span>
+            </label>
+            {!waSame && (
+              <input
+                type="tel"
+                required
+                inputMode="tel"
+                value={waPhone}
+                onChange={(e) => setWaPhone(e.target.value)}
+                placeholder={isAr ? "رقم الواتساب" : "WhatsApp number"}
+                disabled={loading}
+                className="mt-2 w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+                dir="ltr"
+              />
+            )}
+          </div>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}

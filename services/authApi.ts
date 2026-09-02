@@ -4,6 +4,7 @@
  * CSRF token is stored in memory and sent on state-changing requests.
  */
 
+import type { Attribution } from "../lib/attribution";
 import { getCSRFToken, initCSRF } from "./csrf";
 
 const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
@@ -45,9 +46,18 @@ export interface RegisterData {
   password: string;
   first_name: string;
   last_name: string;
-  phone?: string;
+  /** Required by the API — an unreachable merchant is not a lead. */
+  phone: string;
+  /** Default true. When false, `whatsapp_phone` carries the real number. */
+  whatsapp_same_as_phone?: boolean;
+  /** Only sent when it differs from `phone`; absence means "same". */
+  whatsapp_phone?: string;
+  /** Page locale — picks the language of every merchant-facing message. */
+  language?: "ar" | "en";
   /** Pricing card the visitor clicked before signing up (payg auto-activates). */
   plan_intent?: "payg" | "starter" | "pro";
+  /** UTMs + referrer, recorded on the merchant lead for channel attribution. */
+  attribution?: Attribution;
 }
 
 /** POST with CSRF header, auto-retry once on CSRF failure, then refresh token. */

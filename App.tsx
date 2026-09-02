@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
@@ -14,6 +14,7 @@ import ContactModal from './components/ContactModal';
 import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
 import ScrollToTop from './components/ScrollToTop';
+import { captureAttribution } from './lib/attribution';
 
 /* GOOGLE_CLIENT_ID moved to components/GoogleAuthScope.tsx.
    Google Identity Services used to be mounted here, at the app root, which
@@ -62,6 +63,12 @@ const LoadingFallback = () => (
 );
 
 const App: React.FC = () => {
+  // Remember where this visitor came from before any navigation strips
+  // the UTMs off the URL. Idempotent, and the first source seen wins.
+  useEffect(() => {
+    captureAttribution();
+  }, []);
+
   return (
     <ErrorBoundary>
     <LanguageProvider>
