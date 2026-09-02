@@ -9,8 +9,14 @@
  *
  * **Lazy, after render.** Loaded on idle exactly like Sentry, because the
  * landing page's LCP is a number we have spent real effort on and an
- * analytics SDK is never worth regressing it. PostHog buffers the calls
- * it receives before load, so events fired during that window still land.
+ * analytics SDK is never worth regressing it.
+ *
+ * Loading late means events can be fired before the SDK exists — a fast
+ * visitor can open the signup modal well inside the idle window. PostHog's
+ * own HTML snippet handles this with a stub that queues onto `window`;
+ * this module does not use that snippet, so it queues them itself and
+ * flushes on load. Without the queue the first events of every session —
+ * exactly the ones a funnel starts from — are silently dropped.
  *
  * **`identified_only` person profiles.** An anonymous visitor who bounces
  * does not need a stored person record. This is also the difference
@@ -45,6 +51,14 @@ export type AnalyticsEvent =
 type Props = Record<string, string | number | boolean | null | undefined>;
 
 let client: PostHog | null = null;
+
+/** Events captured before the SDK finished loading. Flushed on init. */
+const pending: { event: AnalyticsEvent; props?: Props }[] = [];
+
+// A blocked SDK never loads and never drains this, so it is capped. 50 is
+// far more than a real session fires before idle; the cap exists so an ad
+// blocker cannot turn a long session into unbounded memory growth.
+const PENDING_LIMIT = 50;
 
 const KEY = import.meta.env.VITE_POSTHOG_KEY as string | undefined;
 const HOST =
@@ -89,6 +103,11 @@ export function initAnalytics(): void {
       }
 
       client = posthog;
+
+      // Drain anything captured while the bundle was still downloading.
+      for (const { event, props } of pending.splice(0)) {
+        posthog.capture(event, props);
+      }
     })
     .catch(() => {
       // A blocked or failed analytics bundle is not worth a console error
@@ -96,9 +115,35 @@ export function initAnalytics(): void {
     });
 }
 
-/** Capture an event. No-ops when analytics is off or still loading. */
+/**
+ * Capture an event.
+ *
+ * Queued when the SDK is still loading and flushed once it is ready. A
+ * no-op when analytics is disabled, so callers never have to check.
+ */
 export function track(event: AnalyticsEvent, props?: Props): void {
-  client?.capture(event, props);
+  if (!KEY) return;
+  if (!client) {
+    if (pending.length < PENDING_LIMIT) pending.push({ event, props });
+    return;
+  }
+  client.capture(event, props);
+}
+
+/**
+ * Capture an event that is immediately followed by leaving the page.
+ *
+ * A normal capture is an async request the browser is free to abandon the
+ * moment navigation starts, which is exactly what happens on the signup
+ * hand-off to the hub. sendBeacon is handed to the browser to deliver
+ * after the page is gone.
+ */
+export function trackAndLeave(event: AnalyticsEvent, props?: Props): void {
+  if (!client) {
+    track(event, props);
+    return;
+  }
+  client.capture(event, props, { transport: "sendBeacon" });
 }
 
 /**

@@ -9,7 +9,7 @@ import { useSignupModal } from "../contexts/SignupModalContext";
 import { register } from "../services/authApi";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
-import { identifySignup, track } from "../lib/analytics";
+import { identifySignup, track, trackAndLeave } from "../lib/analytics";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
@@ -134,7 +134,9 @@ const SignupModal: React.FC = () => {
           whatsapp_same_as_phone: waSame,
         });
       }
-      track("signup_submitted", { plan_intent: planIntent ?? null });
+      // The next statement navigates to the hub, which would abandon a
+      // normal in-flight capture. sendBeacon survives the unload.
+      trackAndLeave("signup_submitted", { plan_intent: planIntent ?? null });
 
       // Hand the freshly-created account off to the merchant hub via the
       // same /token-handoff bridge the demo flow uses, rather than calling
