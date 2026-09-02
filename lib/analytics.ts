@@ -149,10 +149,24 @@ export function trackAndLeave(event: AnalyticsEvent, props?: Props): void {
 /**
  * Tie this browser to a merchant once they sign up.
  *
- * Only the account id and coarse signup context — never the email, name
- * or phone. Those live in our own database, where they belong; PostHog
- * needs to know *that* someone signed up, not who they are.
+ * `$email`, `$name` and `phone` are PostHog's conventional keys for the
+ * person's identity, and it renders them in place of the distinct id —
+ * the difference between a list you can act on and a wall of UUIDs. A
+ * signup we cannot put a name to is not much use to anyone: the point of
+ * knowing someone abandoned setup is being able to call them.
+ *
+ * This is our own merchant's contact detail. Nothing about *their*
+ * customers is here, and the landing page never sees any.
  */
-export function identifySignup(userId: string, props?: Props): void {
-  client?.identify(userId, props);
+export function identifySignup(
+  userId: string,
+  identity: { email?: string | null; name?: string | null; phone?: string | null },
+  props?: Props,
+): void {
+  client?.identify(userId, {
+    $email: identity.email ?? null,
+    $name: identity.name?.trim() || null,
+    phone: identity.phone ?? null,
+    ...props,
+  });
 }

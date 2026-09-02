@@ -128,11 +128,22 @@ const SignupModal: React.FC = () => {
       // account id and coarse context — the email and phone are in our own
       // database and have no business in a third-party analytics tool.
       if (res.user?.id) {
-        identifySignup(res.user.id, {
-          plan_intent: planIntent ?? null,
-          language: isAr ? "ar" : "en",
-          whatsapp_same_as_phone: waSame,
-        });
+        identifySignup(
+          res.user.id,
+          // Taken from the response rather than the form fields, so what
+          // PostHog shows is what the account actually holds — the API
+          // normalises the phone to E.164 and may correct the email.
+          {
+            email: res.user.email,
+            name: `${res.user.first_name} ${res.user.last_name}`,
+            phone: res.user.phone ?? e164,
+          },
+          {
+            plan_intent: planIntent ?? null,
+            language: isAr ? "ar" : "en",
+            whatsapp_same_as_phone: waSame,
+          },
+        );
       }
       // The next statement navigates to the hub, which would abandon a
       // normal in-flight capture. sendBeacon survives the unload.
