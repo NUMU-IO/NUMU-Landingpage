@@ -46,7 +46,14 @@ export interface RegisterData {
   password: string;
   first_name: string;
   last_name: string;
-  phone?: string;
+  /** Required by the API — an unreachable merchant is not a lead. */
+  phone: string;
+  /** Default true. When false, `whatsapp_phone` carries the real number. */
+  whatsapp_same_as_phone?: boolean;
+  /** Only sent when it differs from `phone`; absence means "same". */
+  whatsapp_phone?: string;
+  /** Page locale — picks the language of every merchant-facing message. */
+  language?: "ar" | "en";
   /** Pricing card the visitor clicked before signing up (payg auto-activates). */
   plan_intent?: "payg" | "starter" | "pro";
   /** UTMs + referrer, recorded on the merchant lead for channel attribution. */

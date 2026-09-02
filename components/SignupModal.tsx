@@ -33,6 +33,10 @@ const SignupModal: React.FC = () => {
   // Required. Without it we have no way to reach a merchant who stalls
   // mid-setup, and wallet warnings stay email-only.
   const [phone, setPhone] = useState("");
+  // Default on: most merchants read WhatsApp on the number they just
+  // typed, so this is one tick rather than a second field for everyone.
+  const [waSame, setWaSame] = useState(true);
+  const [waPhone, setWaPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -77,6 +81,13 @@ const SignupModal: React.FC = () => {
       setError(phoneError(isAr));
       return;
     }
+    // Only validated when they actually said the numbers differ; an
+    // untouched field behind an unticked box is not an error.
+    const waE164 = waSame ? null : toE164Eg(waPhone);
+    if (!waSame && !waE164) {
+      setError(phoneError(isAr));
+      return;
+    }
     if (password.length < 12) {
       setError(isAr ? "كلمة المرور لازم تكون ١٢ حرف على الأقل." : "Password must be at least 12 characters.");
       return;
@@ -90,6 +101,11 @@ const SignupModal: React.FC = () => {
         first_name: firstName,
         last_name: lastName,
         phone: e164,
+        whatsapp_same_as_phone: waSame,
+        whatsapp_phone: waE164 ?? undefined,
+        // The page's locale decides which language every merchant-facing
+        // message renders in from here on.
+        language: isAr ? "ar" : "en",
         // Which pricing card brought them here. "payg" auto-activates
         // Pay as you Grow when their store is created — no billing page
         // detour; paid intents are recorded for attribution.
@@ -266,6 +282,33 @@ const SignupModal: React.FC = () => {
                 ? "علشان نبعتلك تنبيهات المتجر ونساعدك على واتساب."
                 : "So we can send store alerts and help you on WhatsApp."}
             </p>
+            <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={waSame}
+                onChange={(e) => setWaSame(e.target.checked)}
+                disabled={loading}
+                className="h-3.5 w-3.5 rounded-[2px] accent-saffron"
+              />
+              <span className="font-mono text-[10px] text-cream/60">
+                {isAr
+                  ? "ده نفس رقم الواتساب بتاعي"
+                  : "This is also my WhatsApp number"}
+              </span>
+            </label>
+            {!waSame && (
+              <input
+                type="tel"
+                required
+                inputMode="tel"
+                value={waPhone}
+                onChange={(e) => setWaPhone(e.target.value)}
+                placeholder={isAr ? "رقم الواتساب" : "WhatsApp number"}
+                disabled={loading}
+                className="mt-2 w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+                dir="ltr"
+              />
+            )}
           </div>
           <div className="relative">
             <input
