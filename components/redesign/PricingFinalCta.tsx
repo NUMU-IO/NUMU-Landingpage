@@ -52,6 +52,10 @@ const HOMEPAGE_PLAN_KEYS = ['starter', 'pro', 'enterprise'] as const;
 const PricingFinalCta: React.FC = () => {
   const { b, isAr } = useBi();
   const [plans, setPlans] = useState<Plan[] | null>(null);
+  // Pay as you Grow is deliberately not one of the three cards. It is not a
+  // fourth tier competing on features — it is the answer to "I don't want
+  // to pick a plan yet", so it sits above them as its own thing.
+  const [payg, setPayg] = useState<Plan | null>(null);
   const [failed, setFailed] = useState(false);
   const trial = useTrialMeta();
   const { open: openSignup } = useSignupModal();
@@ -68,6 +72,9 @@ const PricingFinalCta: React.FC = () => {
         ) as Plan[];
         if (picked.length === HOMEPAGE_PLAN_KEYS.length) setPlans(picked);
         else setFailed(true);
+        // Rendered independently of the three: if the admin hides payg the
+        // band disappears and the tiers are unaffected, and vice versa.
+        setPayg(all.find((p) => p.key === 'payg') ?? null);
       })
       .catch(() => {
         if (alive) setFailed(true);
@@ -90,8 +97,78 @@ const PricingFinalCta: React.FC = () => {
           align="center"
         />
 
+        {/* ── "Not sure yet?" → Pay as you Grow ──
+            Placed above the tiers on purpose. The three cards ask the
+            visitor to predict how big they will get, which is the exact
+            question a first-time merchant cannot answer and the most
+            common reason they leave without choosing anything. This gives
+            that person somewhere to go instead of nowhere. It is a band
+            rather than a fourth card because it is not competing on
+            features — comparing it column-by-column would frame it as the
+            weakest tier when it is really the no-commitment option. */}
+        {payg && (
+          <div className="mt-12">
+            <p className="text-center font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta font-semibold">
+              {b({ ar: 'مش متأكد لسه؟', en: 'Not sure yet?' })}
+            </p>
+
+            <div
+              className="mx-auto mt-4 max-w-4xl rounded-[4px] border-2 border-sage/45 bg-sage/[0.07]
+                p-6 sm:p-7 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="min-w-0">
+                <h3 className="font-display text-xl font-bold text-ink">
+                  {isAr ? payg.name_ar : payg.name_en}
+                </h3>
+                <p className="prose-body-sm mt-2 text-ink-soft/85">
+                  {b({
+                    ar: 'ابدأ من غير اشتراك شهري. مش بتدفع حاجة غير لما تبيع.',
+                    en: 'Start with no monthly fee. You only pay when you sell.',
+                  })}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 flex-col items-start gap-4 sm:items-end">
+                <div className="flex items-baseline gap-2">
+                  <span className="font-display text-3xl font-bold text-sage">
+                    {num(String(payg.commission_percent ?? 3))}
+                    {isAr ? '٪' : '%'}
+                  </span>
+                  <span className="text-sm text-ink-soft/70">
+                    {b({ ar: 'على كل أوردر مدفوع', en: 'per paid order' })}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openSignup('payg')}
+                  className="group inline-flex items-center justify-center gap-2 rounded-[4px]
+                    border border-navy/25 px-5 py-2.5 text-sm font-semibold text-navy
+                    transition-all duration-200 ease-numu active:scale-[0.985]
+                    hover:bg-navy/[0.05] focus-visible:outline-none focus-visible:ring-2
+                    focus-visible:ring-saffron focus-visible:ring-offset-2
+                    focus-visible:ring-offset-cream"
+                >
+                  <span>{b(CTA.primary)}</span>
+                  <span
+                    aria-hidden="true"
+                    className="text-saffron rtl:rotate-180 transition-transform
+                      group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"
+                  >
+                    →
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/50">
+              {b({ ar: 'أو اختار باقة ثابتة', en: 'Or pick a fixed plan' })}
+            </p>
+          </div>
+        )}
+
         {plans ? (
-          <div className="mt-14 grid gap-5 lg:grid-cols-3 items-start">
+          <div className="mt-8 grid gap-5 lg:grid-cols-3 items-start">
             {plans.map((plan) => {
               const isCustom = plan.price_monthly === -1;
               const recommended = plan.popular;
