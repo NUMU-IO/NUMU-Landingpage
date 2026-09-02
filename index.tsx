@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { initCSRF } from './services/csrf';
 import { initMonitoring } from './services/heronsignal';
+import { initAnalytics } from './lib/analytics';
 import './index.css';
 
 // Real-user monitoring starts before render (and before the CSRF round-trip)
@@ -69,5 +70,24 @@ if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
     requestIdleCallback(initSentry);
   } else {
     setTimeout(initSentry, 2000);
+  }
+}
+
+// PostHog, on the same terms as Sentry: after render, on idle, off unless
+// a key is configured. Product analytics is never worth the LCP we spent
+// real effort winning back.
+//
+// `initAnalytics` is imported statically on purpose. The modal components
+// import it too, so a dynamic import here cannot split it into its own
+// chunk — it would only add a build warning for no benefit. The weight
+// that actually matters is the PostHog SDK, and that stays behind a
+// dynamic import *inside* initAnalytics, so it never touches the critical
+// path. PostHog buffers anything captured before it finishes loading, so
+// events fired in that window are not lost.
+if (import.meta.env.VITE_POSTHOG_KEY) {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => initAnalytics());
+  } else {
+    setTimeout(initAnalytics, 2000);
   }
 }

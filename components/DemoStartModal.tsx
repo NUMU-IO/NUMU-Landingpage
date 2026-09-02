@@ -6,6 +6,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
+import { track } from "../lib/analytics";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
@@ -51,6 +52,12 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen, language]);
 
+  // Top of the demo funnel — the denominator for everything below it.
+  useEffect(() => {
+    if (!isOpen) return;
+    track("demo_modal_opened");
+  }, [isOpen]);
+
   // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -77,6 +84,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
     }
 
     setLoading(true);
+    track("demo_submitted");
 
     try {
       const res = await fetch(`${API_URL}/public/demo/start`, {
@@ -304,6 +312,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   if (!credentialResponse.credential) return;
+                  track("signup_google_clicked", { door: "demo" });
                   setLoading(true);
                   setError("");
                   try {

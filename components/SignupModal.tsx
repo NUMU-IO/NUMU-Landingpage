@@ -9,6 +9,7 @@ import { useSignupModal } from "../contexts/SignupModalContext";
 import { register } from "../services/authApi";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
+import { identifySignup, track } from "../lib/analytics";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
@@ -45,6 +46,13 @@ const SignupModal: React.FC = () => {
   const [error, setError] = useState("");
 
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // The top of the funnel. Every drop-off number below this is measured
+  // against how many people opened the form, not how many saw the page.
+  useEffect(() => {
+    if (!isOpen) return;
+    track("signup_modal_opened", { plan_intent: planIntent ?? null });
+  }, [isOpen, planIntent]);
 
   // Lock scroll + Escape to close while open
   useEffect(() => {
@@ -115,6 +123,19 @@ const SignupModal: React.FC = () => {
         // UTMs + referrer captured on arrival, first touch within the tab.
         attribution: getAttribution(),
       });
+
+      // Identify before the redirect below ends this page's life. Only the
+      // account id and coarse context — the email and phone are in our own
+      // database and have no business in a third-party analytics tool.
+      if (res.user?.id) {
+        identifySignup(res.user.id, {
+          plan_intent: planIntent ?? null,
+          language: isAr ? "ar" : "en",
+          whatsapp_same_as_phone: waSame,
+        });
+      }
+      track("signup_submitted", { plan_intent: planIntent ?? null });
+
       // Hand the freshly-created account off to the merchant hub via the
       // same /token-handoff bridge the demo flow uses, rather than calling
       // authenticated endpoints (e.g. verify-email-code) from the landing
@@ -136,6 +157,13 @@ const SignupModal: React.FC = () => {
       // redirect to the hub still carries the session.
       window.location.href = DASHBOARD_URL;
     } catch (err: any) {
+      // A failed signup is the most useful event on this page — it is the
+      // difference between "nobody wants this" and "the form is broken".
+      // `reason` is our own server's message, never anything typed here.
+      track("signup_failed", {
+        reason: String(err?.message ?? "unknown").slice(0, 120),
+        plan_intent: planIntent ?? null,
+      });
       setError(
         err?.message ||
           (isAr ? "حصل مشكلة، حاول تاني." : "Something went wrong, try again."),
@@ -191,6 +219,7 @@ const SignupModal: React.FC = () => {
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               if (!credentialResponse.credential) return;
+              track("signup_google_clicked", { plan_intent: planIntent ?? null });
               setLoading(true);
               setError("");
               try {
