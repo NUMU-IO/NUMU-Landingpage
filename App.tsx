@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
@@ -6,7 +6,6 @@ import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
 import { DemoModalProvider } from './contexts/DemoModalContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
@@ -15,8 +14,13 @@ import ContactModal from './components/ContactModal';
 import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
 import ScrollToTop from './components/ScrollToTop';
+import { captureAttribution } from './lib/attribution';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+/* GOOGLE_CLIENT_ID moved to components/GoogleAuthScope.tsx.
+   Google Identity Services used to be mounted here, at the app root, which
+   fetched 99 KiB of third-party script and set nine Google cookies on every
+   page view — including for visitors who never went near sign-in. It now
+   mounts inside the three surfaces that render a Google button. */
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -59,9 +63,14 @@ const LoadingFallback = () => (
 );
 
 const App: React.FC = () => {
+  // Remember where this visitor came from before any navigation strips
+  // the UTMs off the URL. Idempotent, and the first source seen wins.
+  useEffect(() => {
+    captureAttribution();
+  }, []);
+
   return (
     <ErrorBoundary>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <LanguageProvider>
       <LandingConfigProvider>
       <Router>
@@ -128,7 +137,6 @@ const App: React.FC = () => {
       </Router>
     </LandingConfigProvider>
     </LanguageProvider>
-    </GoogleOAuthProvider>
     </ErrorBoundary>
   );
 };

@@ -109,6 +109,8 @@ const InboxAndMobile: React.FC = () => {
         <Reveal delay={120} className="overflow-hidden rounded-[10px] border border-ink/10 bg-cream numu-mockup-frame">
           <AssetSlot
             asset="inbox"
+            /* Measured: 563 CSS px on desktop. */
+            sizes="(min-width: 1024px) 580px, 100vw"
             ratio={16 / 10}
             alt={{
               ar: 'صندوق الوارد في نُمُو: محادثات من واتساب وفيسبوك وإنستغرام في قائمة واحدة.',

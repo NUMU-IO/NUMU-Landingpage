@@ -10,7 +10,7 @@ is no blur, no black box and no post-editing, so the UI reads as genuine while
 carrying no real data.
 
 `assets/asset-plan.md` requires that screenshots contain no real customer
-names, phone numbers, addresses, API keys or internal URLs. This is how that
+names, phone numbers, addresses hdh dh, API keys or internal URLs. This is how that
 was satisfied.
 
 ## Method

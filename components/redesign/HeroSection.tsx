@@ -36,8 +36,47 @@ const HeroSection: React.FC = () => {
   const [state, setState] = useState<VideoState>('idle');
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const poster = isDesktop ? ASSETS.heroPoster.src : ASSETS.heroPosterMobile.src;
-  const showVideo = !reduced && state !== 'failed';
+  /**
+   * Hold the video back until the first frame has been painted.
+   *
+   * The clip is the single biggest thing this page downloads — 939 KiB on
+   * mobile, 1.68 MB on desktop, roughly half the page in both cases — and with
+   * `preload="auto"` on an element present in the initial markup, the browser
+   * starts pulling it while the stylesheet and the webfonts that gate First
+   * Contentful Paint are still in flight. On a throttled mobile connection that
+   * contention is most of the gap between a 0.3 s TTFB and a 4.6 s FCP.
+   *
+   * Mounting the <video> one frame after paint costs nothing visually: the
+   * poster below is already on screen and stays there until the clip has
+   * something to show. The video then loads with the whole connection to
+   * itself instead of fighting the critical path for it.
+   *
+   * `requestIdleCallback` with a timeout rather than a bare rAF, so the fetch
+   * also waits out the hydration burst; the timeout guarantees it starts on a
+   * busy main thread. Reduced motion never arms it at all.
+   */
+  const [videoArmed, setVideoArmed] = useState(false);
+  useEffect(() => {
+    if (reduced || typeof window === 'undefined') return;
+    let idle: number | undefined;
+    const raf = window.requestAnimationFrame(() => {
+      const ric = (
+        window as unknown as {
+          requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback;
+      idle =
+        typeof ric === 'function'
+          ? ric(() => setVideoArmed(true), { timeout: 1500 })
+          : window.setTimeout(() => setVideoArmed(true), 400);
+    });
+    return () => {
+      window.cancelAnimationFrame(raf);
+      if (idle !== undefined) window.clearTimeout(idle);
+    };
+  }, [reduced]);
+
+  const showVideo = !reduced && state !== 'failed' && videoArmed;
 
   /**
    * Start the clip as early as the browser will allow.
@@ -83,26 +122,64 @@ const HeroSection: React.FC = () => {
     >
       {/* ── Footage ── */}
       <div className="absolute inset-0 -z-10">
-        {showVideo ? (
+        {/*
+          The poster is a real <picture>, always in the markup, and it is what
+          the visitor actually sees first.
+
+          It used to be the <video>'s `poster` attribute with the cut chosen in
+          JS (`isDesktop ? desktop : mobile`). That could not be right in the
+          served HTML: `scripts/prerender.mjs` captures the DOM from a headless
+          browser at ONE viewport, so one cut was baked in for everybody, and on
+          the other form factor `useMediaQuery` flipped after mount, changed the
+          element's `key`, and remounted it. Measured on a phone: BOTH posters
+          were downloaded — the 66 KiB desktop one it could never show, then the
+          34 KiB mobile one — and the swap was a visible blank frame on the
+          largest element on screen.
+
+          `<source media>` moves that decision to the browser, during HTML
+          parse, before any script runs. One download, the right one, on both
+          form factors, and nothing to repair after hydration.
+        */}
+        <picture>
+          <source media="(min-width: 768px)" srcSet={ASSETS.heroPoster.src} />
+          <img
+            src={ASSETS.heroPosterMobile.src}
+            alt={b(hero.videoAlt)}
+            width={720}
+            height={720}
+            className="absolute inset-0 w-full h-full object-cover"
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
+
+        {showVideo && (
           <video
             // Remount on breakpoint change so the browser picks up the other
-            // cut instead of keeping the one it already committed to.
+            // cut instead of keeping the one it already committed to. Safe now
+            // that the element only mounts after paint — the breakpoint is
+            // already resolved, so in practice this never fires twice.
             key={isDesktop ? 'desktop' : 'mobile'}
             ref={videoRef}
             muted
             loop
             playsInline
-            /* `auto`, not `metadata`. The hero clip IS the hero — with
-               `metadata` the browser fetched the header, stopped, and only
-               began the media once something asked it to play, which read as
-               a second or two of frozen poster on every load. LCP is the
-               headline (text), not this element, so the extra early bytes do
-               not move it. */
+            /* `auto`, not `metadata`. Once the element exists we want the clip
+               as fast as possible — with `metadata` the browser fetched the
+               header, stopped, and only began the media once something asked it
+               to play, which read as a second or two of frozen poster. WHEN the
+               element appears is now the lever instead: see `videoArmed`. */
             preload="auto"
-            poster={poster}
-            aria-label={b(hero.videoAlt)}
+            /* No `poster` attribute: the <picture> underneath IS the poster, at
+               the right cut for the viewport. Setting one here would fetch a
+               second copy — the mobile still on desktop — for a frame nobody
+               sees, since this element is transparent until it plays. */
+            /* The <picture> above carries the description of this footage;
+               announcing it twice is noise. */
+            aria-hidden="true"
             onError={() => setState('failed')}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+            style={{ opacity: state === 'playing' ? 1 : 0 }}
           >
             {isDesktop && <source src={ASSETS.heroVideoWebm.src} type="video/webm" />}
             <source
@@ -110,16 +187,6 @@ const HeroSection: React.FC = () => {
               type="video/mp4"
             />
           </video>
-        ) : (
-          // Reduced motion, or the video failed: the poster carries the hero.
-          <img
-            src={poster}
-            alt={b(hero.videoAlt)}
-            width={isDesktop ? 1600 : 720}
-            height={isDesktop ? 900 : 720}
-            className="w-full h-full object-cover"
-            fetchPriority="high"
-          />
         )}
       </div>
 

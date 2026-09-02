@@ -56,6 +56,56 @@ jobs:
             exit 1
           fi
 
+      # Vercel's Git integration is connected to Yahiasherif002/NUMU-Landingpage,
+      # not to this repo, and its production branch is `dev`. So the deploy hook
+      # below builds THAT repo's `dev` at whatever it currently points to — the
+      # promoted commit has to be mirrored there first or the hook cheerfully
+      # rebuilds and redeploys yesterday's code while reporting success.
+      #
+      # This mirror step is what makes the hook mean anything. If the Vercel
+      # project is ever repointed at NUMU-IO/NUMU-Landingpage, delete this step
+      # and FORK_PUSH_TOKEN with it.
+      - name: Mirror the promoted commit to the deploy remote
+        env:
+          FORK_PUSH_TOKEN: ${{ secrets.FORK_PUSH_TOKEN }}
+        run: |
+          if [ -z "$FORK_PUSH_TOKEN" ]; then
+            echo "::error::Missing repository secret FORK_PUSH_TOKEN."
+            echo "Vercel deploys Yahiasherif002/NUMU-Landingpage, so the promoted"
+            echo "commit must be pushed there before the deploy hook fires."
+            echo "Create a PAT with 'contents: write' on that repo and add it as"
+            echo "FORK_PUSH_TOKEN, or repoint the Vercel project at this repo."
+            exit 1
+          fi
+          sha=$(git rev-parse HEAD)
+          remote="https://x-access-token:$FORK_PUSH_TOKEN@github.com/Yahiasherif002/NUMU-Landingpage.git"
+          git push "$remote" "$sha:refs/heads/dev" "$sha:refs/heads/main"
+          echo "Mirrored $sha to the deploy remote (dev + main)."
+
+      # Fires a production build. Preferred over waiting for a push webhook,
+      # because the mirror above may be a no-op fast-forward that Vercel has
+      # already seen, and a promote that deploys nothing is the failure this
+      # workflow exists to avoid.
+      #
+      # Note this cannot verify the result: reading deployment state back needs
+      # VERCEL_TOKEN, which this repo does not have. `deploy.yml` does verify,
+      # and is the better path once that token is added.
+      - name: Trigger the Vercel production deploy
+        env:
+          HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK_URL" ]; then
+            echo "::error::Missing repository secret VERCEL_DEPLOY_HOOK_URL."
+            echo "Vercel → Project Settings → Git → Deploy Hooks; create one on"
+            echo "the production branch and store its URL as that secret."
+            exit 1
+          fi
+          # --fail so a 4xx/5xx from Vercel fails the job instead of being
+          # swallowed into a green run that shipped nothing.
+          response=$(curl --fail --silent --show-error -X POST "$HOOK_URL")
+          echo "$response"
+          echo "Vercel build triggered."
+
       - name: Summary
         run: |
           {
@@ -63,5 +113,6 @@ jobs:
             echo ""
             echo "Commit: \`$(git rev-parse --short HEAD)\`"
             echo ""
-            echo "The production deploy runs in **Deploy Landing Page** on that push."
+            echo "Mirrored to the deploy remote and triggered a Vercel production build."
+            echo "Watch it at <https://vercel.com/numueg/numu-landingpage/deployments>."
           } >> "$GITHUB_STEP_SUMMARY"

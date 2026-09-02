@@ -1,0 +1,164 @@
+{
+  "/assets/analytics.webp": [
+    {
+      "w": 480,
+      "src": "/assets/analytics-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/analytics-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/analytics-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/analytics.webp"
+    }
+  ],
+  "/assets/dashboard-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/dashboard-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/dashboard-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/dashboard-home-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/dashboard-home.webp"
+    }
+  ],
+  "/assets/inbox.webp": [
+    {
+      "w": 480,
+      "src": "/assets/inbox-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/inbox-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/inbox-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/inbox.webp"
+    }
+  ],
+  "/assets/orders-workflow.webp": [
+    {
+      "w": 480,
+      "src": "/assets/orders-workflow-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/orders-workflow-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/orders-workflow-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/orders-workflow.webp"
+    }
+  ],
+  "/assets/store-vionne.webp": [
+    {
+      "w": 480,
+      "src": "/assets/store-vionne-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/store-vionne-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/store-vionne-1200.webp"
+    },
+    {
+      "w": 1400,
+      "src": "/assets/store-vionne.webp"
+    }
+  ],
+  "/assets/storefront-preview.webp": [
+    {
+      "w": 480,
+      "src": "/assets/storefront-preview-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/storefront-preview-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/storefront-preview-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/storefront-preview.webp"
+    }
+  ],
+  "/assets/theme-engine.webp": [
+    {
+      "w": 480,
+      "src": "/assets/theme-engine-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/theme-engine-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/theme-engine-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/theme-engine.webp"
+    }
+  ],
+  "/assets/trust-network.webp": [
+    {
+      "w": 480,
+      "src": "/assets/trust-network-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/trust-network-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/trust-network-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/trust-network.webp"
+    }
+  ],
+  "/assets/whatsapp.webp": [
+    {
+      "w": 480,
+      "src": "/assets/whatsapp-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/whatsapp-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/whatsapp-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/whatsapp.webp"
+    }
+  ]
+}

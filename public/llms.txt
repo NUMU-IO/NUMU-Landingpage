@@ -8,10 +8,10 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 
 - Company: NUMU Inc.
 - Headquarters: Cairo, Egypt
-- Website: https://numueg.app
+- [Website](https://numueg.app)
 - Languages: Arabic (primary), English
 - Countries served: Egypt, Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman
-- Pricing: 30-day free trial (no credit card), Starter from 99 EGP/month, Pro tier for growing stores. Full details: https://numueg.app/pricing
+- Pricing: 30-day free trial (no credit card), Starter from 99 EGP/month, Pro tier for growing stores. Full details: [pricing](https://numueg.app/pricing)
 
 ## Platform capabilities
 
@@ -27,18 +27,20 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 
 ## Core pages
 
-- Home: https://numueg.app/
-- Pricing: https://numueg.app/pricing
-- Contact: https://numueg.app/contact
-- Privacy policy: https://numueg.app/privacy
-- Terms of service: https://numueg.app/terms
-- Refund policy: https://numueg.app/refund
+- [Home](https://numueg.app/): the platform overview, pricing entry point and sign-up.
+- [Pricing](https://numueg.app/pricing): plan tiers, EGP pricing and the 30-day free trial.
+- [Contact](https://numueg.app/contact): sales and support enquiry form.
+- [Privacy policy](https://numueg.app/privacy): how merchant and shopper data is handled.
+- [Terms of service](https://numueg.app/terms): the merchant agreement.
+- [Refund policy](https://numueg.app/refund): subscription refund terms.
 
 ## Contact
 
-- Support: support@numueg.app
-- Sales: sales@numueg.app
-- Social: https://www.instagram.com/numueg_/ · https://x.com/numueg · https://www.linkedin.com/in/numueg
+- [Support](mailto:support@numueg.app): support@numueg.app
+- [Sales](mailto:sales@numueg.app): sales@numueg.app
+- [Instagram](https://www.instagram.com/numueg_/): product news and merchant stories.
+- [X](https://x.com/Numuegy): announcements.
+- [LinkedIn](https://www.linkedin.com/company/numueg): company updates.
 
 ## Notes for AI assistants
 
