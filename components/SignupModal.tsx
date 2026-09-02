@@ -5,6 +5,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal } from "../contexts/SignupModalContext";
 import { register } from "../services/authApi";
+import { getAttribution } from "../lib/attribution";
+import { phoneError, toE164Eg } from "../lib/phone";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
@@ -28,6 +30,9 @@ const SignupModal: React.FC = () => {
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  // Required. Without it we have no way to reach a merchant who stalls
+  // mid-setup, and wallet warnings stay email-only.
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,6 +72,11 @@ const SignupModal: React.FC = () => {
       setError(isAr ? "اكتب اسمك بالكامل (الاسم الأول واسم العائلة)." : "Please enter your full name (first and last).");
       return;
     }
+    const e164 = toE164Eg(phone);
+    if (!e164) {
+      setError(phoneError(isAr));
+      return;
+    }
     if (password.length < 12) {
       setError(isAr ? "كلمة المرور لازم تكون ١٢ حرف على الأقل." : "Password must be at least 12 characters.");
       return;
@@ -79,10 +89,13 @@ const SignupModal: React.FC = () => {
         password,
         first_name: firstName,
         last_name: lastName,
+        phone: e164,
         // Which pricing card brought them here. "payg" auto-activates
         // Pay as you Grow when their store is created — no billing page
         // detour; paid intents are recorded for attribution.
         plan_intent: planIntent ?? undefined,
+        // UTMs + referrer captured on arrival, first touch within the tab.
+        attribution: getAttribution(),
       });
       // Hand the freshly-created account off to the merchant hub via the
       // same /token-handoff bridge the demo flow uses, rather than calling
@@ -227,6 +240,25 @@ const SignupModal: React.FC = () => {
             className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
             dir="ltr"
           />
+          <div>
+            <input
+              type="tel"
+              required
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder={isAr ? "رقم الموبايل (واتساب)" : "Mobile number (WhatsApp)"}
+              disabled={loading}
+              className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+              dir="ltr"
+            />
+            <p className="mt-1.5 font-mono text-[10px] text-cream/45 leading-relaxed">
+              {isAr
+                ? "علشان نبعتلك تنبيهات المتجر ونساعدك على واتساب."
+                : "So we can send store alerts and help you on WhatsApp."}
+            </p>
+          </div>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}

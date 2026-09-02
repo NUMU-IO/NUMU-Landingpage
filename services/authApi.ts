@@ -4,6 +4,7 @@
  * CSRF token is stored in memory and sent on state-changing requests.
  */
 
+import type { Attribution } from "../lib/attribution";
 import { getCSRFToken, initCSRF } from "./csrf";
 
 const API_BASE = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
@@ -48,6 +49,8 @@ export interface RegisterData {
   phone?: string;
   /** Pricing card the visitor clicked before signing up (payg auto-activates). */
   plan_intent?: "payg" | "starter" | "pro";
+  /** UTMs + referrer, recorded on the merchant lead for channel attribution. */
+  attribution?: Attribution;
 }
 
 /** POST with CSRF header, auto-retry once on CSRF failure, then refresh token. */

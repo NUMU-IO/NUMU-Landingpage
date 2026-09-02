@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLanguage } from "../contexts/LanguageContext";
 import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
+import { getAttribution } from "../lib/attribution";
+import { phoneError, toE164Eg } from "../lib/phone";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
@@ -63,6 +65,16 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // WhatsApp is required now. A demo we cannot follow up on is a
+    // costly no-op: we provision a tenant, seed it, and then have no way
+    // to reach the person when they go quiet.
+    const e164 = toE164Eg(whatsapp);
+    if (!e164) {
+      setError(phoneError(isAr));
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -73,9 +85,11 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
         body: JSON.stringify({
           name: name.trim(),
           email,
-          whatsapp: whatsapp.trim() || null,
+          whatsapp: e164,
           language,
           turnstile_token: turnstileToken,
+          // UTMs + referrer captured on arrival, first touch within the tab.
+          attribution: getAttribution(),
         }),
       });
 
@@ -190,8 +204,8 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
           </button>
         ) : (
           <>
-            {/* Form — name + email both required so every demo lead is
-                attributable to a person, not just an inbox. */}
+            {/* Form — name, email and WhatsApp all required so every demo
+                lead is a person we can actually reach. */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
@@ -218,22 +232,28 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                   dir="ltr"
                 />
               </div>
-              {/* WhatsApp — optional on purpose: it's the lead channel
-                  that converts in Egypt, but forcing it costs signups. */}
+              {/* WhatsApp — required. This is where we send the store
+                  link, and the only channel that reaches a merchant who
+                  goes quiet after trying the demo. */}
               <div>
                 <input
                   type="tel"
+                  required
                   inputMode="tel"
+                  autoComplete="tel"
                   maxLength={20}
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  placeholder={
-                    isAr ? "رقم الواتساب (اختياري)" : "WhatsApp number (optional)"
-                  }
+                  placeholder={isAr ? "رقم الواتساب" : "WhatsApp number"}
                   disabled={loading}
                   className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
                   dir="ltr"
                 />
+                <p className="mt-1.5 font-mono text-[10px] text-cream/45 leading-relaxed">
+                  {isAr
+                    ? "هنبعتلك لينك متجرك التجريبي عليه."
+                    : "We send your demo store link here."}
+                </p>
               </div>
 
               {/* Turnstile widget */}
