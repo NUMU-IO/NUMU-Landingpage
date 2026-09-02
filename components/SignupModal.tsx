@@ -180,7 +180,15 @@ const SignupModal: React.FC = () => {
                   method: "POST",
                   credentials: "include",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ id_token: credentialResponse.credential }),
+                  // Send whatever the form already holds. Google's token
+                  // carries no phone number, so this is the only chance to
+                  // attach one without making one-click into two steps —
+                  // and the API only writes it when the user has none.
+                  body: JSON.stringify({
+                    id_token: credentialResponse.credential,
+                    phone: toE164Eg(phone) || undefined,
+                    attribution: getAttribution(),
+                  }),
                 });
                 if (!res.ok) {
                   const errBody = await res.json().catch(() => null);

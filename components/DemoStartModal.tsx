@@ -310,8 +310,12 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                       method: "POST",
                       credentials: "include",
                       headers: { "Content-Type": "application/json" },
+                      // See SignupModal — Google returns no phone, so the
+                      // one in the form is the only one we will get here.
                       body: JSON.stringify({
                         id_token: credentialResponse.credential,
+                        phone: toE164Eg(whatsapp) || undefined,
+                        attribution: getAttribution(),
                       }),
                     });
                     if (!res.ok) {
