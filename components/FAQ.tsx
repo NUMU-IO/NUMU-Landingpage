@@ -77,21 +77,30 @@ const FAQ: React.FC = () => {
   const isAr = language === 'ar';
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  // FAQPage schema — emitted from the same `items` source so the visible
-  // copy and the structured data can never diverge. English is used for
-  // the schema text because Google's crawler prefers consistent-language
-  // answers for rich results; the Arabic storefront still benefits via
-  // the inLanguage field.
+  // FAQPage schema — emitted from the same `items` source so the visible copy
+  // and the structured data can never diverge.
+  //
+  // This previously always emitted the ENGLISH strings, with a note that
+  // "Google's crawler prefers consistent-language answers". Consistent with
+  // the PAGE is the part that matters: Google's structured-data policy is that
+  // markup must match the content a visitor sees, and answering in English
+  // under Arabic copy is the mismatch that rule exists to catch. It also
+  // declared `inLanguage: ['en', 'ar']` while carrying one of them, so the
+  // claim was wrong in its own terms.
+  //
+  // For an Arabic-first product whose merchants search in Arabic, the cost was
+  // concrete: the Arabic answers were on the page for a human and invisible to
+  // every answer engine — the exact audience this markup exists for.
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    inLanguage: ['en', 'ar'],
+    inLanguage: isAr ? 'ar' : 'en',
     mainEntity: items.map((item) => ({
       '@type': 'Question',
-      name: item.q_en,
+      name: isAr ? item.q_ar : item.q_en,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.a_en,
+        text: isAr ? item.a_ar : item.a_en,
       },
     })),
   };
