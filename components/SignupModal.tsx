@@ -28,7 +28,7 @@ const DASHBOARD_URL =
 const SignupModal: React.FC = () => {
   const { language, dir } = useLanguage();
   const isAr = language === "ar";
-  const { isOpen, close, planIntent } = useSignupModal();
+  const { isOpen, close, planIntent, referralCode } = useSignupModal();
   const navigate = useNavigate();
 
   const [fullName, setFullName] = useState("");
@@ -120,6 +120,9 @@ const SignupModal: React.FC = () => {
         // Pay as you Grow when their store is created — no billing page
         // detour; paid intents are recorded for attribution.
         plan_intent: planIntent ?? undefined,
+        // The merchant who sent them. Attribution is first-touch on the
+        // backend, so a code that arrived on a previous visit still wins.
+        referral_code: referralCode ?? undefined,
         // UTMs + referrer captured on arrival, first touch within the tab.
         attribution: getAttribution(),
       });
