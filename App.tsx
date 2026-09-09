@@ -11,6 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
 import SignupModal from './components/SignupModal';
 import SignupRedirect from './components/SignupRedirect';
+import SignupUrlTrigger from './components/SignupUrlTrigger';
 import ContactModal from './components/ContactModal';
 import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
@@ -125,6 +126,7 @@ const App: React.FC = () => {
           </Routes>
         </Suspense>
         {/* Global modals — rendered once at root so any CTA can open them */}
+        <SignupUrlTrigger />
         <SignupModal />
         <WaitlistModal />
         <ContactModal />
