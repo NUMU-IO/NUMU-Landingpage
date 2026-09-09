@@ -1,4 +1,24 @@
+# NUMU — numueg.app
+#
+# Content-Signal (RFC 9309 extension, Cloudflare's policy vocabulary). The
+# storefronts this platform hosts each declare their own; the marketing site
+# had none, which left the one page that explains what NUMU is silent about
+# whether an assistant may use it.
+#
+#   search   = yes — obviously.
+#   ai-input = yes — when a merchant asks an assistant "what should I use to
+#                    sell in Egypt", we want this page read and cited. That is
+#                    distribution.
+#   ai-train = yes — deliberately the opposite of the per-store default, and
+#                    for a reason that does not transfer. This page is NUMU's
+#                    own marketing copy: the more models that carry an
+#                    accurate account of what NUMU is, the more merchants
+#                    hear about it, and we are the ones who benefit. A
+#                    MERCHANT's store is their photography and their product
+#                    copy, they get nothing back for it, and their default
+#                    stays no until they say otherwise.
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /login
 Disallow: /signup
@@ -8,5 +28,39 @@ Disallow: /api/
 Disallow: /docs
 Disallow: /redoc
 Disallow: /openapi.json
+
+# Named explicitly, because several of these read Allow/Disallow and ignore
+# extension directives entirely — a Content-Signal line on its own would be a
+# policy nobody is obliged to read. Allowing them is the point: this file
+# should not be the reason an assistant cannot answer a question about NUMU.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
 
 Sitemap: https://numueg.app/sitemap.xml
