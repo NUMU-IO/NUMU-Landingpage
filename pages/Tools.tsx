@@ -298,7 +298,7 @@ const Tools: React.FC = () => {
           <p className="prose-body text-cream/75 max-w-xl mx-auto mb-6">
             {isAr
               ? `نُمُو بيجمع كل حاجة — متجر، دفع، شحن، فواتير، AI — في لوحة واحدة. ابدأ مجاناً ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم.`
-              : "numu bundles every tool — storefront, payments, shipping, invoices, AI — into one dashboard. Free for 30 days."}
+              : `numu bundles every tool — storefront, payments, shipping, invoices, AI — into one dashboard. Free for ${DEFAULT_TRIAL_DAYS} days.`}
           </p>
           <Link
             to="/?demo=1"

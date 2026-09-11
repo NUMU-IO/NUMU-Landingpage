@@ -11,7 +11,8 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 - [Website](https://numueg.app)
 - Languages: Arabic (primary), English
 - Countries served: Egypt, Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman
-- Pricing: 30-day free trial (no credit card), Starter from 99 EGP/month, Pro tier for growing stores. Full details: [pricing](https://numueg.app/pricing)
+- Pricing: 37-day free trial (no credit card), Starter from 250 EGP/month, and Pay as you Grow with no monthly subscription. Full details: [pricing](https://numueg.app/pricing)
+- Order limits: Starter, Pro, Enterprise, and Pay as you Grow accept unlimited orders. The 50-order figure belongs only to NUMU's temporary Try-a-Demo sandbox and is not a Starter-plan limit.
 
 ## Platform capabilities
 
@@ -28,7 +29,7 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 ## Core pages
 
 - [Home](https://numueg.app/): the platform overview, pricing entry point and sign-up.
-- [Pricing](https://numueg.app/pricing): plan tiers, EGP pricing and the 30-day free trial.
+- [Pricing](https://numueg.app/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 37-day free trial.
 - [Contact](https://numueg.app/contact): sales and support enquiry form.
 - [Privacy policy](https://numueg.app/privacy): how merchant and shopper data is handled.
 - [Terms of service](https://numueg.app/terms): the merchant agreement.

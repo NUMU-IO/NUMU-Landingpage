@@ -136,6 +136,18 @@ export async function register(data: RegisterData): Promise<AuthResponse> {
   );
 }
 
+export async function googleLogin(
+  idToken: string,
+  phone?: string,
+  attribution?: Attribution,
+): Promise<AuthResponse> {
+  return postWithCsrf<AuthResponse>(
+    `${API_BASE}/auth/google`,
+    { id_token: idToken, phone, attribution },
+    "Google login failed",
+  );
+}
+
 export async function forgotPassword(email: string): Promise<{ message: string }> {
   return postWithCsrf<{ message: string }>(
     `${API_BASE}/auth/forgot-password`,

@@ -6,6 +6,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
+import { googleLogin } from "../services/authApi";
 import { track } from "../lib/analytics";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -307,7 +308,7 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Google OAuth \u2014 goes straight to 30-day trial (skips 7-day demo) */}
+            {/* Google OAuth \u2014 goes straight to 37-day trial (skips 7-day demo) */}
             <div className="flex justify-center">
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
@@ -316,25 +317,18 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                   setLoading(true);
                   setError("");
                   try {
-                    const res = await fetch(`${API_URL}/auth/google`, {
-                      method: "POST",
-                      credentials: "include",
-                      headers: { "Content-Type": "application/json" },
-                      // See SignupModal — Google returns no phone, so the
-                      // one in the form is the only one we will get here.
-                      body: JSON.stringify({
-                        id_token: credentialResponse.credential,
-                        phone: toE164Eg(whatsapp) || undefined,
-                        attribution: getAttribution(),
-                      }),
-                    });
-                    if (!res.ok) {
-                      const errBody = await res.json().catch(() => null);
-                      throw new Error(
-                        errBody?.detail ||
-                          errBody?.error?.message ||
-                          (isAr ? "فشل تسجيل الدخول بجوجل" : "Google login failed")
-                      );
+                    const res = await googleLogin(
+                      credentialResponse.credential,
+                      toE164Eg(whatsapp) || undefined,
+                      getAttribution(),
+                    );
+                    if (res.tokens?.access_token) {
+                      const handoff = new URL("/token-handoff", DASHBOARD_URL);
+                      handoff.searchParams.set("access_token", res.tokens.access_token);
+                      handoff.searchParams.set("refresh_token", res.tokens.refresh_token);
+                      handoff.searchParams.set("redirect", "/");
+                      window.location.href = handoff.toString();
+                      return;
                     }
                     window.location.href = DASHBOARD_URL;
                   } catch (err: any) {

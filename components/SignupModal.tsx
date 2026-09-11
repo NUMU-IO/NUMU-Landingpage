@@ -6,12 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { GoogleSignInButton as GoogleLogin } from "./GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal } from "../contexts/SignupModalContext";
-import { register } from "../services/authApi";
+import { googleLogin, register } from "../services/authApi";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
 import { identifySignup, track, trackAndLeave } from "../lib/analytics";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://numueg.app/api/v1";
 const DASHBOARD_URL =
   import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
 
@@ -230,7 +229,7 @@ const SignupModal: React.FC = () => {
           </p>
         </div>
 
-        {/* Google — one-click signup, straight to the dashboard */}
+        {/* Google — authenticate here, then let the hub resolve first-store onboarding. */}
         <div className="flex justify-center">
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
@@ -239,27 +238,20 @@ const SignupModal: React.FC = () => {
               setLoading(true);
               setError("");
               try {
-                const res = await fetch(`${API_URL}/auth/google`, {
-                  method: "POST",
-                  credentials: "include",
-                  headers: { "Content-Type": "application/json" },
-                  // Send whatever the form already holds. Google's token
-                  // carries no phone number, so this is the only chance to
-                  // attach one without making one-click into two steps —
-                  // and the API only writes it when the user has none.
-                  body: JSON.stringify({
-                    id_token: credentialResponse.credential,
-                    phone: toE164Eg(phone) || undefined,
-                    attribution: getAttribution(),
-                  }),
-                });
-                if (!res.ok) {
-                  const errBody = await res.json().catch(() => null);
-                  throw new Error(
-                    errBody?.detail ||
-                      errBody?.error?.message ||
-                      (isAr ? "فشل تسجيل الدخول بجوجل" : "Google login failed"),
-                  );
+                const res = await googleLogin(
+                  credentialResponse.credential,
+                  toE164Eg(phone) || undefined,
+                  getAttribution(),
+                );
+                if (res.tokens?.access_token) {
+                  const handoff = new URL("/token-handoff", DASHBOARD_URL);
+                  handoff.searchParams.set("access_token", res.tokens.access_token);
+                  handoff.searchParams.set("refresh_token", res.tokens.refresh_token);
+                  // Root resolves accounts without a store to /create-store,
+                  // where OAuth users must now provide their phone number.
+                  handoff.searchParams.set("redirect", "/");
+                  window.location.href = handoff.toString();
+                  return;
                 }
                 window.location.href = DASHBOARD_URL;
               } catch (err: any) {
