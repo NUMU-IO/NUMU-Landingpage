@@ -32,11 +32,11 @@ const rows: Row[] = [
     obj_en: "Starting costs are too high.",
     obj_ar: "تكاليف البداية عالية.",
     ans_en:
-      "99 EGP/month. No percentage on orders. No hidden payment fees. No setup charge. That's it.",
+      "250 EGP/month. No percentage on orders. No hidden payment fees. No setup charge. That's it.",
     ans_ar:
-      "٩٩ جنيه/شهر. مفيش نسبة على الأوردرات. مفيش رسوم دفع مخفية. مفيش رسوم تأسيس. وخلاص.",
-    emphasis_en: "99 EGP/month",
-    emphasis_ar: "٩٩ جنيه/شهر",
+      "٢٥٠ جنيه/شهر. مفيش نسبة على الأوردرات. مفيش رسوم دفع مخفية. مفيش رسوم تأسيس. وخلاص.",
+    emphasis_en: "250 EGP/month",
+    emphasis_ar: "٢٥٠ جنيه/شهر",
   },
   {
     obj_en: "Support never actually replies.",

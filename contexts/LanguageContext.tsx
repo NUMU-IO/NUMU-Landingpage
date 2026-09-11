@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type Language = 'en' | 'ar';
 
@@ -611,16 +612,17 @@ export const translationsAr: Record<string, string> = {
   'features.multichannel.desc': 'بيع من موقعك، واتساب، إنستجرام، وفيسبوك من لوحة تحكم واحدة.',
 };
 
-// Arabic is the landing's primary language — it always loads in Arabic for
-// every visitor regardless of browser locale (Numu's audience is Egypt/MENA).
-// The navbar toggle still lets anyone switch to English at any time.
-const getInitialLanguage = (): Language => 'ar';
-
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathLanguage = location.pathname.match(/^\/(ar|en)(?:\/|$)/)?.[1];
+  const remembered = sessionStorage.getItem('numu-language');
+  const language: Language = pathLanguage === 'en' || (!pathLanguage && remembered === 'en') ? 'en' : 'ar';
 
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === 'en' ? 'ar' : 'en'));
+    const next = language === 'en' ? 'ar' : 'en';
+    const path = location.pathname.replace(/^\/(ar|en)(?=\/|$)/, '') || '/';
+    navigate(`/${next}${path === '/' ? '' : path}${location.search}${location.hash}`);
   };
 
   const t = (key: string) => {
@@ -635,6 +637,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   useEffect(() => {
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
+    sessionStorage.setItem('numu-language', language);
   }, [dir, language]);
 
   return (

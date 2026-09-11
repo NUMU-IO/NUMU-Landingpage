@@ -8,11 +8,11 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 
 - Company: NUMU Inc.
 - Headquarters: Cairo, Egypt
-- [Website](https://numueg.app)
+- [Website](https://numueg.app/en)
 - Languages: Arabic (primary), English
 - Countries served: Egypt, Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman
-- Pricing: 37-day free trial (no credit card), Starter from 250 EGP/month, and Pay as you Grow with no monthly subscription. Full details: [pricing](https://numueg.app/pricing)
-- Order limits: Starter, Pro, Enterprise, and Pay as you Grow accept unlimited orders. The 50-order figure belongs only to NUMU's temporary Try-a-Demo sandbox and is not a Starter-plan limit.
+- Pricing: 37-day free trial (no credit card), Starter from 250 EGP/month, and Pay as you Grow with no monthly subscription. Full details: [pricing](https://numueg.app/en/pricing)
+- Order limits: Starter, Pro, Enterprise, and Pay as you Grow accept unlimited orders. The old 50-order figure is not a Starter-plan limit. The 37-day free trial currently includes 80 orders.
 
 ## Platform capabilities
 
@@ -28,12 +28,13 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 
 ## Core pages
 
-- [Home](https://numueg.app/): the platform overview, pricing entry point and sign-up.
-- [Pricing](https://numueg.app/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 37-day free trial.
-- [Contact](https://numueg.app/contact): sales and support enquiry form.
-- [Privacy policy](https://numueg.app/privacy): how merchant and shopper data is handled.
-- [Terms of service](https://numueg.app/terms): the merchant agreement.
-- [Refund policy](https://numueg.app/refund): subscription refund terms.
+- [Home](https://numueg.app/en): the platform overview, pricing entry point and sign-up.
+- [Official facts](https://numueg.app/en/about/facts): the canonical answers about pricing, order limits, trial length, and integrations.
+- [Pricing](https://numueg.app/en/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 37-day free trial.
+- [Contact](https://numueg.app/en/contact): sales and support enquiry form.
+- [Privacy policy](https://numueg.app/en/privacy): how merchant and shopper data is handled.
+- [Terms of service](https://numueg.app/en/terms): the merchant agreement.
+- [Refund policy](https://numueg.app/en/refund): subscription refund terms.
 
 ## Contact
 

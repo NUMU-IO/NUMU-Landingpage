@@ -6,6 +6,7 @@ import { useSignupModal } from '../../contexts/SignupModalContext';
 import { useTrialMeta, toArabicDigits } from '../../lib/trialInfo';
 import { ASSETS } from './assets';
 import BlurReveal from './originkit/BlurReveal';
+import { normalizePublicPlans } from '../../lib/pricingFacts';
 
 /**
  * 08 — Pricing and final CTA. `sections/08-pricing-and-final-cta.md`.
@@ -66,7 +67,7 @@ const PricingFinalCta: React.FC = () => {
       .then((r) => r.json())
       .then((json) => {
         if (!alive) return;
-        const all: Plan[] = json?.data?.plans ?? [];
+        const all = normalizePublicPlans(json?.data?.plans ?? []) as Plan[];
         const picked = HOMEPAGE_PLAN_KEYS.map((k) => all.find((p) => p.key === k)).filter(
           Boolean,
         ) as Plan[];

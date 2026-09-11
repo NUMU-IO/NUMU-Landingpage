@@ -55,12 +55,12 @@ const perks: Perk[] = [
   },
   {
     key: 'premium-free',
-    title_en: '30 days Premium. On us.',
-    title_ar: 'تجربة Premium ٣٠ يوم مجاناً.',
+    title_en: '37 days Premium. On us.',
+    title_ar: 'تجربة Premium ٣٧ يوم مجاناً.',
     desc_en:
-      "Full Premium tier for your first 30 days — no credit card, no downgrade surprise.",
+      "Full Premium tier for your first 37 days — no credit card, no downgrade surprise.",
     desc_ar:
-      'باقة Premium بالكامل في أول ٣٠ يوم — بدون بطاقة ائتمان، بدون مفاجآت.',
+      'باقة Premium بالكامل في أول ٣٧ يوم — بدون بطاقة ائتمان، بدون مفاجآت.',
     accent: 'sage',
   },
   {

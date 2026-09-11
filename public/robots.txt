@@ -28,6 +28,14 @@ Disallow: /api/
 Disallow: /docs
 Disallow: /redoc
 Disallow: /openapi.json
+Disallow: /ar/login
+Disallow: /en/login
+Disallow: /ar/signup
+Disallow: /en/signup
+Disallow: /ar/verify-email
+Disallow: /en/verify-email
+Disallow: /ar/waitlist
+Disallow: /en/waitlist
 
 # Named explicitly, because several of these read Allow/Disallow and ignore
 # extension directives entirely — a Content-Signal line on its own would be a

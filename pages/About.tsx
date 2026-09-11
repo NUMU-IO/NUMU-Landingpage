@@ -116,6 +116,12 @@ const About: React.FC = () => {
             </Link>
             .
           </p>
+          <Link
+            to="/about/facts"
+            className="mt-6 inline-flex font-semibold text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy"
+          >
+            {b({ ar: 'شوف حقائق الأسعار والحدود والتجربة', en: 'See the official pricing, limits and trial facts' })}
+          </Link>
         </div>
       </PageSection>
 

@@ -38,8 +38,10 @@ if (!existsSync(MANIFEST)) {
   process.exit(1);
 }
 
-const { routes } = JSON.parse(readFileSync(MANIFEST, 'utf-8'));
-const homeTitle = pick(readFileSync(fileFor('/'), 'utf-8'), /<title>(.*?)<\/title>/is);
+const { routes, indexedRoutes } = JSON.parse(readFileSync(MANIFEST, 'utf-8'));
+const homeTitles = Object.fromEntries(
+  ['ar', 'en'].map((locale) => [locale, pick(readFileSync(fileFor(`/${locale}`), 'utf-8'), /<title>(.*?)<\/title>/is)]),
+);
 const errors = [];
 
 for (const route of routes) {
@@ -60,8 +62,50 @@ for (const route of routes) {
   if (canonical !== expected) {
     errors.push(`${route}: canonical is "${canonical}", expected "${expected}"`);
   }
-  if (route !== '/' && title && title === homeTitle) {
+  const locale = route.split('/')[1];
+  if (route !== `/${locale}` && title && title === homeTitles[locale]) {
     errors.push(`${route}: <title> is a copy of the homepage's ("${title}")`);
+  }
+
+  const relative = route.replace(/^\/(ar|en)/, '');
+  const alternateLocale = locale === 'ar' ? 'en' : 'ar';
+  const alternate = `${SITE}/${alternateLocale}${relative}`;
+  if (!html.includes(`hreflang="${alternateLocale}" href="${alternate}"`)) {
+    errors.push(`${route}: missing reciprocal ${alternateLocale} hreflang (${alternate})`);
+  }
+
+  const unlocalizedLinks = [...html.matchAll(/<a\b[^>]*\bhref=["']\/(?!\/|ar(?:\/|["'#?])|en(?:\/|["'#?])|assets\/)([^"']*)/gi)];
+  if (unlocalizedLinks.length) {
+    errors.push(`${route}: ${unlocalizedLinks.length} internal link(s) escape the localized URL tree`);
+  }
+}
+
+const sitemapFile = join(DIST, 'sitemap.xml');
+if (!existsSync(sitemapFile)) {
+  errors.push('sitemap.xml: missing from build');
+} else {
+  const sitemap = readFileSync(sitemapFile, 'utf-8');
+  for (const route of indexedRoutes ?? routes) {
+    if (!sitemap.includes(`<loc>${SITE}${route}</loc>`)) errors.push(`${route}: missing from sitemap.xml`);
+  }
+}
+
+const releaseFile = join(DIST, 'release.json');
+if (!existsSync(releaseFile)) {
+  errors.push('release.json: missing from build');
+} else {
+  const release = JSON.parse(readFileSync(releaseFile, 'utf-8'));
+  if (typeof release.sha !== 'string' || !release.sha) errors.push('release.json: missing sha');
+}
+
+for (const locale of ['ar', 'en']) {
+  const pricing = readFileSync(fileFor(`/${locale}/pricing`), 'utf-8');
+  if (!pricing.includes(locale === 'ar' ? '٣٧ يوم' : '37-day')) {
+    errors.push(`/${locale}/pricing: missing the 37-day trial`);
+  }
+  const starter = pricing.match(/Starter[\s\S]{0,5000}?(?:Pro|Enterprise)/i)?.[0] ?? '';
+  if (/50\s+(orders?|طلبات|اوردر|أوردر)/i.test(starter)) {
+    errors.push(`/${locale}/pricing: Starter still advertises a 50-order limit`);
   }
 }
 
@@ -70,8 +114,8 @@ for (const route of routes) {
 // itself from GET /public/stores at prerender time, so an API that is down, slow,
 // or missing the endpoint yields a valid-but-pointless page. Warn loudly rather
 // than fail — a marketing API blip should not be able to block a deploy.
-if (routes.includes('/stores') && existsSync(fileFor('/stores'))) {
-  const html = readFileSync(fileFor('/stores'), 'utf-8');
+if (routes.includes('/ar/stores') && existsSync(fileFor('/ar/stores'))) {
+  const html = readFileSync(fileFor('/ar/stores'), 'utf-8');
   const links = html.match(/href="https:\/\/[a-z0-9-]+\.numueg\.app/g) ?? [];
   if (links.length === 0) {
     console.warn(

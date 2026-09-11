@@ -18,6 +18,9 @@ name: IndexNow submit
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy Landing Page"]
+    types: [completed]
   # Give Vercel time to finish building and promote the deployment before we
   # announce URLs that may still be serving the previous build. IndexNow asks
   # you not to submit unchanged URLs; announcing stale ones is the same waste.
@@ -31,6 +34,9 @@ concurrency:
 jobs:
   submit:
     name: Submit sitemap URLs
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

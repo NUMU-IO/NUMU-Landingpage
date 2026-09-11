@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
 import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
@@ -57,6 +57,10 @@ const TrustNetworkPage = lazy(() => import('./pages/TrustNetworkPage'));
 const Support = lazy(() => import('./pages/Support'));
 const About = lazy(() => import('./pages/About'));
 const Resources = lazy(() => import('./pages/Resources'));
+const Facts = lazy(() => import('./pages/Facts'));
+const LearnArticle = lazy(() => import('./pages/LearnArticle'));
+const IntegrationDetail = lazy(() => import('./pages/IntegrationDetail'));
+const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
@@ -64,7 +68,52 @@ const LoadingFallback = () => (
   </div>
 );
 
-const App: React.FC = () => {
+const routeComponents = [
+  ['', Home],
+  ['pricing', Pricing],
+  ['privacy', Privacy],
+  ['terms', Terms],
+  ['data-deletion', DataDeletion],
+  ['contact', Contact],
+  ['refund', Refund],
+  ['apps', Apps],
+  ['themes', Themes],
+  ['developers', Developers],
+  ['tools', Tools],
+  ['tools/store-names', ToolStoreNames],
+  ['tools/profit-margin', ToolProfitMargin],
+  ['tools/invoice', ToolInvoice],
+  ['tools/ai-description', ToolAIDescription],
+  ['tools/vat', ToolVat],
+  ['tools/cod', ToolCod],
+  ['learn', Learn],
+  ['learn/:slug', LearnArticle],
+  ['features', Features],
+  ['integrations', IntegrationsPage],
+  ['integrations/:slug', IntegrationDetail],
+  ['compare/:slug', ComparisonPage],
+  ['product-tour', ProductTour],
+  ['trust-network', TrustNetworkPage],
+  ['support', Support],
+  ['about', About],
+  ['about/facts', Facts],
+  ['resources', Resources],
+  ['stores', Stores],
+] as const;
+
+const LegacyLocaleRedirect: React.FC = () => {
+  const location = useLocation();
+  const { language } = useLanguage();
+  if (/^\/(ar|en)(?:\/|$)/.test(location.pathname)) return <NotFound />;
+  return (
+    <Navigate
+      replace
+      to={`/${language}${location.pathname === '/' ? '' : location.pathname}${location.search}${location.hash}`}
+    />
+  );
+};
+
+const RoutedApp: React.FC = () => {
   // Remember where this visitor came from before any navigation strips
   // the UTMs off the URL. Idempotent, and the first source seen wins.
   useEffect(() => {
@@ -75,7 +124,6 @@ const App: React.FC = () => {
     <ErrorBoundary>
     <LanguageProvider>
       <LandingConfigProvider>
-      <Router>
         <ScrollToTop />
         <WaitlistModalProvider>
         <SignupModalProvider>
@@ -83,46 +131,24 @@ const App: React.FC = () => {
         <ContactModalProvider>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            {/* /signup opens the direct sign-up modal on home (replaces the
-                old private-beta waitlist). "Try a Demo" stays separate. */}
-            <Route path="/signup" element={<SignupRedirect />} />
-            <Route element={<AuthLayout />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-            </Route>
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/data-deletion" element={<DataDeletion />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/refund" element={<Refund />} />
-            <Route path="/apps" element={<Apps />} />
-            <Route path="/themes" element={<Themes />} />
-            <Route path="/developers" element={<Developers />} />
-            <Route path="/tools" element={<Tools />} />
-            <Route path="/tools/store-names" element={<ToolStoreNames />} />
-            <Route path="/tools/profit-margin" element={<ToolProfitMargin />} />
-            <Route path="/tools/invoice" element={<ToolInvoice />} />
-            <Route path="/tools/ai-description" element={<ToolAIDescription />} />
-            <Route path="/tools/vat" element={<ToolVat />} />
-            <Route path="/tools/cod" element={<ToolCod />} />
-            <Route path="/learn" element={<Learn />} />
-
-            {/* v1 redesign secondary pages */}
-            <Route path="/features" element={<Features />} />
-            <Route path="/integrations" element={<IntegrationsPage />} />
-            <Route path="/product-tour" element={<ProductTour />} />
-            <Route path="/trust-network" element={<TrustNetworkPage />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/resources" element={<Resources />} />
-
-            {/* Crawl entry point for merchant storefronts - see pages/Stores.tsx */}
-            <Route path="/stores" element={<Stores />} />
-            <Route path="/404" element={<NotFound />} />
-            <Route path="*" element={<NotFound />} />
+            {(['ar', 'en'] as const).flatMap((locale) =>
+              routeComponents.map(([path, Component]) => (
+                <Route
+                  key={`${locale}/${path}`}
+                  path={`/${locale}${path ? `/${path}` : ''}`}
+                  element={<Component />}
+                />
+              )),
+            )}
+            {(['ar', 'en'] as const).flatMap((locale) => [
+              <Route key={`${locale}-signup`} path={`/${locale}/signup`} element={<SignupRedirect />} />,
+              <Route key={`${locale}-auth`} element={<AuthLayout />}>
+                <Route path={`/${locale}/login`} element={<Login />} />
+                <Route path={`/${locale}/verify-email`} element={<VerifyEmail />} />
+              </Route>,
+              <Route key={`${locale}-waitlist`} path={`/${locale}/waitlist`} element={<Waitlist />} />,
+            ])}
+            <Route path="*" element={<LegacyLocaleRedirect />} />
           </Routes>
         </Suspense>
         {/* Global modals — rendered once at root so any CTA can open them */}
@@ -137,11 +163,16 @@ const App: React.FC = () => {
         </DemoModalProvider>
         </SignupModalProvider>
         </WaitlistModalProvider>
-      </Router>
     </LandingConfigProvider>
     </LanguageProvider>
     </ErrorBoundary>
   );
 };
+
+const App: React.FC = () => (
+  <Router>
+    <RoutedApp />
+  </Router>
+);
 
 export default App;

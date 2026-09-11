@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
@@ -18,7 +18,7 @@ import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
  * work today).
  */
 
-interface Guide {
+export interface Guide {
   slug: string;
   category_en: string;
   category_ar: string;
@@ -33,7 +33,7 @@ interface Guide {
   tip_ar?: string;
 }
 
-const guides: Guide[] = [
+export const guides: Guide[] = [
   {
     slug: "open-store-egypt",
     category_en: "Getting started",
@@ -304,7 +304,6 @@ const accentText: Record<Guide["accent"], string> = {
 const Learn: React.FC = () => {
   const { dir, language } = useLanguage();
   const isAr = language === "ar";
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
 
   useSEO({
     title: isAr
@@ -369,25 +368,18 @@ const Learn: React.FC = () => {
       <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
         <div className="flex flex-col gap-3">
           {guides.map((g, i) => {
-            const open = openSlug === g.slug;
-            const body = isAr ? g.body_ar : g.body_en;
             return (
               <article
                 key={g.slug}
                 id={g.slug}
-                className={`relative bg-paper border border-ink/10 rounded-[10px] overflow-hidden transition-all duration-200 ease-numu ${
-                  open ? "shadow-card" : ""
-                }`}
+                className="relative bg-paper border border-ink/10 rounded-[10px] overflow-hidden transition-all duration-200 ease-numu hover:shadow-card"
               >
                 <span
                   aria-hidden="true"
                   className={`absolute top-0 start-0 w-12 h-[3px] ${accentBar[g.accent]}`}
                 />
-                <button
-                  type="button"
-                  onClick={() => setOpenSlug(open ? null : g.slug)}
-                  // eslint-disable-next-line jsx-a11y/aria-proptypes
-                  aria-expanded={open}
+                <Link
+                  to={`/learn/${g.slug}`}
                   className="w-full flex items-start justify-between gap-4 text-start p-5 sm:p-6 hover:bg-navy/[0.03] transition-colors"
                 >
                   <div className="min-w-0 flex-1">
@@ -414,61 +406,10 @@ const Learn: React.FC = () => {
                       {isAr ? g.title_ar : g.title_en}
                     </h2>
                   </div>
-                  <span
-                    aria-hidden="true"
-                    className={`shrink-0 size-7 rounded-[4px] bg-cream border border-ink/10 flex items-center justify-center text-ink-soft transition-transform duration-200 ease-numu ${
-                      open ? "rotate-45 text-terracotta border-terracotta/40" : ""
-                    }`}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
+                  <span aria-hidden="true" className="shrink-0 text-lg text-terracotta rtl:rotate-180">
+                    →
                   </span>
-                </button>
-                {open && (
-                  <div className="px-5 sm:px-6 pb-6 sm:pb-7 pt-0">
-                    <div className="border-t border-bone pt-5 flex flex-col gap-3">
-                      {body.map((para, pi) => (
-                        <p
-                          key={pi}
-                          className="prose-body text-ink/80 leading-[1.8]"
-                        >
-                          {para}
-                        </p>
-                      ))}
-
-                      {(isAr ? g.tip_ar : g.tip_en) && (
-                        <div
-                          className={`mt-2 bg-cream border border-ink/10 rounded-[6px] p-4 border-s-[3px] ${
-                            g.accent === "navy"
-                              ? "border-s-navy"
-                              : g.accent === "terracotta"
-                                ? "border-s-terracotta"
-                                : g.accent === "sage"
-                                  ? "border-s-sage"
-                                  : "border-s-saffron"
-                          }`}
-                        >
-                          <p className="font-mono text-[10px] uppercase tracking-[0.18em] font-semibold text-ink-soft/60 mb-1">
-                            § {isAr ? "ملاحظة نُمُو" : "NUMU NOTE"}
-                          </p>
-                          <p className="prose-body-sm text-ink/80">
-                            {isAr ? g.tip_ar : g.tip_en}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+                </Link>
               </article>
             );
           })}

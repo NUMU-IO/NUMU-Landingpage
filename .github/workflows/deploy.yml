@@ -1,65 +1,36 @@
 name: Deploy Landing Page
 
-# numueg.app is served by Vercel (Cloudflare sits in front of it). This workflow
-# is the deploy path: push to main ships production, push to dev ships a preview
-# URL, and either can be re-run by hand from the Actions tab.
-#
-# It replaces an rsync deploy to 188.166.156.151 — the DigitalOcean droplet that
-# was decommissioned. That host stopped answering, so every run of this workflow
-# since June 2026 failed, while the site it was supposed to be deploying carried
-# on being served from somewhere else entirely.
-#
-# ─── Required secrets ────────────────────────────────────────────────────────
-#   VERCEL_TOKEN        Account Settings → Tokens
-#   VERCEL_ORG_ID       Project Settings → General ("Team ID" / "Vercel ID")
-#   VERCEL_PROJECT_ID   Project Settings → General ("Project ID")
-#
-# Without VERCEL_TOKEN the job stops at the preflight step with an explanation
-# rather than failing several minutes later inside the Vercel CLI.
+# Vercel is connected to Yahiasherif002/NUMU-Landingpage. The upstream
+# promotion mirrors the release there, fires the Vercel deploy hook, then sends
+# a repository_dispatch event to this workflow. This job independently builds
+# the same commit and does not need Vercel credentials in the fork.
 
 on:
-  push:
-    branches: [main, dev]
   workflow_dispatch:
+  repository_dispatch:
+    types: [promote-production]
 
 concurrency:
-  group: deploy-landing-${{ github.ref_name }}
+  group: deploy-landing-production
   cancel-in-progress: false
+
+permissions:
+  contents: read
 
 env:
   NODE_VERSION: "20"
 
 jobs:
   deploy:
-    name: Build & deploy (${{ github.ref_name == 'main' && 'production' || 'preview' }})
+    name: Build & verify production
     runs-on: ubuntu-latest
-
-    # The Vercel CLI reads all three of these from the environment, so no step
-    # has to pass --token and no secret is ever interpolated into a shell line.
     env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      EXPECTED_SHA: ${{ github.event.client_payload.sha || github.sha }}
 
     steps:
       - uses: actions/checkout@v4
-
-      # Secrets are read through the environment, never interpolated into the
-      # script body — an expression expands before the shell parses the line,
-      # so a secret containing shell syntax would be executed rather than read.
-      - name: Preflight — credentials present?
-        run: |
-          missing=()
-          [ -n "$VERCEL_TOKEN" ]      || missing+=(VERCEL_TOKEN)
-          [ -n "$VERCEL_ORG_ID" ]     || missing+=(VERCEL_ORG_ID)
-          [ -n "$VERCEL_PROJECT_ID" ] || missing+=(VERCEL_PROJECT_ID)
-          if [ ${#missing[@]} -ne 0 ]; then
-            echo "::error::Missing repository secret(s): ${missing[*]}"
-            echo "Add them under Settings → Secrets and variables → Actions."
-            echo "VERCEL_TOKEN comes from Vercel → Account Settings → Tokens;"
-            echo "the two IDs from the project's Settings → General."
-            exit 1
-          fi
+        with:
+          ref: ${{ github.event.client_payload.sha || github.sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -72,65 +43,52 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      # Resolve production vs preview once, so no later step has to repeat the
-      # branch test and none of them can disagree about which one this is.
-      - name: Resolve target
-        id: target
-        run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "env=production" >> "$GITHUB_OUTPUT"
-            echo "flag=--prod"    >> "$GITHUB_OUTPUT"
-          else
-            echo "env=preview" >> "$GITHUB_OUTPUT"
-            echo "flag="       >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Pull Vercel project settings
-        run: npx --yes vercel@latest pull --yes --environment=${{ steps.target.outputs.env }}
-
-      # Built here rather than on Vercel's build container, and deployed with
-      # --prebuilt. The prerender step needs a real Chrome: this runner has one
-      # preinstalled, whereas the build container has none and has to unpack
-      # @sparticuz/chromium to stand one up. Building here also means a broken
-      # build fails in this log, where it is visible, instead of silently
-      # leaving the previous deployment live.
-      - name: Build (vite + prerender + prerender gate)
+      - name: Build and verify all prerendered routes
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: npx --yes vercel@latest build ${{ steps.target.outputs.flag }}
+        run: npm run build:ssg
 
-      - name: Deploy
-        id: deploy
+      # The deploy hook runs asynchronously. release.json is written by the
+      # production build from VERCEL_GIT_COMMIT_SHA, so matching it proves the
+      # exact promoted commit—not merely a similar bundle—reached production.
+      - name: Wait for the promoted commit
         run: |
-          url=$(npx --yes vercel@latest deploy --prebuilt ${{ steps.target.outputs.flag }})
-          echo "url=$url" >> "$GITHUB_OUTPUT"
-          echo "Deployed to $url"
+          for attempt in {1..60}; do
+            release=$(curl -fsSL --retry 2 --retry-delay 2 \
+              "https://numueg.app/release.json?sha=$EXPECTED_SHA" 2>/dev/null || true)
+            if echo "$release" | grep -q "$EXPECTED_SHA"; then
+              echo "Production is serving $EXPECTED_SHA."
+              exit 0
+            fi
+            echo "Attempt $attempt/60: production has not reached $EXPECTED_SHA yet."
+            sleep 10
+          done
+          echo "::error::Production did not publish $EXPECTED_SHA within 10 minutes."
+          exit 1
 
-      # Proves the deployment serves what was just built, rather than trusting
-      # that a green deploy step means a changed site — the two came apart here
-      # before, which is how an eight-week-old build stayed live unnoticed.
-      # The deployment URL is checked, not numueg.app: the alias and the CDN in
-      # front of it can lag, and a stale cached copy is not a failed deploy.
-      - name: Verify the deployment serves this build
+      - name: Verify localized search facts
         run: |
-          built=$(ls dist/assets/index-*.js | head -1 | xargs basename)
-          echo "Expecting bundle: $built"
-          body=$(curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors "${{ steps.deploy.outputs.url }}/")
-          echo "$body" | grep -q "$built" \
-            || { echo "::error::Deployment does not reference $built"; exit 1; }
-          echo "$body" | grep -q 'x-numu-prerendered' \
-            || { echo "::error::Deployment served a raw SPA shell — prerender did not survive"; exit 1; }
-          echo "OK — $built is live at ${{ steps.deploy.outputs.url }}"
+          pricing=$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors https://numueg.app/en/pricing)
+          facts=$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors https://numueg.app/en/about/facts)
+          sitemap=$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors https://numueg.app/sitemap.xml)
+          echo "$pricing" | grep -qi 'canonical" href="https://numueg.app/en/pricing' \
+            || { echo "::error::English pricing canonical is missing"; exit 1; }
+          echo "$pricing" | grep -qi '37-day' \
+            || { echo "::error::37-day trial is missing from English pricing"; exit 1; }
+          echo "$facts" | grep -qi 'unlimited orders' \
+            || { echo "::error::Official facts do not state unlimited orders"; exit 1; }
+          echo "$sitemap" | grep -q '<loc>https://numueg.app/ar/learn/open-store-egypt</loc>' \
+            || { echo "::error::Localized academy URLs are missing from sitemap"; exit 1; }
+          echo "$sitemap" | grep -q '<loc>https://numueg.app/en/integrations/paymob</loc>' \
+            || { echo "::error::Localized integration URLs are missing from sitemap"; exit 1; }
+          echo "Localized canonicals, facts, and sitemap are live."
 
       - name: Summary
         run: |
           {
-            echo "### Landing page deployed"
+            echo "### Landing page deployment verified"
             echo ""
-            echo "- **Target:** ${{ steps.target.outputs.env }}"
-            echo "- **Branch:** \`${{ github.ref_name }}\` @ \`${GITHUB_SHA:0:7}\`"
-            echo "- **URL:** ${{ steps.deploy.outputs.url }}"
-            if [ "${{ steps.target.outputs.env }}" = "production" ]; then
-              echo "- **Live at:** https://numueg.app"
-            fi
+            echo "- **Commit:** \`${EXPECTED_SHA:0:7}\`"
+            echo "- **Live at:** https://numueg.app"
+            echo "- **Coverage:** 112 localized prerendered routes"
           } >> "$GITHUB_STEP_SUMMARY"
