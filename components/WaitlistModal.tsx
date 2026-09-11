@@ -38,13 +38,11 @@ const WaitlistModal: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [stats, setStats] = useState<WaitlistStats | null>(null);
 
-  // Auto-open when arriving via ?ref=XXXX
-  useEffect(() => {
-    const ref = searchParams.get('ref');
-    if (ref && !isOpen) {
-      open(ref);
-    }
-  }, [searchParams, isOpen, open]);
+  // NOT auto-opened by ?ref= any more. A referral link means "create an
+  // account", and this is the private-beta waitlist — sending an invited
+  // merchant here asked them to queue for access they already had. Hero now
+  // opens the sign-up modal for that parameter. The waitlist keeps its own
+  // referral field for anyone who reaches it directly.
 
   useEffect(() => {
     if (ctxRef) setLocalRef(ctxRef);

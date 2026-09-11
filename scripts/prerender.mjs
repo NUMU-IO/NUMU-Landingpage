@@ -144,7 +144,7 @@ const ROUTES = [
         offers: [
           {
             '@type': 'Offer',
-            name: '30-Day Free Trial',
+            name: '37-Day Free Trial',
             price: '0',
             priceCurrency: 'EGP',
             availability: 'https://schema.org/InStock',
@@ -153,13 +153,13 @@ const ROUTES = [
           {
             '@type': 'Offer',
             name: 'Starter',
-            price: '99',
+            price: '250',
             priceCurrency: 'EGP',
             availability: 'https://schema.org/InStock',
             url: `${SITE}/pricing`,
             priceSpecification: {
               '@type': 'UnitPriceSpecification',
-              price: '99',
+              price: '250',
               priceCurrency: 'EGP',
               unitText: 'MONTH',
             },

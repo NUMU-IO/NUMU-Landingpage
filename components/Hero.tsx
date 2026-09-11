@@ -43,9 +43,16 @@ const Hero: React.FC = () => {
       searchParams.delete("demo");
       setSearchParams(searchParams, { replace: true });
     }
-    if (searchParams.get("signup") === "1") {
-      openSignup();
+    // A referral link is an invitation to create an account, so it opens the
+    // sign-up modal — it used to open the private-beta WAITLIST, which asked
+    // an invited merchant to queue for access they had already been given.
+    const ref = searchParams.get("ref");
+    if (searchParams.get("signup") === "1" || ref) {
+      openSignup(null, ref);
       searchParams.delete("signup");
+      // `ref` is deliberately left in the URL: the code is now held in
+      // context, but a merchant who refreshes or shares the page they landed
+      // on should still be carrying the referral.
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams, openSignup]);

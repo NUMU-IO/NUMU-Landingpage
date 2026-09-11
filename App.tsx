@@ -10,6 +10,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from '@vercel/analytics/react';
 import WaitlistModal from './components/WaitlistModal';
 import SignupModal from './components/SignupModal';
+import SignupRedirect from './components/SignupRedirect';
+import SignupUrlTrigger from './components/SignupUrlTrigger';
 import ContactModal from './components/ContactModal';
 import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
@@ -84,7 +86,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             {/* /signup opens the direct sign-up modal on home (replaces the
                 old private-beta waitlist). "Try a Demo" stays separate. */}
-            <Route path="/signup" element={<Navigate to="/?signup=1" replace />} />
+            <Route path="/signup" element={<SignupRedirect />} />
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
@@ -124,6 +126,7 @@ const App: React.FC = () => {
           </Routes>
         </Suspense>
         {/* Global modals — rendered once at root so any CTA can open them */}
+        <SignupUrlTrigger />
         <SignupModal />
         <WaitlistModal />
         <ContactModal />

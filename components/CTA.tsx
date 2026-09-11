@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSignupModal } from '../contexts/SignupModalContext';
+import { DEFAULT_TRIAL_DAYS } from '../lib/trialInfo';
 
 /**
  * Closing CTA — full-bleed navy editorial panel with souk-tile accent,
@@ -95,8 +96,8 @@ const CTA: React.FC = () => {
           {/* Fine print — mono, muted */}
           <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/50">
             {isAr
-              ? `بدون فيزا · تجربة ${toArabicDigits('14')} يوم`
-              : 'No credit card · 14-day trial'}
+              ? `بدون فيزا · تجربة ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم`
+              : `No credit card · ${DEFAULT_TRIAL_DAYS}-day trial`}
           </p>
         </div>
 

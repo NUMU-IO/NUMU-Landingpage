@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal, PlanIntent } from "../contexts/SignupModalContext";
+import { DEFAULT_TRIAL_DAYS } from "../lib/trialInfo";
 import DemoStartModal from "./DemoStartModal";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -185,8 +186,8 @@ const PricingSection: React.FC = () => {
           const isPopular = plan.popular;
           const isPayg = plan.key === "payg";
           // Trial length comes from the admin-controlled signup settings
-          // (falls back to 30 for older API payloads).
-          const trialDays = String(data.trial?.days ?? 30);
+          // (falls back to the static marketing default for older payloads).
+          const trialDays = String(data.trial?.days ?? DEFAULT_TRIAL_DAYS);
           const paygPct = String(plan.commission_percent ?? 3);
 
           const priceRaw = isCustom

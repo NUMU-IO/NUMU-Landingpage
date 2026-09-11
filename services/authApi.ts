@@ -56,6 +56,9 @@ export interface RegisterData {
   language?: "ar" | "en";
   /** Pricing card the visitor clicked before signing up (payg auto-activates). */
   plan_intent?: "payg" | "starter" | "pro";
+  /** From a referral link. The backend attributes it first-touch and ignores
+   *  an unknown code rather than rejecting the registration. */
+  referral_code?: string;
   /** UTMs + referrer, recorded on the merchant lead for channel attribution. */
   attribution?: Attribution;
 }
@@ -130,6 +133,18 @@ export async function register(data: RegisterData): Promise<AuthResponse> {
     `${API_BASE}/auth/register`,
     data,
     "Registration failed",
+  );
+}
+
+export async function googleLogin(
+  idToken: string,
+  phone?: string,
+  attribution?: Attribution,
+): Promise<AuthResponse> {
+  return postWithCsrf<AuthResponse>(
+    `${API_BASE}/auth/google`,
+    { id_token: idToken, phone, attribution },
+    "Google login failed",
   );
 }
 
