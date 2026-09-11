@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal, PlanIntent } from "../contexts/SignupModalContext";
 import { DEFAULT_TRIAL_DAYS } from "../lib/trialInfo";
+import { normalizePublicPlans } from "../lib/pricingFacts";
 import DemoStartModal from "./DemoStartModal";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -58,7 +59,7 @@ const PricingSection: React.FC = () => {
   useEffect(() => {
     fetch(`${API_URL}/public/pricing-plans`, { credentials: "include" })
       .then((r) => r.json())
-      .then((json) => setData(json.data))
+      .then((json) => setData({ ...json.data, plans: normalizePublicPlans(json.data?.plans ?? []) }))
       .catch(() => {});
   }, []);
 

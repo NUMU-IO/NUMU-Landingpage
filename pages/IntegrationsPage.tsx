@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PageShell, PageSection, PageClose } from '../components/redesign/PageShell';
 import { PrimaryCta, SecondaryCta, useBi } from '../components/redesign/ui';
 import {
@@ -6,6 +7,7 @@ import {
   CATEGORY_LABEL,
   CATEGORY_ACCENT,
   PartnerCategory,
+  partnerSlug,
 } from '../components/redesign/partners';
 import { Bi } from '../components/redesign/copy';
 import PartnerLogo from '../components/redesign/PartnerLogo';
@@ -33,7 +35,7 @@ const FILTERS: { key: PartnerCategory | 'all'; label: Bi }[] = [
 ];
 
 /** What a merchant needs before the integration can be switched on. */
-const SETUP: Record<PartnerCategory, Bi> = {
+export const SETUP: Record<PartnerCategory, Bi> = {
   payments: {
     ar: 'محتاج حساب تاجر مفعّل عند مزوّد الدفع، وبعدها بتحط بيانات الربط في لوحة تحكم نُمُو.',
     en: 'You need an active merchant account with the payment provider, then you enter the connection details in your numu dashboard.',
@@ -139,6 +141,12 @@ const IntegrationsPage: React.FC = () => {
                   {b({ ar: 'شغّال', en: 'Active' })}
                 </span>
               </p>
+              <Link
+                to={`/integrations/${partnerSlug(p.name)}`}
+                className="mt-5 font-semibold text-sm text-navy underline decoration-navy/30 underline-offset-4"
+              >
+                {b({ ar: 'تفاصيل التكامل', en: 'Integration details' })}
+              </Link>
             </li>
           ))}
         </ul>

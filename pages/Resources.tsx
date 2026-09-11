@@ -117,6 +117,24 @@ const Resources: React.FC = () => {
         </ul>
       </PageSection>
 
+      <PageSection surface="cream">
+        <BodyHead
+          heading={{ ar: 'قارن قبل ما تختار.', en: 'Compare before you choose.' }}
+          support={{ ar: 'مقارنات واضحة للتاجر المصري، من غير اختراع أسعار أو مميزات عند المنافسين.', en: 'Clear comparisons for Egyptian merchants, without inventing competitor prices or features.' }}
+        />
+        <div className="mt-7 flex flex-wrap gap-3">
+          {['shopify', 'woocommerce', 'salla', 'zid'].map((name) => (
+            <Link
+              key={name}
+              to={`/compare/numu-vs-${name}-egypt`}
+              className="rounded-[4px] border border-ink/15 bg-paper px-4 py-2.5 text-sm font-semibold text-navy hover:border-navy/40"
+            >
+              NUMU vs {name === 'woocommerce' ? 'WooCommerce' : name[0].toUpperCase() + name.slice(1)}
+            </Link>
+          ))}
+        </div>
+      </PageSection>
+
       <PageClose
         heading={{ ar: 'جاهز تطبّق اللي قريته؟', en: 'Ready to apply what you read?' }}
         support={{

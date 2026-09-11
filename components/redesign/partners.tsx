@@ -215,6 +215,9 @@ export const PARTNERS_WITH_MARKS = PARTNERS.filter(hasMark);
 export const partnersIn = (category: PartnerCategory) =>
   PARTNERS.filter((p) => p.category === category);
 
+export const partnerSlug = (name: string) =>
+  name.toLowerCase().replace('&', '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 export const CATEGORY_LABEL: Record<PartnerCategory, Bi> = {
   payments: { ar: 'دفع', en: 'Payments' },
   shipping: { ar: 'شحن', en: 'Shipping' },

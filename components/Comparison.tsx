@@ -25,8 +25,8 @@ const rows: Row[] = [
   {
     label_ar: "اشتراك شهري",
     label_en: "Monthly subscription",
-    numu_ar: "يبدأ من ٩٩ ج.م",
-    numu_en: "From 99 EGP",
+    numu_ar: "يبدأ من ٢٥٠ ج.م",
+    numu_en: "From 250 EGP",
     others_ar: "مجاني",
     others_en: "Free",
     strikeOthers: true,

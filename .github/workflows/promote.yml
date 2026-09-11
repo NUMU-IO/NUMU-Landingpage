@@ -82,14 +82,6 @@ jobs:
           git push "$remote" "$sha:refs/heads/dev" "$sha:refs/heads/main"
           echo "Mirrored $sha to the deploy remote (dev + main)."
 
-      # Fires a production build. Preferred over waiting for a push webhook,
-      # because the mirror above may be a no-op fast-forward that Vercel has
-      # already seen, and a promote that deploys nothing is the failure this
-      # workflow exists to avoid.
-      #
-      # Note this cannot verify the result: reading deployment state back needs
-      # VERCEL_TOKEN, which this repo does not have. `deploy.yml` does verify,
-      # and is the better path once that token is added.
       - name: Trigger the Vercel production deploy
         env:
           HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
@@ -100,11 +92,23 @@ jobs:
             echo "the production branch and store its URL as that secret."
             exit 1
           fi
-          # --fail so a 4xx/5xx from Vercel fails the job instead of being
-          # swallowed into a green run that shipped nothing.
           response=$(curl --fail --silent --show-error -X POST "$HOOK_URL")
           echo "$response"
           echo "Vercel build triggered."
+
+      # repository_dispatch requires only the existing contents:write fork PAT.
+      # The fork builds the mirrored SHA and waits until release.json proves that
+      # the asynchronous Vercel build published that exact commit.
+      - name: Trigger the fork production workflow
+        env:
+          GH_TOKEN: ${{ secrets.FORK_PUSH_TOKEN }}
+        run: |
+          sha=$(git rev-parse HEAD)
+          gh api --method POST \
+            repos/Yahiasherif002/NUMU-Landingpage/dispatches \
+            -f event_type=promote-production \
+            -f "client_payload[sha]=$sha"
+          echo "Fork deploy.yml dispatched for $sha."
 
       - name: Summary
         run: |
@@ -113,6 +117,6 @@ jobs:
             echo ""
             echo "Commit: \`$(git rev-parse --short HEAD)\`"
             echo ""
-            echo "Mirrored to the deploy remote and triggered a Vercel production build."
-            echo "Watch it at <https://vercel.com/numueg/numu-landingpage/deployments>."
+            echo "Mirrored to the deploy remote, triggered Vercel, and dispatched verification."
+            echo "Watch it at <https://github.com/Yahiasherif002/NUMU-Landingpage/actions/workflows/deploy.yml>."
           } >> "$GITHUB_STEP_SUMMARY"

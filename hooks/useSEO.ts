@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface SEOProps {
   title: string;
@@ -13,10 +14,8 @@ interface SEOProps {
  * canonical link, Open Graph / Twitter card tags, and hreflang alternates
  * for each page. Falls back to the defaults in index.html when unmounted.
  *
- * hreflang: numu is bilingual from a single URL (RTL switches client-side),
- * so the `<link rel="alternate" hreflang="...">` tags point to the same
- * canonical for `ar-EG`, `en`, and `x-default`. This signals to Google
- * that Arabic- and English-speaking searchers should both land here.
+ * Arabic and English have distinct /ar and /en URLs. The canonical follows
+ * the current locale and hreflang links point to the reciprocal page.
  */
 const DEFAULT_TITLE = 'NUMU — Build Your Online Store in Egypt & MENA';
 const DEFAULT_DESCRIPTION =
@@ -59,8 +58,14 @@ function setHreflang(hreflang: string, href: string) {
 }
 
 export function useSEO({ title, description, canonical, ogImage, noIndex }: SEOProps) {
+  const location = useLocation();
+
   useEffect(() => {
-    const canon = canonical ?? DEFAULT_CANONICAL;
+    const base = new URL(canonical ?? DEFAULT_CANONICAL);
+    const locale = location.pathname.match(/^\/(ar|en)(?:\/|$)/)?.[1] ?? 'ar';
+    const basePath = base.pathname === '/' ? '' : base.pathname;
+    const canon = `${base.origin}/${locale}${basePath}`;
+    const alternate = (lang: 'ar' | 'en') => `${base.origin}/${lang}${basePath}`;
 
     // Title
     document.title = title;
@@ -91,11 +96,10 @@ export function useSEO({ title, description, canonical, ogImage, noIndex }: SEOP
     setMeta('twitter:description', description);
     setMeta('twitter:image', ogImage ?? DEFAULT_OG_IMAGE);
 
-    // hreflang alternates — same URL serves both languages
-    setHreflang('ar-EG', canon);
-    setHreflang('ar', canon);
-    setHreflang('en', canon);
-    setHreflang('x-default', canon);
+    setHreflang('ar-EG', alternate('ar'));
+    setHreflang('ar', alternate('ar'));
+    setHreflang('en', alternate('en'));
+    setHreflang('x-default', alternate('ar'));
 
     return () => {
       // Restore defaults on unmount
@@ -119,5 +123,5 @@ export function useSEO({ title, description, canonical, ogImage, noIndex }: SEOP
       setHreflang('en', DEFAULT_CANONICAL);
       setHreflang('x-default', DEFAULT_CANONICAL);
     };
-  }, [title, description, canonical, ogImage, noIndex]);
+  }, [title, description, canonical, ogImage, noIndex, location.pathname]);
 }

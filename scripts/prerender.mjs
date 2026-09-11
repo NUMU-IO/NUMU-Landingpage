@@ -15,6 +15,7 @@ import puppeteer from 'puppeteer-core';
 const DIST = join(process.cwd(), 'dist');
 const PORT = 4173;
 const SITE = 'https://numueg.app';
+const RELEASE_SHA = process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || 'local';
 
 // Public, unauthenticated API calls the prerendered pages make (today only
 // the store directory /stores is built from), matched BY PATH and fulfilled
@@ -29,6 +30,8 @@ const SITE = 'https://numueg.app';
 // nothing at all.
 const API_PATH_RE = /^\/api\/v1\/public\//;
 const API_ORIGIN = SITE;
+const LOCAL_ORIGIN = `http://localhost:${PORT}`;
+const apiCache = new Map();
 
 /** The real API URL to serve an intercepted request from, or null. */
 function apiTargetFor(requestUrl) {
@@ -45,12 +48,16 @@ function apiTargetFor(requestUrl) {
 /** Fetch JSON as text for `req.respond`. Throws so the caller can fall back
  *  to `req.continue()` — a directory blip must never fail the whole build. */
 async function fetchJsonForPage(url) {
-  const res = await fetch(url, {
-    headers: { accept: 'application/json' },
-    signal: AbortSignal.timeout(10_000),
-  });
-  if (!res.ok) throw new Error(`${url} -> ${res.status}`);
-  return await res.text();
+  if (!apiCache.has(url)) {
+    apiCache.set(url, fetch(url, {
+      headers: { accept: 'application/json' },
+      signal: AbortSignal.timeout(10_000),
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+      return await res.text();
+    }));
+  }
+  return await apiCache.get(url);
 }
 
 /** The free tools, as [path, name] — kept in one place so /tools's ItemList and
@@ -64,6 +71,20 @@ const TOOLS = [
   ['/tools/ai-description', 'AI Product Description Writer'],
   ['/tools/vat', 'VAT Calculator'],
   ['/tools/cod', 'COD & RTO Cost Calculator'],
+];
+
+const LEARN_SLUGS = [
+  'open-store-egypt', 'paymob-vs-fawry', 'reduce-cod-rto', 'governorate-shipping',
+  'whatsapp-instagram-selling', 'eta-einvoicing', 'import-products', 'choose-store-name',
+  'ramadan-campaign', 'first-100-orders',
+];
+const INTEGRATION_SLUGS = [
+  'paymob', 'fawry', 'kashier', 'instapay', 'fawaterak', 'bosta', 'mylerz',
+  'jt-express', 'whatsapp', 'facebook', 'instagram', 'meta', 'tiktok', 'eta',
+];
+const COMPARISON_SLUGS = [
+  'numu-vs-shopify-egypt', 'numu-vs-woocommerce-egypt',
+  'numu-vs-salla-egypt', 'numu-vs-zid-egypt',
 ];
 
 /** BreadcrumbList builder: crumb('Apps', '/apps') or crumb(parent, parentPath, leaf, leafPath). */
@@ -118,12 +139,25 @@ const REDESIGN_ROUTES = [
   ],
 }));
 
-const ROUTES = [
+const BASE_ROUTES = [
   {
     path: '/',
     extraJsonLd: [],
   },
   ...REDESIGN_ROUTES,
+  { path: '/about/facts', extraJsonLd: [crumb('About', '/about', 'NUMU facts', '/about/facts')] },
+  ...LEARN_SLUGS.map((slug) => ({
+    path: `/learn/${slug}`,
+    extraJsonLd: [crumb('Learn', '/learn', slug, `/learn/${slug}`)],
+  })),
+  ...INTEGRATION_SLUGS.map((slug) => ({
+    path: `/integrations/${slug}`,
+    extraJsonLd: [crumb('Integrations', '/integrations', slug, `/integrations/${slug}`)],
+  })),
+  ...COMPARISON_SLUGS.map((slug) => ({
+    path: `/compare/${slug}`,
+    extraJsonLd: [crumb('Comparisons', '/compare', slug, `/compare/${slug}`)],
+  })),
   {
     path: '/pricing',
     extraJsonLd: [
@@ -276,6 +310,7 @@ const ROUTES = [
   },
   {
     path: '/404',
+    index: false,
     extraJsonLd: [],
   },
   {
@@ -305,6 +340,14 @@ const ROUTES = [
     ],
   },
 ];
+
+const ROUTES = ['ar', 'en'].flatMap((locale) =>
+  BASE_ROUTES.map((route) => ({
+    ...route,
+    locale,
+    path: `/${locale}${route.path === '/' ? '' : route.path}`,
+  })),
+);
 
 const CHROME_PATHS = [
   process.env.CHROME_PATH,
@@ -427,15 +470,71 @@ function stripRuntimePreloads(html, allowed) {
   );
 }
 
+/** Keep crawlable internal links inside the language tree captured for this page. */
+function localizeInternalLinks(html, locale) {
+  return html.replace(
+    /(<a\b[^>]*\bhref=["'])\/(?!\/|ar(?:\/|["'#?])|en(?:\/|["'#?])|assets\/)([^"']*)(["'])/gi,
+    `$1/${locale}/$2$3`,
+  );
+}
+
 function injectRouteMeta(html, route) {
+  const pathWithoutLocale = route.path.replace(/^\/(ar|en)/, '') || '';
+  const canonical = `${SITE}${route.path}`;
+  const alternate = (locale) => `${SITE}/${locale}${pathWithoutLocale}`;
+  const languageLinks = [
+    ['ar-EG', alternate('ar')],
+    ['ar', alternate('ar')],
+    ['en', alternate('en')],
+    ['x-default', alternate('ar')],
+  ].map(([language, href]) => `<link rel="alternate" hreflang="${language}" href="${href}">`).join('\n    ');
+
   const blocks = (route.extraJsonLd || [])
-    .map((obj) => `<script type="application/ld+json">${JSON.stringify(obj)}</script>`)
+    .map((obj) => `<script type="application/ld+json">${JSON.stringify(localizeJsonLd(obj, route.locale))}</script>`)
     .join('\n    ');
 
   const marker = `<meta name="x-numu-prerendered" content="${route.path}">`;
-  const injection = [blocks, marker].filter(Boolean).join('\n    ');
+  const injection = [
+    `<link rel="canonical" href="${canonical}">`,
+    languageLinks,
+    blocks,
+    marker,
+  ].filter(Boolean).join('\n    ');
 
-  return html.replace('</head>', `    ${injection}\n</head>`);
+  return html
+    .replace(/<link[^>]+rel=["']canonical["'][^>]*>\s*/gi, '')
+    .replace(/<link[^>]+rel=["']alternate["'][^>]+hreflang=["'][^"']+["'][^>]*>\s*/gi, '')
+    .replace(/<meta[^>]+property=["']og:url["'][^>]*>/gi, `<meta property="og:url" content="${canonical}">`)
+    .replace('</head>', `    ${injection}\n</head>`);
+}
+
+function localizeJsonLd(value, locale) {
+  if (Array.isArray(value)) return value.map((item) => localizeJsonLd(item, locale));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, localizeJsonLd(item, locale)]));
+  }
+  if (typeof value !== 'string' || !value.startsWith(SITE)) return value;
+  const url = new URL(value);
+  if (!/^\/(ar|en)(?:\/|$)/.test(url.pathname)) {
+    url.pathname = `/${locale}${url.pathname === '/' ? '' : url.pathname}`;
+  }
+  return url.toString().replace(/\/$/, url.pathname === `/${locale}` ? '' : '/');
+}
+
+function sitemapXml(routes) {
+  const paths = [...new Set(routes.filter((route) => route.index !== false).map((route) => route.path.replace(/^\/(ar|en)/, '') || '/'))];
+  const url = (locale, path) => `${SITE}/${locale}${path === '/' ? '' : path}`;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${paths.flatMap((path) => ['ar', 'en'].map((locale) => `  <url>
+    <loc>${url(locale, path)}</loc>
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="${url('ar', path)}" />
+    <xhtml:link rel="alternate" hreflang="ar" href="${url('ar', path)}" />
+    <xhtml:link rel="alternate" hreflang="en" href="${url('en', path)}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${url('ar', path)}" />
+  </url>`)).join('\n')}
+</urlset>
+`;
 }
 
 /** Polls a URL until it answers, or the timeout elapses. */
@@ -539,6 +638,10 @@ async function main() {
             });
           return;
         }
+        if (new URL(req.url()).origin !== LOCAL_ORIGIN) {
+          req.abort();
+          return;
+        }
         req.continue();
       });
 
@@ -547,7 +650,7 @@ async function main() {
       // legitimately nothing here" — that is exactly how /stores shipped
       // with zero storefront links without anyone noticing.
       page.on('console', (msg) => {
-        if (msg.type() === 'warning' || msg.type() === 'error') {
+        if ((msg.type() === 'warning' || msg.type() === 'error') && !msg.text().startsWith('Failed to load resource')) {
           console.log(`  [page ${msg.type()}] ${msg.text().slice(0, 200)}`);
         }
       });
@@ -557,12 +660,19 @@ async function main() {
         }
       });
 
-      await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
       await page.waitForSelector('#root > *:not(.skeleton-hero)', { timeout: 15000 });
-      await new Promise((r) => setTimeout(r, 500));
+      if (route.path === `/${route.locale}` || route.path.endsWith('/pricing')) {
+        await page.waitForFunction(
+          () => document.body.innerText.includes('Starter') || document.body.innerText.includes('ستارتر'),
+          { timeout: 15000 },
+        );
+      }
+      await new Promise((r) => setTimeout(r, 100));
 
       let html = await page.content();
       html = stripRuntimePreloads(html, templatePreloads);
+      html = localizeInternalLinks(html, route.locale);
       html = injectRouteMeta(html, route);
       rendered.push({ route, html });
 
@@ -595,7 +705,13 @@ async function main() {
   // rest went unverified (and therefore unprerendered) for months.
   writeFileSync(
     join(DIST, 'prerender-manifest.json'),
-    JSON.stringify({ routes: ROUTES.map((r) => r.path) }, null, 2),
+    JSON.stringify({ routes: ROUTES.map((r) => r.path), indexedRoutes: ROUTES.filter((r) => r.index !== false).map((r) => r.path) }, null, 2),
+    'utf-8',
+  );
+  writeFileSync(join(DIST, 'sitemap.xml'), sitemapXml(ROUTES), 'utf-8');
+  writeFileSync(
+    join(DIST, 'release.json'),
+    `${JSON.stringify({ sha: RELEASE_SHA })}\n`,
     'utf-8',
   );
 
