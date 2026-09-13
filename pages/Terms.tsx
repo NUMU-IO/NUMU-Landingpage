@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 
 const sections: { title: string; text: string; accent: 'navy' | 'saffron' | 'sage' | 'terracotta' }[] = [
+  { title: 'legal.title', text: 'legal.text', accent: 'terracotta' },
   { title: 'terms.account_title', text: 'terms.account_text', accent: 'navy' },
   { title: 'terms.services_title', text: 'terms.services_text', accent: 'saffron' },
   { title: 'terms.payments_title', text: 'terms.payments_text', accent: 'sage' },

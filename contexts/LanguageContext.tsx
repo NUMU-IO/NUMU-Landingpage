@@ -256,7 +256,10 @@ export const translations: Record<string, string> = {
   'footer.terms': 'Terms',
   'footer.contact': 'Contact',
   'footer.refund': 'Refund Policy',
-  'footer.copyright': '© 2026 NUMU Inc. All rights reserved.',
+  'footer.copyright': '© 2026 numu (NUMU). All rights reserved.',
+  'footer.legal': 'numu (NUMU) is the trade name of the platform operated by يحيى شريف ابراهيم محمد · Legal business name: يحيى شريف ابراهيم محمد · تقسيم ساميه الجمل، غرب المنصورة، 35511، Egypt',
+  'legal.title': 'Legal information',
+  'legal.text': 'Legal business name: يحيى شريف ابراهيم محمد. Trade name: numu (NUMU). Address: تقسيم ساميه الجمل، غرب المنصورة، 35511، Egypt. Website: numueg.app. numu (NUMU) is the trade name of the platform operated by يحيى شريف ابراهيم محمد.',
 
   // Preview
   'preview.title': 'Command Center',
@@ -556,7 +559,10 @@ export const translationsAr: Record<string, string> = {
   'footer.terms': 'الشروط',
   'footer.contact': 'كلمونا',
   'footer.refund': 'سياسة الاسترجاع',
-  'footer.copyright': '© 2026 شركة نمو. جميع الحقوق محفوظة.',
+  'footer.copyright': '© 2026 نُمُو (NUMU). جميع الحقوق محفوظة.',
+  'footer.legal': 'نُمُو (NUMU) هو الاسم التجاري للمنصة اللي بيديرها يحيى شريف ابراهيم محمد · الاسم القانوني للنشاط: يحيى شريف ابراهيم محمد · تقسيم ساميه الجمل، غرب المنصورة، 35511، مصر',
+  'legal.title': 'البيانات القانونية',
+  'legal.text': 'الاسم القانوني للنشاط: يحيى شريف ابراهيم محمد. الاسم التجاري: نُمُو (NUMU). العنوان: تقسيم ساميه الجمل، غرب المنصورة، 35511، مصر. الموقع: numueg.app. نُمُو (NUMU) هو الاسم التجاري للمنصة اللي بيديرها يحيى شريف ابراهيم محمد.',
 
   // Preview
   'preview.title': 'مركز القيادة',

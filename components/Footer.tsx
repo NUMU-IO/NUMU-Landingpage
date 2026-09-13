@@ -184,6 +184,10 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </div>
+
+          <p className="text-xs text-ink-soft/70 text-center max-w-2xl">
+            {t('footer.legal')}
+          </p>
         </div>
       </div>
     </div>
