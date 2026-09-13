@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 
 const sections = [
+  { title: 'legal.title', text: 'legal.text', accent: 'terracotta' as const },
   { title: 'privacy.collect_title', text: 'privacy.collect_text', accent: 'navy' as const },
   { title: 'privacy.use_title', text: 'privacy.use_text', accent: 'saffron' as const },
   { title: 'privacy.protect_title', text: 'privacy.protect_text', accent: 'sage' as const },

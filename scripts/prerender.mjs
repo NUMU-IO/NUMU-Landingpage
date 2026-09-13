@@ -662,6 +662,9 @@ async function main() {
 
       await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
       await page.waitForSelector('#root > *:not(.skeleton-hero)', { timeout: 15000 });
+      // The Suspense spinner satisfies the selector above, so lazy routes were
+      // captured as a bare spinner. Wait for the route's own content instead.
+      await page.waitForFunction(() => !document.querySelector('[data-suspense-fallback]'), { timeout: 15000 });
       if (route.path === `/${route.locale}` || route.path.endsWith('/pricing')) {
         await page.waitForFunction(
           () => document.body.innerText.includes('Starter') || document.body.innerText.includes('ستارتر'),

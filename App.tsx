@@ -63,7 +63,7 @@ const IntegrationDetail = lazy(() => import('./pages/IntegrationDetail'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
+  <div data-suspense-fallback className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
     <div className="size-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
   </div>
 );
