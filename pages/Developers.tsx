@@ -42,35 +42,39 @@ const endpoints: Endpoint[] = [
   },
   {
     method: "POST",
-    path: "/api/v1/auth/signup",
-    purpose_en: "Create a merchant account — returns access token.",
+    path: "/api/v1/auth/register",
+    purpose_en: "Create a merchant account — returns an access token.",
     purpose_ar: "إنشاء حساب تاجر — يرجع access token.",
   },
   {
     method: "POST",
-    path: "/api/v1/orders/cod/risk",
-    purpose_en:
-      "Trust Network risk score for a COD shopper phone. Opt-in, fail-open.",
-    purpose_ar:
-      "درجة ريسك Trust Network لتليفون زبون كاش عند الاستلام. opt-in, fail-open.",
+    path: "/api/v1/stores/{store_id}/access-tokens",
+    purpose_en: "Mint a scoped API token. The secret is shown once.",
+    purpose_ar: "إنشاء توكن API بصلاحيات محددة. السر بيظهر مرة واحدة بس.",
   },
   {
     method: "GET",
-    path: "/api/v1/orders",
+    path: "/api/v1/stores/{store_id}/orders/",
     purpose_en: "List orders with filters, pagination, and status facets.",
     purpose_ar: "عرض الأوردرات مع فلاتر، تصفح، وتجميع حسب الحالة.",
   },
   {
     method: "POST",
-    path: "/api/v1/shipping/waybills",
-    purpose_en: "Generate a Bosta waybill for an order. No form-filling.",
-    purpose_ar: "إنشاء بوليصة بوسطة لأوردر — بدون ملء فورم.",
+    path: "/api/v1/stores/{store_id}/shipments/waybills",
+    purpose_en: "Generate a courier waybill for an order. No form-filling.",
+    purpose_ar: "إنشاء بوليصة شحن لأوردر — بدون ملء فورم.",
   },
   {
     method: "GET",
-    path: "/api/v1/invoices/eta",
-    purpose_en: "Fetch the ETA-compliant e-invoice for any order.",
-    purpose_ar: "جيب الفاتورة الإلكترونية المعتمدة من ETA لأي أوردر.",
+    path: "/api/v1/stores/{store_id}/invoices/by-order/{order_id}",
+    purpose_en: "Fetch the ETA-compliant e-invoice for an order.",
+    purpose_ar: "جيب الفاتورة الإلكترونية المعتمدة من ETA لأوردر.",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/stores/{store_id}/webhooks",
+    purpose_en: "Subscribe an endpoint to order and product events.",
+    purpose_ar: "اشترك بـ endpoint في أحداث الأوردرات والمنتجات.",
   },
 ];
 
@@ -127,8 +131,8 @@ const Developers: React.FC = () => {
         </h1>
         <p className="prose-body text-ink/75 max-w-2xl mx-auto">
           {isAr
-            ? "كل لي في لوحة التاجر متاح كـ REST API. استعلم، اشغل أحداث webhook، وابنِ أدواتك الخاصة — بدون قيود."
-            : "Everything in the merchant dashboard is exposed as a REST API. Query, subscribe to webhooks, and build your own tools — no limits."}
+            ? "متجرك متاح كـ REST API: المنتجات، الأوردرات، الشحن، الفواتير والعملاء. اعمل توكن بصلاحيات محددة، اشترك في الأحداث، وابني أدواتك."
+            : "Your store, as a REST API: products, orders, shipping, invoices and customers. Mint a scoped token, subscribe to events, build your own tools."}
         </p>
       </div>
 
@@ -151,29 +155,29 @@ const Developers: React.FC = () => {
               title_en: "Webhooks",
               title_ar: "Webhooks",
               body_en:
-                "Subscribe to orders, payments, shipments, and Trust Network events.",
+                "Signed, retried deliveries for order, payment and product events. Test and rotate from the API.",
               body_ar:
-                "اشترك في أحداث الأوردرات، الدفع، الشحن، وTrust Network.",
+                "رسائل موقّعة وبتتعاد لو فشلت، لأحداث الأوردرات والدفع والمنتجات. تقدر تجربها وتغيّر السر من الـ API.",
               accent: "bg-terracotta",
             },
             {
-              eyebrow: "OAUTH 2",
-              title_en: "OAuth 2 + keys",
-              title_ar: "OAuth 2 + مفاتيح",
+              eyebrow: "TOKENS",
+              title_en: "Scoped API tokens",
+              title_ar: "توكنات بصلاحيات محددة",
               body_en:
-                "Personal access tokens for scripts, full OAuth 2 for public apps.",
+                "Mint a token per integration, scoped per domain and pinned to one store. Revoke it any time.",
               body_ar:
-                "Personal tokens للسكريبتات، OAuth 2 كامل للتطبيقات العامة.",
+                "اعمل توكن لكل تكامل، بصلاحيات محددة ومربوط بمتجر واحد. وتقدر توقفه في أي وقت.",
               accent: "bg-saffron",
             },
             {
-              eyebrow: "SANDBOX",
-              title_en: "Free sandbox",
-              title_ar: "Sandbox مجاني",
+              eyebrow: "REFERENCE",
+              title_en: "Live API reference",
+              title_ar: "مرجع الـ API مباشر",
               body_en:
-                "Every account gets an isolated sandbox store for testing.",
+                "An OpenAPI document generated from the running API — point your client generator at it.",
               body_ar:
-                "كل حساب بيحصل على sandbox معزول للاختبار.",
+                "ملف OpenAPI بيتولد من الـ API نفسه — وصّل عليه مولّد الكلاينت بتاعك.",
               accent: "bg-sage",
             },
           ].map((pillar) => (
@@ -210,26 +214,31 @@ const Developers: React.FC = () => {
             className="bg-navy rounded-[10px] p-5 sm:p-6 overflow-x-auto font-mono text-[12px] sm:text-[13px] text-cream/90 leading-relaxed"
             dir="ltr"
           >
-{`# Score a COD order against the Trust Network
-# before dispatching the waybill
+{`# Send every paid order to your own system.
+# NUMU_TOKEN is a scoped token you minted in the dashboard.
 
-curl -X POST https://api.numueg.app/v1/orders/cod/risk \\
+curl -X POST \\
+  https://numueg.app/api/v1/stores/$STORE_ID/webhooks \\
   -H "Authorization: Bearer $NUMU_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "phone": "+20 1X XXX XXX XX",
-    "order_value_egp": 850,
-    "governorate": "Cairo"
+    "url": "https://erp.example.com/hooks/numu",
+    "events": ["order.paid", "order.status_changed"],
+    "description": "ERP sync"
   }'
 
 # =>
 # {
-#   "risk_score": 87,
-#   "confidence": "high",
-#   "label": "new_to_network",
-#   "signals": ["rto_history", "teleport"],
-#   "action": "warn"
-# }`}
+#   "id": "8f2b...",
+#   "events": ["order.paid", "order.status_changed"],
+#   "is_active": true,
+#   "secret": "shown once — sign every delivery with it"
+# }
+
+# Each delivery carries:
+#   X-NUMU-Event:        order.paid
+#   X-NUMU-Delivery:     <id, stable across retries>
+#   X-NUMU-Signature-V1: t=<unix>,v1=<hmac sha256 of "t.body">`}
           </pre>
         </div>
 
@@ -273,9 +282,13 @@ curl -X POST https://api.numueg.app/v1/orders/cod/risk \\
             })}
           </div>
           <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/55">
-            {isAr
-              ? "مرجع كامل قادم — سجّل في الـ waitlist للوصول المبكر"
-              : "Full reference shipping soon — join the waitlist for early access"}
+            {isAr ? "المرجع الكامل: " : "Full reference: "}
+            <a
+              href="https://numueg.app/api/v1/public/docs"
+              className="text-navy underline underline-offset-2 hover:text-terracotta transition-colors"
+            >
+              /api/v1/public/docs
+            </a>
           </p>
         </div>
 
