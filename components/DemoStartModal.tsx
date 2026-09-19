@@ -137,13 +137,16 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
       }
 
       // Redirect to the merchant hub's /token-handoff page with tokens
-      // as URL params. That page calls POST /auth/token-handoff to set
-      // httpOnly cookies on the hub's own origin, then redirects to /.
+      // in the URL fragment, which never reaches a server log. That page
+      // calls POST /auth/token-handoff to set httpOnly cookies on the
+      // hub's own origin, then redirects to /.
       if (data?.access_token) {
         const handoffUrl = new URL("/token-handoff", DASHBOARD_URL);
-        handoffUrl.searchParams.set("access_token", data.access_token);
-        handoffUrl.searchParams.set("refresh_token", data.refresh_token);
-        handoffUrl.searchParams.set("redirect", "/?welcome=demo");
+        handoffUrl.hash = new URLSearchParams({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token,
+          redirect: "/?welcome=demo",
+        }).toString();
         window.location.href = handoffUrl.toString();
       }
     } catch {
@@ -324,9 +327,11 @@ const DemoStartModal: React.FC<DemoStartModalProps> = ({ isOpen, onClose }) => {
                     );
                     if (res.tokens?.access_token) {
                       const handoff = new URL("/token-handoff", DASHBOARD_URL);
-                      handoff.searchParams.set("access_token", res.tokens.access_token);
-                      handoff.searchParams.set("refresh_token", res.tokens.refresh_token);
-                      handoff.searchParams.set("redirect", "/");
+                      handoff.hash = new URLSearchParams({
+                        access_token: res.tokens.access_token,
+                        refresh_token: res.tokens.refresh_token,
+                        redirect: "/",
+                      }).toString();
                       window.location.href = handoff.toString();
                       return;
                     }
