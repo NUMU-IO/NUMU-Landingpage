@@ -247,6 +247,7 @@ const BASE_ROUTES = [
     ['/developers', 'Developers'],
     ['/learn', 'Learn'],
     ['/stores', 'Stores'],
+    ['/partners', 'Hire an expert'],
   ].map(([path, name]) => ({ path, extraJsonLd: [crumb(name, path)] })),
   {
     path: '/tools',
