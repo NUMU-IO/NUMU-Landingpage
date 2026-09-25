@@ -47,6 +47,7 @@ const ToolVat = lazy(() => import('./pages/tools/VatCalculator'));
 const ToolCod = lazy(() => import('./pages/tools/CodCalculator'));
 const Learn = lazy(() => import('./pages/Learn'));
 const Stores = lazy(() => import('./pages/Stores'));
+const Partners = lazy(() => import('./pages/Partners'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 /* Secondary pages introduced by the v1 redesign — `pages/other-pages.md`. */
@@ -99,6 +100,8 @@ const routeComponents = [
   ['about/facts', Facts],
   ['resources', Resources],
   ['stores', Stores],
+  ['partners', Partners],
+  ['partners/:id', Partners],
 ] as const;
 
 const LegacyLocaleRedirect: React.FC = () => {

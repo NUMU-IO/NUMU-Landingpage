@@ -2,6 +2,18 @@
   "buildCommand": "npm run build:ssg",
   "outputDirectory": "dist",
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/docs",
+      "destination": "https://developers.numueg.app/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/:path(.*)",
+      "destination": "https://developers.numueg.app/:path",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path(.*)",

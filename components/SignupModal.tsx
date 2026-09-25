@@ -159,12 +159,14 @@ const SignupModal: React.FC = () => {
       // signup lands in.
       if (res.tokens?.access_token) {
         const handoff = new URL("/token-handoff", DASHBOARD_URL);
-        handoff.searchParams.set("access_token", res.tokens.access_token);
-        handoff.searchParams.set("refresh_token", res.tokens.refresh_token);
         // Verify email first (required), on the merchant hub where the
         // verify flow reliably works. After verifying, the hub routes the
         // new merchant on to create-store → onboarding.
-        handoff.searchParams.set("redirect", "/verify-email");
+        handoff.hash = new URLSearchParams({
+          access_token: res.tokens.access_token,
+          refresh_token: res.tokens.refresh_token,
+          redirect: "/verify-email",
+        }).toString();
         window.location.href = handoff.toString();
         return;
       }
@@ -245,11 +247,13 @@ const SignupModal: React.FC = () => {
                 );
                 if (res.tokens?.access_token) {
                   const handoff = new URL("/token-handoff", DASHBOARD_URL);
-                  handoff.searchParams.set("access_token", res.tokens.access_token);
-                  handoff.searchParams.set("refresh_token", res.tokens.refresh_token);
                   // Root resolves accounts without a store to /create-store,
                   // where OAuth users must now provide their phone number.
-                  handoff.searchParams.set("redirect", "/");
+                  handoff.hash = new URLSearchParams({
+                    access_token: res.tokens.access_token,
+                    refresh_token: res.tokens.refresh_token,
+                    redirect: "/",
+                  }).toString();
                   window.location.href = handoff.toString();
                   return;
                 }
