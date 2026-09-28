@@ -278,13 +278,13 @@ const WaitlistModal: React.FC = () => {
               </button>
 
               <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/55">
-                {isAr ? 'لديك كود دعوة؟' : 'Already invited?'}{' '}
+                {isAr ? 'معاك كود دعوة؟' : 'Already invited?'}{' '}
                 <Link
                   to="/signup"
                   onClick={close}
                   className="text-terracotta hover:text-navy underline transition-colors"
                 >
-                  {isAr ? 'سجّل الآن' : 'Sign up now'} →
+                  {isAr ? 'سجّل دلوقتي' : 'Sign up now'} →
                 </Link>
               </p>
             </div>
@@ -419,7 +419,7 @@ const WaitlistModal: React.FC = () => {
               </form>
 
               <p className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/55 mt-4">
-                {isAr ? 'لديك كود دعوة؟' : 'Have an invite code?'}{' '}
+                {isAr ? 'معاك كود دعوة؟' : 'Have an invite code?'}{' '}
                 <Link
                   to="/signup"
                   onClick={close}

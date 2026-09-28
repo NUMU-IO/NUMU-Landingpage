@@ -28,7 +28,10 @@ const WIDTHS = [480, 768, 1200];
 const MIN_MASTER_WIDTH = 1024;
 /** Masters that are not content images — the hero poster is art-directed by
  *  <picture> in HeroSection and must not be rewritten here. */
-const SKIP = new Set(['hero-poster.webp', 'hero-poster-mobile.webp']);
+const SKIP = new Set([
+  'hero-poster.webp', 'hero-poster-mobile.webp',
+  'hero-film-poster.webp', 'hero-film-poster-mobile.webp',
+]);
 
 const manifest = {};
 let made = 0;

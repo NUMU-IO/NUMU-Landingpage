@@ -23,7 +23,7 @@ const facts: { question: Bi; answer: Bi }[] = [
   },
   {
     question: { ar: 'إيه التكاملات المحلية المتاحة؟', en: 'Which local integrations are available?' },
-    answer: { ar: 'نُمُو متكامل مع Paymob وفوري وKashier وإنستاباي وبوسطة والفاتورة الإلكترونية لمصلحة الضرائب المصرية.', en: 'NUMU integrates with Paymob, Fawry, Kashier, InstaPay, Bosta, and Egyptian Tax Authority e-invoicing.' },
+    answer: { ar: 'نُمُو متكامل مع Paymob وفوري وKashier وفواتيرك وإنستاباي، ومحافظ فودافون كاش وWE Pay وأورنج كاش والتحويل البنكي، وشحن مع بوسطة ومايلرز وJ&T أو مندوبك الخاص، والفاتورة الإلكترونية لمصلحة الضرائب المصرية، وواتساب وفيسبوك وإنستغرام، وبيكسل Meta وتيك توك.', en: 'NUMU integrates with Paymob, Fawry, Kashier, Fawaterak and InstaPay; the Vodafone Cash, WE Pay and Orange Cash wallets and bank transfer; shipping with Bosta, Mylerz and J&T or your own courier; Egyptian Tax Authority e-invoicing; WhatsApp, Facebook and Instagram; and the Meta and TikTok pixels.' },
   },
 ];
 
@@ -57,7 +57,7 @@ const Facts: React.FC = () => {
           ))}
         </dl>
         <p className="mx-auto mt-8 max-w-3xl text-sm text-ink-soft/65">
-          {b({ ar: 'آخر مراجعة: ١١ سبتمبر ٢٠٢٦.', en: 'Last reviewed: 11 September 2026.' })}
+          {b({ ar: 'آخر مراجعة: ٢٥ سبتمبر ٢٠٢٦.', en: 'Last reviewed: 25 September 2026.' })}
         </p>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </PageSection>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { usePrefersReducedMotion, useMediaQuery } from '../hooks';
+import React, { useRef } from 'react';
+import { usePrefersReducedMotion, useMediaQuery, useInView } from '../hooks';
 import { PARTNERS_WITH_LOGOS } from '../partners';
 import { useBi } from '../ui';
 import OriginKitInteractiveGrid from './vendor/interactive-grid';
@@ -38,7 +38,7 @@ import OriginKitInteractiveGrid from './vendor/interactive-grid';
 
 const CONFIG = {
   rounded: 12,
-  logoScale: 3,
+  logoScale: 4,
   cardFill: '#FBF6ED',
   cardBorder: 'rgba(0, 51, 102, 0.14)',
   shadow: true,
@@ -47,27 +47,44 @@ const CONFIG = {
   perspective: 1600,
 } as const;
 
+/** A transparent pixel: a spare cell shows an empty card, never a repeated logo. */
+const EMPTY_CELL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+const pickColumns = (n: number, options: number[]) =>
+  options.reduce((best, c) => (Math.ceil(n / c) * c - n < Math.ceil(n / best) * best - n ? c : best));
+
 const InteractiveGrid: React.FC<{ className?: string }> = ({ className = '' }) => {
   const { b } = useBi();
   const reduced = usePrefersReducedMotion();
   const isMobile = useMediaQuery('(max-width: 639px)');
+  // The vendored grid renders plain eager <img> tags — 34 logos that used to
+  // download during page load and push LCP back. Mount it near the viewport.
+  const box = useRef<HTMLDivElement>(null);
+  const near = useInView(box, '600px');
 
   // One cell per confirmed integration — the roster drives the shape.
   // `PARTNERS_WITH_LOGOS`, never `PARTNERS`: an integration that is real but
   // has no supplied brand file must not be drawn as a logo.
-  const images = PARTNERS_WITH_LOGOS.map((p) => ({ src: p.logoSrc, alt: p.name }));
-  const columns = isMobile ? 3 : Math.min(6, images.length);
-  const rows = Math.ceil(images.length / columns);
+  const logos = PARTNERS_WITH_LOGOS.map((p) => ({ src: p.logoSrc, alt: p.name }));
+  // The vendored grid tiles `images` over every cell, so a spare cell would
+  // repeat a company. Take the column count that leaves the fewest spare
+  // cells, and leave those empty instead.
+  const columns = pickColumns(logos.length, isMobile ? [4, 5] : [8, 7, 6]);
+  const rows = Math.ceil(logos.length / columns);
+  const images = [...logos, ...Array.from({ length: rows * columns - logos.length }, () => ({ src: EMPTY_CELL, alt: '' }))];
+  // The wall grows with the roster instead of shrinking the tiles into it.
+  const height = rows * (isMobile ? 70 : 92) + (isMobile ? 32 : 56);
 
   return (
     <div className={className}>
       <div
+        ref={box}
         // Reduced motion freezes the lift: pointer events never reach the
         // cards, so the grid renders as a plain, static logo row.
-        style={{ pointerEvents: reduced ? 'none' : undefined }}
-        className="h-[190px] sm:h-[240px] rounded-[14px] border border-ink/10 bg-bone/30"
+        style={{ pointerEvents: reduced ? 'none' : undefined, height }}
+        className="rounded-[14px] border border-ink/10 bg-bone/30"
       >
-        <OriginKitInteractiveGrid
+        {near && <OriginKitInteractiveGrid
           images={images}
           columns={columns}
           rows={rows}
@@ -81,7 +98,7 @@ const InteractiveGrid: React.FC<{ className?: string }> = ({ className = '' }) =
           cardShadow={CONFIG.cardShadow}
           glow={CONFIG.glow}
           perspective={CONFIG.perspective}
-        />
+        />}
       </div>
 
       {/* Names in text, always present. The grid gives each card an accessible

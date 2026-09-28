@@ -1,0 +1,720 @@
+{
+  "guides": [
+    {
+      "slug": "open-store-egypt",
+      "steps": [
+        {
+          "url": "http://localhost:3095/ar?signup=1",
+          "actions": [
+            {
+              "wait": 2500
+            },
+            {
+              "type": [
+                "input[placeholder='الاسم بالكامل']",
+                "هدير محمود"
+              ]
+            },
+            {
+              "type": [
+                "input[placeholder='بريدك الإلكتروني']",
+                "hadeer@example.com"
+              ]
+            },
+            {
+              "type": [
+                "input[placeholder='رقم الموبايل (واتساب)']",
+                "01000000000"
+              ]
+            },
+            {
+              "type": [
+                "input[placeholder^='كلمة المرور']",
+                "numu-demo-2026"
+              ]
+            }
+          ],
+          "target": {
+            "text": "أنشئ الحساب"
+          },
+          "caption": {
+            "ar": "اكتب بياناتك ودوس «أنشئ الحساب»",
+            "en": "Fill in your details and press Create account"
+          }
+        },
+        {
+          "url": "/onboarding-wizard",
+          "actions": [
+            {
+              "click": "يلا نبدأ"
+            }
+          ],
+          "target": {
+            "text": "ملابس وأزياء"
+          },
+          "caption": {
+            "ar": "اختار نوع منتجاتك، مثلاً ملابس وأزياء",
+            "en": "Pick what you sell, e.g. Fashion & Clothing"
+          }
+        },
+        {
+          "url": "/onboarding-wizard",
+          "actions": [
+            {
+              "click": "يلا نبدأ"
+            },
+            {
+              "click": "ملابس وأزياء"
+            },
+            {
+              "click": "إنستجرام / فيسبوك"
+            },
+            {
+              "click": "أقل من ٥٠"
+            },
+            {
+              "click": "التالي"
+            },
+            {
+              "click": "مصر"
+            },
+            {
+              "click": "التالي"
+            },
+            {
+              "top": true
+            }
+          ],
+          "target": {
+            "text": "بوسطة"
+          },
+          "caption": {
+            "ar": "في الشحن اختار بوسطة للتوصيل والتتبّع",
+            "en": "For shipping, pick Bosta for delivery and tracking"
+          }
+        },
+        {
+          "url": "/onboarding-wizard",
+          "actions": [
+            {
+              "click": "يلا نبدأ"
+            },
+            {
+              "click": "ملابس وأزياء"
+            },
+            {
+              "click": "إنستجرام / فيسبوك"
+            },
+            {
+              "click": "أقل من ٥٠"
+            },
+            {
+              "click": "التالي"
+            },
+            {
+              "click": "مصر"
+            },
+            {
+              "click": "التالي"
+            },
+            {
+              "click": "بوسطة"
+            },
+            {
+              "click": "التالي"
+            },
+            {
+              "top": true
+            }
+          ],
+          "target": {
+            "text": "بطاقة ائتمان (Paymob)"
+          },
+          "caption": {
+            "ar": "الكاش شغّال لوحده، ضيف بيموب للكروت",
+            "en": "Cash on delivery is on by default; add Paymob for cards"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "paymob-vs-fawry",
+      "steps": [
+        {
+          "url": "/payment-setup",
+          "target": {
+            "sel": "div.group:has(img[alt=Paymob])"
+          },
+          "caption": {
+            "ar": "من إعداد الدفع افتح كارت بيموب",
+            "en": "In Payment setup, open the Paymob card"
+          }
+        },
+        {
+          "url": "/payment-setup",
+          "actions": [
+            {
+              "clickQ": {
+                "sel": "div.group:has(img[alt=Paymob])"
+              }
+            },
+            {
+              "click": "تعديل"
+            },
+            {
+              "top": true
+            }
+          ],
+          "target": {
+            "sel": "input[placeholder^='egy_sk']"
+          },
+          "caption": {
+            "ar": "الصق مفاتيحك من لوحة تحكم بيموب",
+            "en": "Paste your keys from the Paymob dashboard"
+          }
+        },
+        {
+          "url": "/payment-setup",
+          "target": {
+            "sel": "div.group:has(img[alt=Fawry]) button"
+          },
+          "caption": {
+            "ar": "وفعّل فوري كمان للدفع كاش في الفروع",
+            "en": "Then activate Fawry for cash payments at outlets"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "reduce-cod-rto",
+      "steps": [
+        {
+          "url": "/whatsapp",
+          "target": {
+            "text": "تأكيد الطلب على واتساب",
+            "pick": "[role=switch]"
+          },
+          "caption": {
+            "ar": "شغّل تأكيد أوردرات الكاش على واتساب",
+            "en": "Turn on WhatsApp confirmation for COD orders"
+          }
+        },
+        {
+          "url": "/payment-setup",
+          "target": {
+            "text": "تأمين تأكيد الطلب",
+            "pick": "[role=switch]"
+          },
+          "caption": {
+            "ar": "اطلب عربون قبل ما أوردر الكاش يتأكد",
+            "en": "Require a deposit before a COD order is confirmed"
+          }
+        },
+        {
+          "url": "/trust-network",
+          "target": {
+            "text": "حماية من احتيال الدفع عند الاستلام",
+            "pick": "[role=switch]"
+          },
+          "caption": {
+            "ar": "شغّل شبكة الثقة عشان تكشف الزبون اللي بيرفض",
+            "en": "Turn on Trust Network to flag serial refusers"
+          }
+        },
+        {
+          "url": "/orders/ORD-000007",
+          "target": {
+            "text": "إعادة إرسال التأكيد",
+            "center": true
+          },
+          "caption": {
+            "ar": "ابعت تأكيد واتساب من صفحة الأوردر",
+            "en": "Send the WhatsApp confirmation from the order page"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "governorate-shipping",
+      "steps": [
+        {
+          "url": "/shipping/zones",
+          "target": {
+            "text": "منطقة جديدة"
+          },
+          "caption": {
+            "ar": "من مناطق الشحن دوس «منطقة جديدة»",
+            "en": "In Shipping zones, press New zone"
+          }
+        },
+        {
+          "url": "/shipping/zones/new",
+          "actions": [
+            {
+              "fill": {
+                "text": "الاسم (عربي)",
+                "pick": "input"
+              },
+              "value": "الدلتا"
+            },
+            {
+              "fill": {
+                "text": "الاسم (إنجليزي) *",
+                "pick": "input"
+              },
+              "value": "Delta"
+            },
+            {
+              "clickQ": {
+                "sel": "button[role=combobox]"
+              }
+            }
+          ],
+          "target": {
+            "sel": "[role=option]",
+            "text": "الدلتا"
+          },
+          "caption": {
+            "ar": "اختار مجموعة المحافظات، مثلاً الدلتا",
+            "en": "Pick a governorate group, e.g. Delta"
+          }
+        },
+        {
+          "url": "/shipping/zones/new",
+          "actions": [
+            {
+              "fill": {
+                "text": "الاسم (عربي)",
+                "pick": "input"
+              },
+              "value": "الدلتا"
+            },
+            {
+              "fill": {
+                "text": "الاسم (إنجليزي) *",
+                "pick": "input"
+              },
+              "value": "Delta"
+            },
+            {
+              "clickQ": {
+                "sel": "button[role=combobox]"
+              }
+            },
+            {
+              "clickQ": {
+                "sel": "[role=option]",
+                "text": "الدلتا"
+              }
+            },
+            {
+              "clickQ": {
+                "sel": "button[role=combobox] + button"
+              }
+            },
+            {
+              "fill": {
+                "text": "المبلغ (EGP)",
+                "pick": "input"
+              },
+              "value": "90"
+            }
+          ],
+          "target": {
+            "text": "المبلغ (EGP)",
+            "pick": "input"
+          },
+          "caption": {
+            "ar": "حط سعر الشحن للمنطقة دي",
+            "en": "Set the shipping price for this zone"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "whatsapp-instagram-selling",
+      "steps": [
+        {
+          "url": "/channels",
+          "target": {
+            "text": "اربط فيسبوك وإنستجرام",
+            "nth": 1
+          },
+          "caption": {
+            "ar": "من القنوات اربط فيسبوك وإنستجرام",
+            "en": "In Channels, connect Facebook and Instagram"
+          }
+        },
+        {
+          "url": "/whatsapp",
+          "target": {
+            "sel": "a",
+            "text": "ربط الحساب"
+          },
+          "caption": {
+            "ar": "من واتساب دوس «ربط الحساب» واربط رقمك",
+            "en": "In WhatsApp, open Connect account to link a number"
+          }
+        },
+        {
+          "url": "/social",
+          "actions": [
+            {
+              "fill": {
+                "sel": "textarea"
+              },
+              "value": "https://www.instagram.com/p/C8xQ2mLtR4a/\nhttps://www.instagram.com/p/C9bK7wNpE2s/"
+            }
+          ],
+          "target": {
+            "text": "استيراد كمنتجات مسودة"
+          },
+          "caption": {
+            "ar": "الصق روابط بوستاتك واستوردها كمنتجات",
+            "en": "Paste your post links and import them as products"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "eta-einvoicing",
+      "steps": [
+        {
+          "url": "/invoices",
+          "actions": [
+            {
+              "clickIf": "حاول تاني",
+              "after": 4000
+            },
+            {
+              "clickIf": "حاول تاني",
+              "after": 4000
+            },
+            {
+              "type": [
+                "input[inputmode=numeric]",
+                "123456789"
+              ]
+            },
+            {
+              "blur": 1
+            }
+          ],
+          "target": {
+            "sel": "input[inputmode=numeric]"
+          },
+          "caption": {
+            "ar": "افتح الفواتير واكتب رقمك الضريبي",
+            "en": "Open Invoices and enter your Tax ID"
+          }
+        },
+        {
+          "url": "/invoices",
+          "actions": [
+            {
+              "clickIf": "حاول تاني",
+              "after": 4000
+            },
+            {
+              "clickIf": "حاول تاني",
+              "after": 4000
+            }
+          ],
+          "target": {
+            "sel": "main [role=tablist]"
+          },
+          "caption": {
+            "ar": "تابع حالة كل فاتورة: مرسلة ولا مقبولة ولا مرفوضة",
+            "en": "Track each invoice: submitted, accepted or rejected"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "import-products",
+      "steps": [
+        {
+          "url": "/products",
+          "actions": [
+            {
+              "clickSel": "main button[aria-haspopup=menu]"
+            }
+          ],
+          "target": {
+            "sel": "[role=menuitem]",
+            "text": "استيراد"
+          },
+          "caption": {
+            "ar": "من المنتجات افتح القايمة واضغط استيراد",
+            "en": "In Products, open the menu and press Import"
+          }
+        },
+        {
+          "url": "/products",
+          "actions": [
+            {
+              "clickSel": "main button[aria-haspopup=menu]"
+            },
+            {
+              "clickQ": {
+                "sel": "[role=menuitem]",
+                "text": "استيراد"
+              }
+            }
+          ],
+          "target": {
+            "sel": "[role=dialog] button",
+            "text": "تحميل النموذج"
+          },
+          "caption": {
+            "ar": "نزّل النموذج واملاه بمنتجاتك",
+            "en": "Download the template and fill in your products"
+          }
+        },
+        {
+          "url": "/products",
+          "actions": [
+            {
+              "clickSel": "main button[aria-haspopup=menu]"
+            },
+            {
+              "clickQ": {
+                "sel": "[role=menuitem]",
+                "text": "استيراد"
+              }
+            }
+          ],
+          "target": {
+            "sel": "[role=dialog] div.cursor-pointer.border-dashed"
+          },
+          "caption": {
+            "ar": "ارفع ملف الإكسل أو الـCSV واضغط استيراد",
+            "en": "Upload the Excel or CSV file, then press Import"
+          }
+        },
+        {
+          "url": "/social",
+          "target": {
+            "sel": "textarea"
+          },
+          "caption": {
+            "ar": "أو الصق روابط بوستات إنستجرام واضغط استيراد",
+            "en": "Or paste Instagram post links, then press Import"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "choose-store-name",
+      "steps": [
+        {
+          "url": "http://localhost:3095/ar/tools/store-names",
+          "target": {
+            "sel": "select",
+            "nth": 0
+          },
+          "caption": {
+            "ar": "اختار مجال متجرك والطابع اللي يشبهك",
+            "en": "Choose your industry and the style that fits you"
+          },
+          "actions": [
+            {
+              "select": [
+                "select",
+                "minimal",
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "url": "http://localhost:3095/ar/tools/store-names",
+          "actions": [
+            {
+              "select": [
+                "select",
+                "fashion",
+                0
+              ]
+            },
+            {
+              "select": [
+                "select",
+                "minimal",
+                1
+              ]
+            }
+          ],
+          "target": {
+            "sel": "div.grid.gap-3 > button",
+            "nth": 0
+          },
+          "caption": {
+            "ar": "انسخ الاسم اللي عجبك، ولو مش عاجبك اضغط شفّل",
+            "en": "Copy the name you like, or press Shuffle for more"
+          }
+        },
+        {
+          "url": "/store",
+          "actions": [
+            {
+              "scrollTo": "معلومات عامة"
+            }
+          ],
+          "target": {
+            "sel": ".settings-field-group input",
+            "nth": 0
+          },
+          "caption": {
+            "ar": "من إعدادات المتجر اكتب اسم متجرك",
+            "en": "In Store settings, type your store name"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "ramadan-campaign",
+      "steps": [
+        {
+          "url": "/marketing/promotions/new?surface=automatic",
+          "target": {
+            "text": "اشتري 2 خد 1 مجاني"
+          },
+          "caption": {
+            "ar": "اعمل خصم تلقائي واختار «اشتري 2 خد 1 مجاني»",
+            "en": "Create an automatic discount: pick Buy 2, get 1 free"
+          }
+        },
+        {
+          "url": "/marketing/promotions/new?surface=automatic",
+          "actions": [
+            {
+              "click": "اشتري 2 خد 1 مجاني"
+            },
+            {
+              "scrollTo": "الجدول الزمني"
+            },
+            {
+              "focusType": [
+                "#starts",
+                "08022027"
+              ]
+            },
+            {
+              "press": "Tab"
+            },
+            {
+              "keys": "1200A"
+            },
+            {
+              "focusType": [
+                "#ends",
+                "09032027"
+              ]
+            },
+            {
+              "press": "Tab"
+            },
+            {
+              "keys": "1159P"
+            },
+            {
+              "blur": 1
+            }
+          ],
+          "target": {
+            "sel": "#starts"
+          },
+          "caption": {
+            "ar": "حدّد يوم بداية العرض ونهايته على رمضان",
+            "en": "Set the offer's start and end dates for Ramadan"
+          }
+        },
+        {
+          "url": "/marketing/promotions",
+          "actions": [
+            {
+              "click": "خصم جديد"
+            }
+          ],
+          "target": {
+            "sel": "[role=menuitem]",
+            "text": "شريط إعلانات"
+          },
+          "caption": {
+            "ar": "ضيف شريط إعلانات بآخر ميعاد للطلب قبل العيد",
+            "en": "Add an announcement bar with your Eid order cut-off"
+          }
+        },
+        {
+          "url": "/whatsapp/campaigns",
+          "target": {
+            "text": "حملة جديدة"
+          },
+          "caption": {
+            "ar": "وابعت نفس الميعاد لعملائك في حملة واتساب",
+            "en": "Send the same cut-off in a WhatsApp campaign"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "first-100-orders",
+      "steps": [
+        {
+          "url": "/whatsapp",
+          "actions": [
+            {
+              "scrollTo": "تحديث الشحن"
+            }
+          ],
+          "target": {
+            "text": "تحديث الشحن",
+            "pick": "[role=switch]"
+          },
+          "caption": {
+            "ar": "اربط واتساب وشغّل رسايل تأكيد الطلب وتحديث الشحن",
+            "en": "Connect WhatsApp, then switch on order and shipping messages"
+          }
+        },
+        {
+          "url": "/logistics",
+          "target": {
+            "text": "كشف التسليم"
+          },
+          "caption": {
+            "ar": "نزّل كشف التسليم وسلّم الشحنات للمندوب مرة واحدة",
+            "en": "Download the pickup manifest and hand over in one batch"
+          },
+          "noSettle": true
+        },
+        {
+          "url": "/analytics/overview",
+          "actions": [
+            {
+              "click": "آخر 30 أيام"
+            }
+          ],
+          "target": {
+            "text": "الأسبوع الماضي"
+          },
+          "caption": {
+            "ar": "راجع أرقامك كل أسبوع: اختار «الأسبوع الماضي»",
+            "en": "Review weekly: choose Last week"
+          }
+        },
+        {
+          "url": "/analytics/overview",
+          "target": {
+            "text": "الملخص الأسبوعي",
+            "pick": "[role=switch]"
+          },
+          "caption": {
+            "ar": "وخلّي الملخص الأسبوعي يوصلك على الإيميل",
+            "en": "Keep the weekly summary email switched on"
+          }
+        }
+      ]
+    }
+  ]
+}

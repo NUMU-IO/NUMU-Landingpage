@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -36,6 +37,23 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    // `vite preview` answers /ar/pricing with the SPA shell; Vercel answers it
+    // with the prerendered dist/ar/pricing/index.html. Do what Vercel does, so
+    // a local preview shows exactly what production shows (the `/api` proxy
+    // above already applies to preview too).
+    {
+      name: 'numu-preview-prerendered-routes',
+      configurePreviewServer(server) {
+        const outDir = path.resolve(__dirname, server.config.build.outDir);
+        server.middlewares.use((req, _res, next) => {
+          const [pathname, query = ''] = (req.url ?? '').split('?');
+          if (!path.extname(pathname) && fs.existsSync(path.join(outDir, pathname, 'index.html'))) {
+            req.url = `${pathname.replace(/\/$/, '')}/index.html${query ? `?${query}` : ''}`;
+          }
+          next();
+        });
+      },
+    },
     // Pre-compress assets with Brotli (best) and gzip (fallback)
     ...(mode === 'production' ? [
       viteCompression({ algorithm: 'brotliCompress', threshold: 1024 }),

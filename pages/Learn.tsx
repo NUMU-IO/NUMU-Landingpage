@@ -6,6 +6,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CookieConsent from "../components/CookieConsent";
 import { DEFAULT_TRIAL_DAYS, toArabicDigits } from "../lib/trialInfo";
+import GuideWalkthrough, { WalkThumb } from "../components/redesign/GuideWalkthrough";
+import { WALKTHROUGHS } from "./learn/walkthroughs";
 
 /**
  * /learn — Academy v1 index (audit §2.7). Ten short-form bilingual
@@ -45,19 +47,19 @@ export const guides: Guide[] = [
     body_en: [
       "Three decisions get you 80% of the way: pick a platform, connect a payment gateway, and connect a courier. Everything else — theme, product photos, invoice copy — can iterate later.",
       "Platform: pick one that is Arabic-first from day one (RTL, right-aligned forms, Arabic-Indic digits in checkout). Retrofitting Arabic on Shopify works but costs hours per week in template fixes.",
-      "Payments: Paymob for cards + Apple Pay, Fawry for cash-at-point, COD for the 60–90% of shoppers who will refuse to enter card details online. You need all three. Pick the platform that ships with all three as defaults.",
-      "Shipping: Bosta for same-day Cairo + governorate rates; add Aramex for international later. Skip manual waybill PDFs — pick a platform with API-level waybill generation.",
+      "Payments: cash on delivery for the 60–90% of shoppers who will refuse to enter card details online, plus one online option — Paymob for cards and Apple Pay, or Fawry for cash at outlets.",
+      "Shipping: Bosta, Mylerz or J&T for governorate rates and tracking — or your own courier on a platform-issued waybill. Skip manual waybill PDFs — pick a platform with API-level waybill generation.",
     ],
     body_ar: [
       "تلات قرارات بتوصّلك ٨٠٪ من الطريق: اختار منصّة، اربط بوابة دفع، واربط شركة شحن. الباقي — ثيم، صور منتجات، نبرة الفواتير — بيتعدّل بعدها.",
       "المنصّة: اختار واحدة عربي من الأول (RTL، الفورم مظبوطة من اليمين، أرقام عربية في الشيك أوت). تعديل شوبيفاي لتبقى عربي شغّال بس بيكلّف ساعات كل أسبوع في تصحيح الثيم.",
-      "الدفع: بيموب للكروت وآبل باي، فوري للكاش في الفروع، والدفع عند الاستلام لـ٦٠-٩٠٪ من الزباين اللي ما هيكتبوش كروت أونلاين. التلاتة محتاجينهم. اختار منصّة جاية بالتلاتة جاهزين.",
-      "الشحن: بوسطة للتوصيل في نفس اليوم داخل القاهرة وبأسعار بالمحافظة، وأراميكس للشحن الدولي بعدين. متطبعش بوالص يدوي — اختار منصّة بتصدر البوليصة عن طريق API.",
+      "الدفع: الدفع عند الاستلام لـ٦٠-٩٠٪ من الزباين اللي ما هيكتبوش كروت أونلاين، وجنبه وسيلة أونلاين: بيموب للكروت وآبل باي، أو فوري للكاش في المنافذ.",
+      "الشحن: بوسطة أو مايلرز أو J&T بأسعار حسب المحافظة وتتبّع للشحنة — أو مندوبك الخاص ببوليصة طالعة من المنصّة. متطبعش بوالص يدوي — اختار منصّة بتطلّع البوليصة عن طريق API.",
     ],
     tip_en:
-      "numu merchants go from signup to shipping their first COD order in under 25 minutes on average.",
+      "On numu, cash on delivery is on from day one, and the setup wizard asks how you ship — Bosta or your own courier.",
     tip_ar:
-      "معدّل تجار نُمُو من التسجيل لأول أوردر كاش مشحون: أقل من ٢٥ دقيقة.",
+      "في نُمُو، الدفع عند الاستلام شغّال من أول يوم، وخطوات الإعداد بتسألك هتشحن إزاي — بوسطة ولا مندوبك.",
   },
   {
     slug: "paymob-vs-fawry",
@@ -68,16 +70,16 @@ export const guides: Guide[] = [
     readTime: 3,
     accent: "navy",
     body_en: [
-      "They solve different problems. Wire up both; the question is which default to lead with.",
+      "They solve different problems. On numu, cash on delivery runs next to one online gateway at a time, so the question is which one to switch on.",
       "Paymob is for online card + Apple Pay + Meeza. Checkout happens in-flow. Best when your shoppers have cards, trust online payments, and want instant confirmation. Fees: ~2.75% + ~3 EGP per successful transaction.",
-      "Fawry is cash-at-point — the customer gets a reference number, walks to any of ~225,000 Fawry outlets, and pays cash. Best when shoppers don't trust entering card details online but can't wait for COD. Fees: ~0.85% + ~2 EGP.",
-      "Rule of thumb: lead with Paymob if your AOV is above 500 EGP, lead with Fawry below. Offer both, always.",
+      "Fawry is cash-at-point — the customer gets a reference number, walks to any Fawry outlet, and pays cash. Best when shoppers don't trust entering card details online but can't wait for COD. Fees: ~0.85% + ~2 EGP.",
+      "Rule of thumb: switch on Paymob if your average order is above 500 EGP, Fawry below. Either way, keep cash on delivery on.",
     ],
     body_ar: [
-      "حلول لمشاكل مختلفة. اربط الاتنين؛ السؤال الأولوية لمين.",
+      "حلول لمشاكل مختلفة. في نُمُو الدفع عند الاستلام شغّال جنب بوابة أونلاين واحدة في المرّة، فالسؤال: تشغّل أنهي فيهم؟",
       "بيموب: للدفع أونلاين بالكروت وآبل باي وميزة. الشيك أوت بيتم داخل المتجر. الأنسب لما الزباين عندهم كروت، واثقين في الدفع أونلاين، ومستعجلين. الرسوم: ~٢.٧٥٪ + ~٣ ج.م لكل تحصيل ناجح.",
-      "فوري: كاش في الفروع — الزبون بياخد رقم مرجعي، بيمشي لأي فرع من ~٢٢٥,٠٠٠ فرع، بيدفع كاش. الأنسب لما الزباين مش واثقين في الدفع أونلاين بس مش عايزين ينتظروا COD. الرسوم: ~٠.٨٥٪ + ~٢ ج.م.",
-      "القاعدة: ابدأ بيموب لو متوسط الأوردر فوق ٥٠٠ ج.م، وابدأ فوري لو تحت. وفّر الاتنين مع بعض دايماً.",
+      "فوري: كاش في الفروع — الزبون بياخد رقم مرجعي، بيروح لأي منفذ فوري، وبيدفع كاش. الأنسب لما الزباين مش واثقين في الدفع أونلاين بس مش عايزين ينتظروا COD. الرسوم: ~٠.٨٥٪ + ~٢ ج.م.",
+      "القاعدة: شغّل بيموب لو متوسط الأوردر فوق ٥٠٠ ج.م، وفوري لو تحت. وفي الحالتين سيب الدفع عند الاستلام شغّال.",
     ],
   },
   {
@@ -92,7 +94,7 @@ export const guides: Guide[] = [
       "Refused deliveries (RTO — Return To Origin) cost 20–40% of Egyptian COD orders. Every refused order is shipping fee × 2 + re-stocking + damage risk. Here's how to cut it:",
       "1. Confirm by WhatsApp before dispatch. A 15-second \"Hi, your order is ready to ship — confirm the address?\" cuts RTO by 10–15% on its own.",
       "2. Require a deposit for orders above 1,000 EGP. Partial Fawry pre-pay signals commitment and filters out test shoppers.",
-      "3. Use a cross-merchant fraud network. numu's Trust Network tags shoppers who've refused COD at other stores so you see the risk before you print a waybill.",
+      "3. Use a cross-merchant network. Switch on numu's Trust Network: it checks each COD order against refusals at other numu stores, and you review its decisions on the Trust Network page before you ship.",
       "4. Teleport detection — if the shipping address changes by more than 50 km from the shopper's previous order, flag it automatically.",
       "5. Don't block new-to-network shoppers. First-time buyers refuse at normal rates; you don't want to kill acquisition.",
     ],
@@ -100,14 +102,14 @@ export const guides: Guide[] = [
       "الأوردرات المرفوضة (RTO — رجوع للأصل) بتكلّف ٢٠-٤٠٪ من أوردرات الكاش في مصر. كل أوردر مرفوض = شحن × ٢ + إعادة تخزين + مخاطر ضرر. إزاي تقلّلها:",
       "١. أكّد على واتساب قبل الشحن. \"أوردرك جاهز للشحن — أكّد العنوان؟\" بيقلّل الـ RTO ١٠-١٥٪ لوحدها.",
       "٢. اطلب دفعة جزئية للأوردرات فوق ١,٠٠٠ ج.م. دفع فوري جزئي بيبعت رسالة التزام وبيفلتر الزبون اللي \"بيجرّب\".",
-      "٣. استخدم شبكة تاجر مشتركة. Trust Network في نُمُو بيحدّد الزبون اللي رفض كاش في متاجر تانية عشان تشوف الريسك قبل ما تطبع البوليصة.",
+      "٣. استخدم شبكة بين التجار. شغّل Trust Network في نُمُو: بيراجع كل أوردر كاش على تاريخ الرفض في متاجر نُمُو التانية، وتشوف قراراته في صفحة شبكة الثقة قبل ما تشحن.",
       "٤. كشف Teleport — لو العنوان اتغيّر بـ أكتر من ٥٠ كم من أوردر الزبون الفائت، نبّهنا عليه تلقائياً.",
       "٥. متبلوكش الزبون الجديد على الشبكة. اللي بيشتري لأول مرة بيرفض بمعدلات طبيعية؛ متفقدش اكتساب.",
     ],
     tip_en:
-      "Merchants on numu Trust Network see a 30–45% drop in RTO within the first 60 days.",
+      "Switch Trust Network on from its page — from then on, every COD order is checked against refusals across numu stores.",
     tip_ar:
-      "التجار على Trust Network بيشوفوا انخفاض ٣٠-٤٥٪ في الـ RTO خلال أول ٦٠ يوم.",
+      "شغّل شبكة الثقة من صفحتها — ومن ساعتها كل أوردر كاش بيتراجع على تاريخ الرفض في متاجر نُمُو كلها.",
   },
   {
     slug: "governorate-shipping",
@@ -142,16 +144,16 @@ export const guides: Guide[] = [
     accent: "sage",
     body_en: [
       "80% of Egyptian online shoppers find products on Instagram but want to pay via WhatsApp. You need one inventory that syncs to both without duplicate work.",
-      "Instagram: connect Meta Catalog → auto-tag products in posts/reels → shoppers tap \"view on website\" to check out. Don't try to sell inside Instagram DMs at scale — you'll lose orders to message chaos.",
-      "WhatsApp: connect WhatsApp Cloud API (not the old Business app). Automate order confirmations, tracking pings, and delivery-day messages. Live agents handle exceptions only.",
-      "TikTok Shop is live in MENA now. Connect it too — but treat it as a top-of-funnel channel. Your storefront closes the sale.",
+      "Instagram: put your products in a Meta catalog (Commerce Manager) and tag them in posts and reels, so shoppers tap through and check out on your store. In numu, connect Facebook and Instagram from Channels to answer their messages in one inbox. Don't try to sell inside Instagram DMs at scale — you'll lose orders to message chaos.",
+      "WhatsApp: connect WhatsApp Cloud API (not the old Business app). Automate order confirmations, shipping updates and delivery confirmations. Live agents handle exceptions only.",
+      "TikTok: add the TikTok Pixel so you can see which sales it brings — treat it as a top-of-funnel channel. Your storefront closes the sale.",
       "Warning: running multiple channels with separate inventory spreadsheets leads to double-selling the last unit. Pick a platform that has a single source of truth and webhook out to all channels.",
     ],
     body_ar: [
       "٨٠٪ من المتسوقين المصريين أونلاين بيلاقوا المنتج على إنستغرام، بس عايزين يدفعوا عبر واتساب. محتاج مخزون واحد بيتزامن مع الاتنين بدون تكرار شغل.",
-      "إنستغرام: اربط Meta Catalog → يتطبق تاج تلقائي للمنتجات في البوستات والريلز → الزبون يضغط \"عرض على الموقع\" للشيك أوت. متحاولش تبيع جوه رسايل إنستغرام على نطاق — هتخسر أوردرات في الفوضى.",
-      "واتساب: اربط WhatsApp Cloud API (مش تطبيق الـ Business القديم). اعمل أتمتة لتأكيدات الأوردر، رسايل التتبّع، ورسايل يوم التوصيل. الـ agents بس لاستثناءات.",
-      "TikTok Shop دلوقتي متاح في المنطقة. اربطه كمان — بس اعتبره قناة أعلى للقمع. متجرك بيقفل البيعة.",
+      "إنستغرام: حط منتجاتك في كتالوج ميتا من Commerce Manager واعمل لها تاج في البوستات والريلز، والزبون يدوس ويكمّل الشيك أوت على متجرك. وفي نُمُو اربط فيسبوك وإنستجرام من القنوات وردّ على رسايلهم من مكان واحد. متحاولش تبيع جوه رسايل إنستغرام على نطاق — هتخسر أوردرات في الفوضى.",
+      "واتساب: اربط WhatsApp Cloud API (مش تطبيق الـ Business القديم). اعمل أتمتة لتأكيد الأوردر، وتحديثات الشحن، وتأكيد التسليم. الـ agents بس لاستثناءات.",
+      "تيك توك: اربط TikTok Pixel عشان تعرف المبيعات اللي جاية منه — واعتبره قناة أعلى القمع. متجرك هو اللي بيقفل البيعة.",
       "تحذير: تشغيل قنوات متعددة بمخزون في شيتات منفصلة = بيع آخر قطعة مرتين. اختار منصّة فيها مصدر واحد للمخزون بـ webhooks لكل القنوات.",
     ],
   },
@@ -178,9 +180,9 @@ export const guides: Guide[] = [
       "الغرامات: فاتورة ناقصة = ٥٠,٠٠٠ ج.م لكل حالة بعد فترة السماح. ظبّطها قبل ما الحجم يكبر.",
     ],
     tip_en:
-      "numu submits every finalized order to ETA automatically — zero manual uploads.",
+      "In numu, add your Tax ID on the Invoices page and track every invoice there: submitted, accepted or rejected.",
     tip_ar:
-      "نُمُو بيرفع كل أوردر منتهي لـ ETA تلقائياً — صفر رفع يدوي.",
+      "في نُمُو، اكتب رقمك الضريبي من صفحة الفواتير، وتابع هناك حالة كل فاتورة: مرسلة ولا مقبولة ولا مرفوضة.",
   },
   {
     slug: "import-products",
@@ -193,15 +195,15 @@ export const guides: Guide[] = [
     body_en: [
       "Typing 100 products by hand is the #1 reason merchants give up during setup. Three import paths:",
       "Excel / CSV: the classic. Download a template, fill in rows, upload. Best for merchants with a supplier price list already in spreadsheet form. Column order matters — use the template don't invent your own.",
-      "Instagram: if you already sell on Instagram, point the importer at your public profile. It reads the last 100-200 posts, extracts the product image + caption, and generates Arabic + English titles + descriptions via AI.",
-      "Shopify / Salla export: if migrating, export products.csv from your old platform and upload directly. Images, variants, and tags preserved.",
+      "Instagram / Facebook: connect your account, pick the posts you want — or paste up to 20 post links — and each one becomes a draft product with its photo and a name taken from the caption's first line. Check names and prices before you publish.",
+      "Moving from Shopify or Salla: export your products, then copy names and prices into numu's template — the importer reads its own columns, not another platform's export file.",
       "After import, audit the first 10 products. Fix categories + pricing there, then batch-apply the fixes to the remaining 90.",
     ],
     body_ar: [
       "كتابة ١٠٠ منتج باليد أكبر سبب التجار بيستسلموا أثناء الإعداد. ٣ طرق استيراد:",
       "إكسل / CSV: الكلاسيكي. نزّل قالب، املأ الصفوف، ارفع. الأنسب لتاجر عنده لائحة أسعار من المورّد في شيت. ترتيب الأعمدة مهم — استخدم القالب ومتخترعش من عندك.",
-      "إنستغرام: لو بتبيع على إنستغرام، وجّه المستورد لبروفايلك العام. بيقرا آخر ١٠٠-٢٠٠ بوست، يستخرج صورة المنتج + الكابشن، ويولّد العنوان والوصف بالعربي والإنجليزي بـ AI.",
-      "تصدير Shopify / Salla: لو بتنقل، صدّر products.csv من المنصّة القديمة وارفع مباشرة. الصور، الفارينتس، والتاجز كلها بتتحفظ.",
+      "إنستغرام / فيسبوك: اربط حسابك، اختار البوستات اللي عايزها — أو الصق لحد ٢٠ لينك بوست — وكل بوست بيتحوّل لمنتج مسودّة بصورته واسم من أول سطر في الكابشن. راجع الأسماء والأسعار قبل ما تنشر.",
+      "جاي من Shopify أو Salla: صدّر منتجاتك، وانقل الأسماء والأسعار لقالب نُمُو — المستورد بيقرا أعمدة القالب بتاعه، مش ملف التصدير بتاع منصّة تانية.",
       "بعد الاستيراد، راجع أول ١٠ منتجات. صحّح الفئات والأسعار هناك، وطبّق التصحيحات على الـ ٩٠ الباقيين دفعة واحدة.",
     ],
   },
@@ -246,14 +248,14 @@ export const guides: Guide[] = [
       "Ramadan is 60–90% of many Egyptian merchants' annual revenue. It's also the month with the most failed deliveries if you don't plan.",
       "Two weeks before: finalize your Ramadan SKUs (عرض ٢ × ١, gift bundles, suhoor/iftar-timed drops). Upload them with Ramadan-specific product photography. Generic product pics underperform seasonal ones by 30–50%.",
       "One week before: lock in shipping cutoffs. Bosta slows 20–30% during Ramadan working hours. Communicate \"order by X date for delivery before Eid\" loudly on your homepage + WhatsApp.",
-      "During: iftar and pre-suhoor are your conversion peaks. Schedule push notifications and ad spend accordingly.",
+      "During: iftar and pre-suhoor are your conversion peaks. Schedule your WhatsApp campaigns and ad spend around them.",
       "Post-Eid: clear seasonal SKUs fast. Don't let Ramadan packaging sit in storage for 11 months.",
     ],
     body_ar: [
       "رمضان ٦٠-٩٠٪ من الإيرادات السنوية لكتير من التجار المصريين. وهو كمان الشهر بأكبر معدل توصيل فاشل لو متخطّطتش.",
       "قبل أسبوعين: ثبّت منتجات رمضان بتاعتك (عرض ٢ × ١، مجموعات هدايا، منتجات بتيجي قبل الإفطار/السحور). ارفعها بتصوير رمضاني. الصور العادية بتقلّ أداءها ٣٠-٥٠٪ مقارنة بالموسمية.",
       "قبل أسبوع: ثبّت مواعيد قطع الشحن. بوسطة بتبطأ ٢٠-٣٠٪ في ساعات العمل في رمضان. بلّغ \"اطلب قبل تاريخ X للوصول قبل العيد\" بصوت عالي على الصفحة الرئيسية والواتساب.",
-      "خلال الشهر: الإفطار وقبل السحور قمم التحويل. اجدول الإشعارات وصرف الإعلانات حسبهم.",
+      "خلال الشهر: الإفطار وقبل السحور قمم التحويل. اجدول حملات الواتساب وصرف الإعلانات حسبهم.",
       "بعد العيد: صرّف منتجات الموسم بسرعة. متسيبش تغليف رمضان قاعد ١١ شهر.",
     ],
   },
@@ -268,7 +270,7 @@ export const guides: Guide[] = [
     body_en: [
       "Orders 1-20 feel exciting. Orders 20-100 are where most solo merchants burn out. Here's the discipline:",
       "Automate confirmations + tracking pings via WhatsApp from day one. If you're typing \"Hi your order is on the way\" by hand, you'll stop after 30 orders.",
-      "Batch pickups. Schedule Bosta pickup for one time-slot per day, not on-demand. A pickup every 2 hours is a productivity killer.",
+      "Batch pickups. Hand parcels to the courier once a day, not on demand — numu's pickup manifest lists the day's parcels in one sheet. A pickup every 2 hours is a productivity killer.",
       "Save support macros. For the 5 questions every customer asks (\"when does it arrive?\", \"can I exchange?\", \"do you ship to X?\"), pre-write the answers in Arabic and English. Paste, don't retype.",
       "Audit weekly, not daily. Daily revenue feels exciting but trends only show up over 7+ day windows. Skip the daily dopamine.",
       "Talk to your first 20 customers personally. After that, scale with automation. The first 20 teach you what to automate.",
@@ -276,17 +278,20 @@ export const guides: Guide[] = [
     body_ar: [
       "أوردرات ١-٢٠ بتبقى مثيرة. أوردرات ٢٠-١٠٠ هي اللي فيها التاجر لوحده بينهار. الضبط:",
       "أتمت التأكيدات ورسايل التتبّع عبر واتساب من أول يوم. لو بتكتب \"أوردرك في الطريق\" باليد، هتوقّف بعد ٣٠ أوردر.",
-      "دفعات استلام. اجدول بوسطة في شريحة وقت واحدة في اليوم، مش حسب الطلب. استلام كل ساعتين قاتل للإنتاجية.",
+      "دفعات استلام. سلّم الشحنات للمندوب مرّة واحدة في اليوم، مش حسب الطلب — كشف التسليم في نُمُو بيجمع شحنات اليوم في ورقة واحدة. استلام كل ساعتين قاتل للإنتاجية.",
       "احفظ ماكرو الدعم. للـ٥ أسئلة اللي كل زبون بيسألها (\"بيوصل إمتى؟\"، \"أقدر أستبدل؟\"، \"بتشحنوا لـX؟\")، اكتب الإجابات مسبقاً بالعربي والإنجليزي. ألصق، متعيدش كتابة.",
       "راجع أسبوعياً، مش يومياً. الإيراد اليومي ممتع بس الترند بيظهر على نافذة ٧+ أيام. اتخطّى الدوبامين اليومي.",
       "اتكلّم مع أول ٢٠ زبون شخصياً. بعد كده، اتّسع بالأتمتة. الـ٢٠ الأوّلين بيعلّموك تأتمت إيه.",
     ],
     tip_en:
-      "numu's dashboard groups all 5 common questions into canned Arabic + English responses by default.",
+      "In numu's inbox you can send your approved WhatsApp templates instead of typing the same answer again.",
     tip_ar:
-      "داشبورد نُمُو بيجمّع الـ٥ أسئلة الأكثر شيوعاً كـ قوالب إجابات عربي وإنجليزي جاهزة.",
+      "في صندوق الرسايل في نُمُو تقدر تبعت قوالب واتساب المعتمدة بتاعتك بدل ما تكتب نفس الرد كل مرّة.",
   },
 ];
+
+/** The walkthrough shown under the page header (2026-09-27). */
+const FEATURED = "open-store-egypt";
 
 const accentBar: Record<Guide["accent"], string> = {
   navy: "bg-navy",
@@ -319,6 +324,9 @@ const Learn: React.FC = () => {
   const categories = Array.from(
     new Set(guides.map((g) => (isAr ? g.category_ar : g.category_en))),
   );
+  const featured = guides.find((g) => g.slug === FEATURED);
+  const stepsLabel = (n: number) =>
+    isAr ? (n === 2 ? "خطوتين بالصور" : `${toArabicDigits(String(n))} خطوات بالصور`) : `${n} steps with screenshots`;
 
   return (
     <div className="relative min-h-screen bg-cream font-display" dir={dir}>
@@ -365,6 +373,31 @@ const Learn: React.FC = () => {
         </div>
       </div>
 
+      {featured && WALKTHROUGHS[FEATURED] && (
+        <section aria-labelledby="featured-walk" className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 pb-12">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] font-semibold text-terracotta">
+            {isAr ? "شوف بنفسك" : "See it for yourself"}
+          </p>
+          <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <h2 id="featured-walk" className="font-display text-2xl sm:text-[28px] font-bold text-ink tracking-tight leading-tight">
+              {isAr ? featured.title_ar : featured.title_en}
+            </h2>
+            <Link
+              to={`/learn/${featured.slug}`}
+              className="text-sm font-semibold text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy"
+            >
+              {isAr ? "اقرا الدليل كله" : "Read the full guide"}
+            </Link>
+          </div>
+          <GuideWalkthrough
+            className="mt-5"
+            steps={WALKTHROUGHS[FEATURED]}
+            label={{ ar: `خطوات «${featured.title_ar}» على نُمُو`, en: `Steps for “${featured.title_en}” on numu` }}
+            sizes="(min-width: 940px) 852px, 100vw"
+          />
+        </section>
+      )}
+
       <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
         <div className="flex flex-col gap-3">
           {guides.map((g, i) => {
@@ -380,7 +413,7 @@ const Learn: React.FC = () => {
                 />
                 <Link
                   to={`/learn/${g.slug}`}
-                  className="w-full flex items-start justify-between gap-4 text-start p-5 sm:p-6 hover:bg-navy/[0.03] transition-colors"
+                  className="w-full flex items-center justify-between gap-4 text-start p-5 sm:p-6 hover:bg-navy/[0.03] transition-colors"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center flex-wrap gap-2 mb-2">
@@ -401,11 +434,21 @@ const Learn: React.FC = () => {
                           ? `${g.readTime} دقايق قراية`
                           : `${g.readTime} min read`}
                       </span>
+                      {WALKTHROUGHS[g.slug] && (
+                        <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-semibold text-navy bg-navy/[0.06] rounded-[4px] px-1.5 py-0.5">
+                          {stepsLabel(WALKTHROUGHS[g.slug].length)}
+                        </span>
+                      )}
                     </div>
                     <h2 className="font-display text-lg sm:text-xl font-semibold text-ink tracking-tight leading-tight">
                       {isAr ? g.title_ar : g.title_en}
                     </h2>
                   </div>
+                  {WALKTHROUGHS[g.slug] && (
+                    <span className="hidden sm:block w-[180px] shrink-0">
+                      <WalkThumb step={WALKTHROUGHS[g.slug][0]} />
+                    </span>
+                  )}
                   <span aria-hidden="true" className="shrink-0 text-lg text-terracotta rtl:rotate-180">
                     →
                   </span>
@@ -431,7 +474,7 @@ const Learn: React.FC = () => {
               : `Start a ${DEFAULT_TRIAL_DAYS}-day trial. Payments, shipping, invoicing — already wired.`}
           </p>
           <Link
-            to="/?demo=1"
+            to="?signup=1"
             className="group inline-flex items-center justify-center gap-2 bg-cream text-navy font-semibold py-3 px-6 rounded-[4px] hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu"
           >
             <span>{isAr ? "افتح متجرك" : "Open your store"}</span>

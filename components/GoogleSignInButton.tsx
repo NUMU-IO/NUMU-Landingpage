@@ -6,8 +6,8 @@ import { GoogleAuthScope } from './GoogleAuthScope';
  * `<GoogleLogin>` that brings its own provider.
  *
  * A drop-in replacement for the library's `GoogleLogin`, used so the Google
- * Identity Services script is fetched at the three places a Google button
- * genuinely appears — the sign-up modal, the demo modal and `/login` — rather
+ * Identity Services script is fetched at the two places a Google button
+ * genuinely appears — the sign-up modal and `/login` — rather
  * than on every page load from a provider at the app root. See
  * `GoogleAuthScope` for what that was costing.
  *

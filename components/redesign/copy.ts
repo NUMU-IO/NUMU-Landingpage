@@ -21,14 +21,28 @@ export interface Bi {
 
 export const pick = (b: Bi, lang: Lang): string => (lang === 'ar' ? b.ar : b.en);
 
+/* ── Tone rules (W7, `docs/Plans/landing page updates/07-egyptian-tone.md`) ──
+   1. Egyptian, never MSA: إزاي not كيف, عشان not لأن, دلوقتي not الآن, مش not ليس.
+   2. One idea per sentence; ≤ 14 words in a bubble or caption, ≤ 20 in body copy.
+   3. A joke is about the pain of the old way — never the merchant, a customer,
+      a courier, a region or a competitor by name. At most one per section.
+   4. No jokes in pricing, legal, Trust Network, payment or shipping errors,
+      anything with a number, or a button label.
+   5. English is a plain translation; jokes do not travel.
+   Inventory + MSA-flag script output: `copy-inventory.md` in the same folder. */
+
+import type { AssetKey } from './assets';
+
 /* ============================================================
    Fixed CTA vocabulary — content-system.md § "Fixed CTA vocabulary"
    These labels are locked for v1. Alternatives such as `ابدأ دلوقتي`,
    `ابدأ الآن`, `جرّب نسخة تجريبية`, `ابدأ مجاناً` are explicitly banned.
+   The secondary conversion is the product tour (`productTour`). The demo
+   label was retired on 2026-09-25: the marketing site has one door, the
+   trial, and no 7-day demo tenant.
    ============================================================ */
 export const CTA = {
   primary: { ar: 'أنشئ متجرك مجانًا', en: 'Create your store free' },
-  secondary: { ar: 'شاهد الديمو', en: 'See the demo' },
   productTour: { ar: 'استكشف لوحة التحكم', en: 'Explore the dashboard' },
   integrations: { ar: 'استعرض التكاملات', en: 'Browse integrations' },
   trustNetwork: { ar: 'اعرف عن Trust Network', en: 'About Trust Network' },
@@ -51,15 +65,220 @@ export const hero = {
     en: 'An Arabic storefront that is ready to go, local payments, easier shipping, and cash on delivery built for the Egyptian market.',
   },
   reassurance: {
-    ar: 'بدون بطاقة ائتمان · بدون برمجة · ابدأ خلال دقائق',
+    ar: 'من غير بطاقة ائتمان · من غير مبرمج · من غير ابن خالتك اللي بيفهم في الكمبيوتر',
     en: 'No credit card · No code · Start in minutes',
   },
-  /** Accessible description of the hero footage for screen readers. */
+  /** Accessible description of the hero film (the poster's alt text). */
   videoAlt: {
-    ar: 'فيديو قصير لتجار بيجهزوا طلبات ويعبّوا شحنات في مساحة شغلهم.',
-    en: 'A short video of merchants preparing orders and packing parcels in their workspace.',
+    ar: 'فيلم موشن قصير عن نُمُو: بتفتح متجرك وتجهّزه، وعميلك بيدفع بالطريقة اللي تريحه أو كاش عند الاستلام، والتحديثات بتوصله على واتساب، وبتشحن لكل المحافظات، وكل أرقامك قدامك في لوحة واحدة.',
+    en: 'A short motion film about numu: open and set up your store, let customers pay their way or cash on delivery, send updates on WhatsApp, ship to every governorate, and see every number on one dashboard.',
   },
+  /** The film player's accessible name. */
+  filmLabel: { ar: 'فيلم نُمُو', en: 'The numu film' },
 } satisfies Record<string, Bi>;
+
+/* ============================================================
+   01b — Onboarding chat (added 2026-09-25, owner request — W3,
+   `docs/Plans/landing page updates/03-onboarding-chat.md`)
+   A scripted conversation, not a model. Chip values are the hub setup
+   wizard's own option ids, so the answers pre-fill `OnboardingWizard` after
+   sign-up. Every reply quotes only what the integrations audit (W1)
+   verified. Humour budget: one light line (the tea), none in the summary.
+   ============================================================ */
+export interface ChatChip {
+  value: string;
+  label: Bi;
+  /** What numu says back to this answer, when it says something specific. */
+  reply?: Bi;
+  /** Sub-line under a preset (niche list only). */
+  desc?: Bi;
+}
+
+export const onboardingChat = {
+  eyebrow: { ar: 'ابدأ من هنا', en: 'Start here' },
+  heading: {
+    ar: 'قولّنا بتبيع إيه، والباقي علينا.',
+    en: 'Tell us what you sell. We take it from there.',
+  },
+  support: {
+    ar: 'كام سؤال على السريع بدل فورم طويل. إجاباتك بتتحفظ، وتلاقيها مستنياك أول ما تفتح متجرك.',
+    en: 'A few quick questions instead of a long form. Your answers are kept and waiting for you the moment you open your store.',
+  },
+  bot: { ar: 'نُمُو', en: 'numu' },
+  status: { ar: 'بيرد دلوقتي', en: 'Replying now' },
+  threadLabel: { ar: 'المحادثة مع نُمُو', en: 'Conversation with numu' },
+  composer: {
+    label: { ar: 'اوصف متجرك في سطر', en: 'Describe your store in a line' },
+    // Cycled as the placeholder while the box is empty (static under reduced motion).
+    examples: [
+      { ar: 'بعمل حلويات بيتي وبوصّل في القاهرة والجيزة…', en: 'I bake at home and deliver across Cairo and Giza…' },
+      { ar: 'عندي براند طرح وأوشحة شغّال على إنستجرام…', en: 'I run a scarves brand on Instagram…' },
+      { ar: 'ببيع إكسسوارات موبايل، وأغلب عملائي بيدفعوا كاش…', en: 'I sell phone accessories and most customers pay cash…' },
+      { ar: 'محل هدوم في المنصورة وعايز أبيع أونلاين…', en: 'A clothes shop in Mansoura that wants to sell online…' },
+    ] as Bi[],
+    submit: { ar: 'ابني متجري', en: 'Build my store' },
+    hint: { ar: 'اكتب بالعامي عادي — أو اختار من تحت', en: 'Type it plainly — or pick one below' },
+    presets: { ar: 'الأكتر اختيارًا', en: 'Most picked' },
+  },
+  choicesLabel: { ar: 'اختار إجابة', en: 'Pick an answer' },
+  niche: {
+    ask: {
+      ar: 'أهلًا! أنا نُمُو. مش هاخد من وقتك أكتر من كوباية شاي — كام سؤال ونبدأ. بتبيع إيه؟',
+      en: "Hi, I'm numu. A few quick questions and we start. What do you sell?",
+    },
+    chips: [
+      { value: 'fashion', label: { ar: 'ملابس وأزياء', en: 'Fashion & clothing' }, desc: { ar: 'فساتين، طرح، جينز، تيشيرتات', en: 'Dresses, scarves, jeans, tees' } },
+      { value: 'accessories', label: { ar: 'إكسسوارات', en: 'Accessories' }, desc: { ar: 'شنط، ساعات، فضة ونظارات', en: 'Bags, watches, silver, eyewear' } },
+      { value: 'beauty', label: { ar: 'تجميل وعناية', en: 'Beauty & care' }, desc: { ar: 'ميكب، سكين كير، برفانات', en: 'Makeup, skincare, perfume' } },
+      { value: 'electronics', label: { ar: 'إلكترونيات', en: 'Electronics' }, desc: { ar: 'موبايلات، سماعات، شواحن', en: 'Phones, headphones, chargers' } },
+      { value: 'food', label: { ar: 'أكل ومشروبات', en: 'Food & drinks' }, desc: { ar: 'حلويات بيتي، قهوة، أكل صحي', en: 'Home-made sweets, coffee, healthy food' } },
+      { value: 'home', label: { ar: 'مستلزمات البيت', en: 'Home & living' }, desc: { ar: 'مفروشات، ديكور، أدوات مطبخ', en: 'Bedding, decor, kitchenware' } },
+      { value: 'other', label: { ar: 'حاجة تانية', en: 'Something else' }, desc: { ar: 'كتب، هدايا، أي حاجة تتباع', en: 'Books, gifts, anything that sells' } },
+    ] as ChatChip[],
+  },
+  where: {
+    ask: { ar: 'حلو. وبتبيع دلوقتي منين؟', en: 'Nice. Where do you sell today?' },
+    chips: [
+      { value: 'instagram', label: { ar: 'إنستجرام أو فيسبوك', en: 'Instagram or Facebook' } },
+      { value: 'easyorders', label: { ar: 'إيزي أوردرز', en: 'EasyOrders' } },
+      { value: 'vondera', label: { ar: 'فونديرا', en: 'Vondera' } },
+      { value: 'shopify', label: { ar: 'شوبيفاي', en: 'Shopify' } },
+      { value: 'own_site', label: { ar: 'موقع خاص بيا', en: 'My own site' } },
+      { value: 'offline', label: { ar: 'محل على الأرض', en: 'A physical shop' } },
+      { value: 'nowhere', label: { ar: 'لسه مبدأتش', en: 'Not selling yet' } },
+    ] as ChatChip[],
+  },
+  orders: {
+    ask: { ar: 'وبيجيلك كام أوردر في الشهر تقريبًا؟', en: 'Roughly how many orders a month?' },
+    notYet: {
+      ar: 'ولا يهمك، كلنا بدأنا من أول أوردر. أول أوردر عليك، والباقي علينا.',
+      en: 'No problem — everyone starts from order one.',
+    },
+    notYetLabel: { ar: 'لسه', en: 'Not yet' },
+    chips: [
+      { value: '1-50', label: { ar: 'أقل من ٥٠', en: 'Under 50' } },
+      { value: '51-200', label: { ar: 'من ٥٠ لـ ٢٠٠', en: '50 – 200' } },
+      { value: '201-1000', label: { ar: 'من ٢٠٠ لـ ١٠٠٠', en: '200 – 1,000' } },
+      { value: '1000+', label: { ar: 'أكتر من ١٠٠٠', en: 'Over 1,000' } },
+    ] as ChatChip[],
+  },
+  pay: {
+    ask: { ar: 'عميلك بيدفع إزاي غالبًا؟', en: 'How do your customers usually pay?' },
+    chips: [
+      {
+        value: 'cod',
+        label: { ar: 'كاش عند الاستلام', en: 'Cash on delivery' },
+        reply: {
+          ar: 'الدفع عند الاستلام عندنا مش خانة في فورم، ده نص الشغل: شبكة الثقة بتكشف الزبون اللي بيرفض الاستلام قبل ما تشحن.',
+          en: 'Cash on delivery is half the job here, not a checkbox: Trust Network flags customers who refuse deliveries before you ship.',
+        },
+      },
+      {
+        value: 'card',
+        label: { ar: 'كارت فيزا أو ماستركارد', en: 'Visa or Mastercard' },
+        reply: {
+          ar: 'الكروت بتشتغل عن طريق Paymob أو Kashier، والدفع عند الاستلام فاضل شغّال جنبهم.',
+          en: 'Cards run through Paymob or Kashier, with cash on delivery still on beside them.',
+        },
+      },
+      {
+        value: 'wallet',
+        label: { ar: 'فودافون كاش والمحافظ', en: 'Vodafone Cash & wallets' },
+        reply: {
+          ar: 'المحافظ تتربط من Paymob، أو العميل يحوّل على فودافون كاش ويرفع صورة الإيصال.',
+          en: 'Wallets connect through Paymob, or the customer transfers by Vodafone Cash and uploads the receipt.',
+        },
+      },
+      {
+        value: 'fawry',
+        label: { ar: 'فوري', en: 'Fawry' },
+        reply: {
+          ar: 'فوري بيدّي عميلك كود يدفع بيه من أي منفذ فوري.',
+          en: 'Fawry gives your customer a code to pay at any Fawry outlet.',
+        },
+      },
+      {
+        value: 'all',
+        label: { ar: 'كل ده', en: 'All of these' },
+        reply: {
+          ar: 'ماشي. الكاش شغّال دايمًا، وجنبه بوابة أونلاين واحدة تختارها، وفودافون كاش وإنستاباي بالإيصال.',
+          en: 'Sure. Cash on delivery is always on, next to one online gateway you choose, plus Vodafone Cash and InstaPay by receipt.',
+        },
+      },
+    ] as ChatChip[],
+  },
+  ship: {
+    ask: { ar: 'والشحن؟', en: 'And shipping?' },
+    chips: [
+      {
+        value: 'bosta',
+        label: { ar: 'بوسطة', en: 'Bosta' },
+        reply: {
+          ar: 'بوسطة متوصّلة جاهزة: البوليصة والتتبّع من جوه الأوردر.',
+          en: 'Bosta is wired in: the waybill and tracking come from inside the order.',
+        },
+      },
+      {
+        value: 'mylerz_jt',
+        label: { ar: 'مايلرز أو J&T', en: 'Mylerz or J&T' },
+        reply: {
+          ar: 'مايلرز وJ&T بتربطهم من صفحة الشحن أول ما المتجر يتفتح.',
+          en: 'Mylerz and J&T connect from the shipping page once the store is open.',
+        },
+      },
+      {
+        value: 'own',
+        label: { ar: 'مندوبي الخاص', en: 'My own courier' },
+        reply: {
+          ar: 'مندوبك ليه بوليصة من نُمُو، وعميلك ليه صفحة يتابع منها الشحنة.',
+          en: 'Your courier gets a numu waybill, and your customer gets a page to track the parcel.',
+        },
+      },
+      {
+        value: 'both',
+        label: { ar: 'بوسطة ومندوبي', en: 'Bosta and my courier' },
+        reply: {
+          ar: 'بوسطة ومندوبك الاتنين شغّالين من نفس الشاشة.',
+          en: 'Bosta and your own courier both work from the same screen.',
+        },
+      },
+      {
+        value: 'unknown',
+        label: { ar: 'لسه معرفش', en: 'Not sure yet' },
+        reply: {
+          ar: 'ولا يهمك. ابدأ بأسعار شحن حسب المحافظة، واربط شركة الشحن وقت ما تحب.',
+          en: 'No problem. Start with shipping rates by governorate and connect a carrier whenever you like.',
+        },
+      },
+    ] as ChatChip[],
+  },
+  done: {
+    title: { ar: 'تمام كده، فهمت عليك.', en: 'That is everything I need.' },
+    rows: {
+      niche: { ar: 'بتبيع', en: 'You sell' },
+      where: { ar: 'بتبيع منين', en: 'Selling on' },
+      orders: { ar: 'أوردرات الشهر', en: 'Orders a month' },
+      pay: { ar: 'الدفع', en: 'Payments' },
+      ship: { ar: 'الشحن', en: 'Shipping' },
+    },
+    fit: { ar: 'ده بالظبط اللي نُمُو معمول عشانه.', en: 'That is exactly what numu is built for.' },
+    carry: {
+      ar: 'سجّل، وهتلاقي إجاباتك دي مستنياك في خطوات إعداد المتجر.',
+      en: 'Sign up and these answers will be waiting in your store setup.',
+    },
+    restart: { ar: 'غيّر إجاباتي', en: 'Change my answers' },
+  },
+  figure: {
+    alt: {
+      ar: 'خطوة إعداد المتجر في لوحة تحكم نُمُو، والتصنيف ومكان البيع وعدد الأوردرات متعلّمين جاهزين من إجابات الشات.',
+      en: 'The store setup step in the numu dashboard, with the category, sales channel and order band already selected from the chat answers.',
+    },
+    caption: {
+      ar: 'إجاباتك بتوصل هنا: خطوات إعداد متجرك في لوحة التحكم، متعلّمة جاهزة.',
+      en: 'Where your answers land: your store setup in the dashboard, already filled in.',
+    },
+  },
+};
 
 /* ============================================================
    02 — Merchant proof
@@ -93,7 +312,7 @@ export const localCommerce = {
     en: 'Your commerce runs with the market you sell in.',
   },
   support: {
-    ar: 'دفع محلي، شحن مناسب، واتساب، ودفع عند الاستلام — الأدوات الأساسية للتاجر المصري في مكان واحد.',
+    ar: 'الدفع والشحن وواتساب والدفع عند الاستلام — الحاجات اللي بتفتح لها خمس تابات كل يوم، في تاب واحدة.',
     en: 'Local payments, shipping that fits, WhatsApp, and cash on delivery — the essentials for an Egyptian merchant in one place.',
   },
   blocks: [
@@ -105,8 +324,8 @@ export const localCommerce = {
         en: 'Let the customer pay the way that suits them.',
       },
       body: {
-        ar: 'كارت، محفظة، أو دفع عند الاستلام — العميل بيختار، والأوردر بيوصلك بنفس الشكل.',
-        en: 'Card, wallet, or cash on delivery — the customer chooses, and the order reaches you the same way.',
+        ar: 'كارت، فودافون كاش أو أي محفظة، إنستاباي، أو دفع عند الاستلام — العميل بيختار، والأوردر بيوصلك بنفس الشكل.',
+        en: 'Card, Vodafone Cash or any wallet, InstaPay, or cash on delivery — the customer chooses, and the order reaches you the same way.',
       },
     },
     {
@@ -217,9 +436,81 @@ export const reliability = {
       en: 'Start with one store and scale as your business grows, without migrating your data somewhere else.',
     },
   ],
-  globeAlt: {
-    ar: 'كرة أرضية منقّطة، الشرق الأوسط وشمال أفريقيا في المنتصف.',
-    en: 'A dotted globe with the Middle East and North Africa centred.',
+  /**
+   * The section's proof since 2026-09-25 (`06-earth-replacement.md`): five
+   * real hub screens from the order arriving to the cash being confirmed.
+   * Captions are Egyptian colloquial and describe what is on the screen —
+   * still no number, no uptime, no coverage claim.
+   */
+  pipeline: {
+    heading: { ar: 'من الأوردر لحد الفلوس في جيبك', en: 'From the order to the cash in your pocket' },
+    steps: [
+      {
+        key: 'order',
+        label: { ar: 'أوردر جديد وصل', en: 'A new order lands' },
+        caption: {
+          ar: 'الأوردر بحالته وعميله وشحنته في شاشة واحدة.',
+          en: 'The order, its status, its customer and its shipment on one screen.',
+        },
+        asset: 'hubOrders',
+        alt: {
+          ar: 'قائمة الطلبات في نُمُو: رقم الأوردر والعميل والدفع والحالة.',
+          en: 'The numu orders list: order number, customer, payment and status.',
+        },
+      },
+      {
+        key: 'risk',
+        label: { ar: 'إشارة الريسك قبل الشحن', en: 'The risk signal before you ship' },
+        caption: {
+          ar: 'Trust Network بيقولك الأوردر ده مضمون ولا يستاهل عربون. القرار قرارك.',
+          en: 'Trust Network tells you whether this order is safe or worth a deposit. The call is yours.',
+        },
+        asset: 'trustNetwork',
+        alt: {
+          ar: 'شاشة Trust Network في نُمُو: إشارة الريسك والإجراءات المتاحة للتاجر.',
+          en: 'The numu Trust Network screen: the risk signal and the actions open to the merchant.',
+        },
+      },
+      {
+        key: 'whatsapp',
+        label: { ar: 'تأكيد على واتساب', en: 'Confirmation on WhatsApp' },
+        caption: {
+          ar: 'رسالة التأكيد بتروح لوحدها، وإنت شايف اتقرت ولا لأ.',
+          en: 'The confirmation goes out by itself, and you can see whether it was read.',
+        },
+        asset: 'whatsapp',
+        alt: {
+          ar: 'شاشة واتساب بيزنس في نُمُو وعليها رسائل التأكيد المرسلة وحالتها.',
+          en: 'The numu WhatsApp Business screen with the confirmation messages sent and their status.',
+        },
+      },
+      {
+        key: 'shipping',
+        label: { ar: 'البوليصة والتتبّع', en: 'Waybill and tracking' },
+        caption: {
+          ar: 'بوسطة أو مايلرز أو J&T أو مندوبك الخاص: بوليصة وتتبّع من جوه نُمُو.',
+          en: 'Bosta, Mylerz, J&T or your own courier: waybill and tracking from inside numu.',
+        },
+        asset: 'hubLogistics',
+        alt: {
+          ar: 'صفحة الشحن في نُمُو: المناطق والأسعار وشركات الشحن ومندوبك الخاص.',
+          en: 'The numu shipping page: zones, rates, couriers and your own courier.',
+        },
+      },
+      {
+        key: 'cash',
+        label: { ar: 'الفلوس اتأكدت', en: 'The cash is confirmed' },
+        caption: {
+          ar: 'لما الكاش يوصل بتأكد الدفع من الأوردر نفسه، وتسوية الكاش مع شركة الشحن ليها صفحتها.',
+          en: 'When the cash arrives you confirm the payment on the order itself; settling cash with the courier has its own page.',
+        },
+        asset: 'hubOrderDetail',
+        alt: {
+          ar: 'تفاصيل أوردر في نُمُو: ملخص الدفع والرصيد المتبقي وزرار تأكيد الدفع.',
+          en: 'An order in numu: the payment summary, the balance due and the confirm-payment button.',
+        },
+      },
+    ] satisfies { key: string; label: Bi; caption: Bi; asset: AssetKey; alt: Bi }[],
   },
 };
 
@@ -262,12 +553,12 @@ export const cod = {
    ============================================================ */
 export const ecosystem = {
   heading: {
-    ar: 'الأدوات اللي بتبيع بيها، متوصلة مع بعض.',
-    en: 'The tools you sell with, connected to each other.',
+    ar: 'الأدوات اللي بتبيع بيها، بتكلّم بعض — من غير ما تكون إنت الوسيط.',
+    en: 'The tools you sell with, talking to each other — without you in the middle.',
   },
   support: {
-    ar: 'اربط الدفع، الشحن، واتساب، والتكاملات اللي محتاجها — وخلي نُمُو يجمعلك التشغيل في مكان واحد.',
-    en: 'Connect payments, shipping, WhatsApp and the integrations you need — and let numu bring the operation together in one place.',
+    ar: 'اربط الدفع والمحافظ، الشحن، واتساب، الدومين، الاستيراد، والذكاء الاصطناعي — وخلي نُمُو يجمعلك التشغيل في مكان واحد.',
+    en: 'Connect payments and wallets, shipping, WhatsApp, your domain, imports and AI — and let numu bring the operation together in one place.',
   },
 };
 

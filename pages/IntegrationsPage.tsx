@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageShell, PageSection, PageClose } from '../components/redesign/PageShell';
-import { PrimaryCta, SecondaryCta, useBi } from '../components/redesign/ui';
+import { PrimaryCta, SecondaryCta, AssetSlot, useBi } from '../components/redesign/ui';
 import {
   PARTNERS,
   CATEGORY_LABEL,
@@ -28,10 +28,16 @@ import PartnerLogo from '../components/redesign/PartnerLogo';
 const FILTERS: { key: PartnerCategory | 'all'; label: Bi }[] = [
   { key: 'all', label: { ar: 'الكل', en: 'All' } },
   { key: 'payments', label: CATEGORY_LABEL.payments },
+  { key: 'methods', label: CATEGORY_LABEL.methods },
   { key: 'shipping', label: CATEGORY_LABEL.shipping },
+  { key: 'handoff', label: CATEGORY_LABEL.handoff },
   { key: 'messaging', label: CATEGORY_LABEL.messaging },
   { key: 'marketing', label: CATEGORY_LABEL.marketing },
   { key: 'tax', label: CATEGORY_LABEL.tax },
+  { key: 'wallets', label: CATEGORY_LABEL.wallets },
+  { key: 'domains', label: CATEGORY_LABEL.domains },
+  { key: 'imports', label: CATEGORY_LABEL.imports },
+  { key: 'ai', label: CATEGORY_LABEL.ai },
 ];
 
 /** What a merchant needs before the integration can be switched on. */
@@ -53,8 +59,32 @@ export const SETUP: Record<PartnerCategory, Bi> = {
     en: 'You add the pixel ID and token in the dashboard, then events are sent from the storefront and the server together.',
   },
   tax: {
-    ar: 'محتاج تسجيل عند مصلحة الضرايب المصرية وبيانات الربط، وبعدها الفواتير بتتبعت من نُمُو.',
-    en: 'You need an Egyptian Tax Authority registration and its credentials, then invoices are submitted from numu.',
+    ar: 'محتاج رقم ضريبي: بتكتبه في صفحة الفواتير في لوحة التحكم، وبتتابع هناك حالة كل فاتورة.',
+    en: 'You need a Tax ID: add it on the Invoices page in the dashboard, then track each invoice there.',
+  },
+  methods: {
+    ar: 'بتظهر للعميل في الشيك أوت أول ما تفعّل بوابة الدفع اللي بتدعمها.',
+    en: 'They appear at checkout as soon as you switch on a gateway that supports them.',
+  },
+  handoff: {
+    ar: 'بتضيف شركة الشحن في صفحة الشحن، ونُمُو بيطلّع كشف الشحنات ورسالة واتساب جاهزة للمندوب.',
+    en: 'You add the courier on the shipping page; numu produces the parcel sheet and a ready WhatsApp message for the courier.',
+  },
+  wallets: {
+    ar: 'بتحط رقم المحفظة أو بيانات الحساب البنكي في لوحة التحكم، والعميل بيحوّل ويرفع صورة الإيصال وانت بتأكد الأوردر.',
+    en: 'You add the wallet number or bank details in the dashboard; the customer transfers, uploads the receipt, and you confirm the order.',
+  },
+  domains: {
+    ar: 'بتضيف الدومين في إعدادات المتجر وتعمل سجل CNAME واحد عند اللي شاري منه الدومين، والشهادة بتتعمل لوحدها.',
+    en: 'You add the domain in store settings and create one CNAME record at your registrar; the certificate is issued automatically.',
+  },
+  imports: {
+    ar: 'بتربط صفحتك أو بترفع ملف إكسل أو CSV من لوحة التحكم، وبتراجع المنتجات قبل ما تتنشر.',
+    en: 'You connect your page or upload an Excel or CSV file from the dashboard, and review the products before they go live.',
+  },
+  ai: {
+    ar: 'بتعمل مفتاح ربط من إعدادات المتجر (Connect your AI) وبتحطه في Claude أو ChatGPT أو Cursor.',
+    en: 'You create a connection key in store settings (Connect your AI) and paste it into Claude, ChatGPT or Cursor.',
   },
 };
 
@@ -81,11 +111,39 @@ const IntegrationsPage: React.FC = () => {
         en: 'numu integrations — payments, shipping and messaging',
       }}
       description={{
-        ar: 'بيموب، فوري، كاشير، إنستاباي، بوسطة، وواتساب — التكاملات المفعّلة على نُمُو وإيه اللي محتاجه عشان تشغّلها.',
-        en: 'Paymob, Fawry, Kashier, InstaPay, Bosta and WhatsApp — the live numu integrations and what you need to switch each one on.',
+        ar: 'بوابات الدفع والمحافظ، شركات الشحن، واتساب، الدومين، الاستيراد، والذكاء الاصطناعي — التكاملات المفعّلة على نُمُو وإيه اللي محتاجه عشان تشغّلها.',
+        en: 'Payment gateways and wallets, couriers, WhatsApp, domains, imports and AI — the live numu integrations and what you need to switch each one on.',
       }}
     >
       <PageSection surface="paper">
+        {/* Owner-supplied illustration (2026-09-25): the store in the middle,
+            payments, wallets, shipping, chat and Instagram wired into it. The
+            roster below stays the only list of what is actually connected. */}
+        <div className="mb-12 grid gap-8 lg:grid-cols-[1.15fr_1fr] items-center">
+          <div className="max-w-xl">
+            <h2 className="font-display font-bold text-[24px]/[1.3] sm:text-[28px]/[1.28] text-ink">
+              {b({ ar: 'كل أدواتك متوصلة بمتجرك، من غير مبرمج.', en: 'Every tool wired to your store, no developer needed.' })}
+            </h2>
+            <p className="prose-body mt-4 text-ink-soft/85">
+              {b({
+                ar: 'الدفع والمحافظ، الشحن، واتساب، والاستيراد والذكاء الاصطناعي — بتربطهم من لوحة التحكم وبيشتغلوا على أوردراتك على طول.',
+                en: 'Payments and wallets, shipping, WhatsApp, imports and AI — you connect them from the dashboard and they work on your orders straight away.',
+              })}
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-[10px] border border-ink/10 bg-cream">
+            <AssetSlot
+              asset="illoConnectedTools"
+              ratio={1}
+              sizes="(min-width: 1024px) 480px, 100vw"
+              alt={{
+                ar: 'رسمة توضيحية: تاجر على اللابتوب ومتجره في النص، ومتوصل بيه بطاقة ومحفظة وشحن وتحليلات ومحادثات وإنستغرام.',
+                en: 'Illustration: a merchant at a laptop with his store in the centre, connected to cards, a wallet, shipping, analytics, chat and Instagram.',
+              }}
+            />
+          </div>
+        </div>
+
         {/* Category filter */}
         <div
           role="group"
@@ -131,7 +189,7 @@ const IntegrationsPage: React.FC = () => {
               </p>
 
               <p className="prose-body-sm mt-4 pt-4 border-t border-ink/10 text-ink-soft/70">
-                {b(SETUP[p.category])}
+                {b(p.setup ?? SETUP[p.category])}
               </p>
 
               {/* Status pairs a dot with a word — never colour alone. */}

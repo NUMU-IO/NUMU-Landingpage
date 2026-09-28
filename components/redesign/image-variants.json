@@ -35,6 +35,240 @@
       "src": "/assets/dashboard-home.webp"
     }
   ],
+  "/assets/hub-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-home-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-home.webp"
+    }
+  ],
+  "/assets/hub-logistics.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-logistics-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-logistics-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-logistics-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-logistics.webp"
+    }
+  ],
+  "/assets/hub-order-detail.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-order-detail-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-order-detail-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-order-detail-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-order-detail.webp"
+    }
+  ],
+  "/assets/hub-orders.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-orders-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-orders-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-orders-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-orders.webp"
+    }
+  ],
+  "/assets/hub-payment-setup.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-payment-setup-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-payment-setup-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-payment-setup-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-payment-setup.webp"
+    }
+  ],
+  "/assets/hub-settings-mcp.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-settings-mcp-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-settings-mcp-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-settings-mcp-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-settings-mcp.webp"
+    }
+  ],
+  "/assets/hub-themes-marketplace.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-themes-marketplace-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-themes-marketplace-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-themes-marketplace-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/hub-themes-marketplace.webp"
+    }
+  ],
+  "/assets/hub-wizard-prefilled.webp": [
+    {
+      "w": 480,
+      "src": "/assets/hub-wizard-prefilled-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/hub-wizard-prefilled-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/hub-wizard-prefilled-1200.webp"
+    },
+    {
+      "w": 1400,
+      "src": "/assets/hub-wizard-prefilled.webp"
+    }
+  ],
+  "/assets/illo-cod-decision.webp": [
+    {
+      "w": 480,
+      "src": "/assets/illo-cod-decision-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/illo-cod-decision-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/illo-cod-decision-1200.webp"
+    },
+    {
+      "w": 1280,
+      "src": "/assets/illo-cod-decision.webp"
+    }
+  ],
+  "/assets/illo-connected-tools.webp": [
+    {
+      "w": 480,
+      "src": "/assets/illo-connected-tools-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/illo-connected-tools-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/illo-connected-tools-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/illo-connected-tools.webp"
+    }
+  ],
+  "/assets/illo-merchant-store.webp": [
+    {
+      "w": 480,
+      "src": "/assets/illo-merchant-store-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/illo-merchant-store-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/illo-merchant-store-1200.webp"
+    },
+    {
+      "w": 2000,
+      "src": "/assets/illo-merchant-store.webp"
+    }
+  ],
+  "/assets/illo-open-store.webp": [
+    {
+      "w": 480,
+      "src": "/assets/illo-open-store-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/illo-open-store-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/illo-open-store-1200.webp"
+    },
+    {
+      "w": 1536,
+      "src": "/assets/illo-open-store.webp"
+    }
+  ],
+  "/assets/illo-packing-orders.webp": [
+    {
+      "w": 480,
+      "src": "/assets/illo-packing-orders-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/illo-packing-orders-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/illo-packing-orders-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/illo-packing-orders.webp"
+    }
+  ],
   "/assets/inbox.webp": [
     {
       "w": 480,
@@ -51,6 +285,674 @@
     {
       "w": 2000,
       "src": "/assets/inbox.webp"
+    }
+  ],
+  "/assets/learn-choose-store-name-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-choose-store-name-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-choose-store-name-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-choose-store-name-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-choose-store-name-s1.webp"
+    }
+  ],
+  "/assets/learn-choose-store-name-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-choose-store-name-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-choose-store-name-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-choose-store-name-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-choose-store-name-s2.webp"
+    }
+  ],
+  "/assets/learn-choose-store-name-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-choose-store-name-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-choose-store-name-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-choose-store-name-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-choose-store-name-s3.webp"
+    }
+  ],
+  "/assets/learn-eta-einvoicing-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-eta-einvoicing-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-eta-einvoicing-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-eta-einvoicing-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-eta-einvoicing-s1.webp"
+    }
+  ],
+  "/assets/learn-eta-einvoicing-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-eta-einvoicing-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-eta-einvoicing-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-eta-einvoicing-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-eta-einvoicing-s2.webp"
+    }
+  ],
+  "/assets/learn-first-100-orders-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-first-100-orders-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-first-100-orders-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-first-100-orders-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-first-100-orders-s1.webp"
+    }
+  ],
+  "/assets/learn-first-100-orders-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-first-100-orders-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-first-100-orders-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-first-100-orders-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-first-100-orders-s2.webp"
+    }
+  ],
+  "/assets/learn-first-100-orders-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-first-100-orders-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-first-100-orders-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-first-100-orders-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-first-100-orders-s3.webp"
+    }
+  ],
+  "/assets/learn-first-100-orders-s4.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-first-100-orders-s4-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-first-100-orders-s4-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-first-100-orders-s4-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-first-100-orders-s4.webp"
+    }
+  ],
+  "/assets/learn-governorate-shipping-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-governorate-shipping-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-governorate-shipping-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-governorate-shipping-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-governorate-shipping-s1.webp"
+    }
+  ],
+  "/assets/learn-governorate-shipping-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-governorate-shipping-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-governorate-shipping-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-governorate-shipping-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-governorate-shipping-s2.webp"
+    }
+  ],
+  "/assets/learn-governorate-shipping-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-governorate-shipping-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-governorate-shipping-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-governorate-shipping-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-governorate-shipping-s3.webp"
+    }
+  ],
+  "/assets/learn-import-products-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-import-products-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-import-products-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-import-products-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-import-products-s1.webp"
+    }
+  ],
+  "/assets/learn-import-products-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-import-products-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-import-products-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-import-products-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-import-products-s2.webp"
+    }
+  ],
+  "/assets/learn-import-products-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-import-products-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-import-products-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-import-products-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-import-products-s3.webp"
+    }
+  ],
+  "/assets/learn-import-products-s4.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-import-products-s4-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-import-products-s4-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-import-products-s4-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-import-products-s4.webp"
+    }
+  ],
+  "/assets/learn-open-store-egypt-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-open-store-egypt-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-open-store-egypt-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-open-store-egypt-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-open-store-egypt-s1.webp"
+    }
+  ],
+  "/assets/learn-open-store-egypt-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-open-store-egypt-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-open-store-egypt-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-open-store-egypt-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-open-store-egypt-s2.webp"
+    }
+  ],
+  "/assets/learn-open-store-egypt-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-open-store-egypt-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-open-store-egypt-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-open-store-egypt-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-open-store-egypt-s3.webp"
+    }
+  ],
+  "/assets/learn-open-store-egypt-s4.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-open-store-egypt-s4-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-open-store-egypt-s4-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-open-store-egypt-s4-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-open-store-egypt-s4.webp"
+    }
+  ],
+  "/assets/learn-paymob-vs-fawry-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-paymob-vs-fawry-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-paymob-vs-fawry-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-paymob-vs-fawry-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-paymob-vs-fawry-s1.webp"
+    }
+  ],
+  "/assets/learn-paymob-vs-fawry-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-paymob-vs-fawry-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-paymob-vs-fawry-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-paymob-vs-fawry-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-paymob-vs-fawry-s2.webp"
+    }
+  ],
+  "/assets/learn-paymob-vs-fawry-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-paymob-vs-fawry-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-paymob-vs-fawry-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-paymob-vs-fawry-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-paymob-vs-fawry-s3.webp"
+    }
+  ],
+  "/assets/learn-ramadan-campaign-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-ramadan-campaign-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-ramadan-campaign-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-ramadan-campaign-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-ramadan-campaign-s1.webp"
+    }
+  ],
+  "/assets/learn-ramadan-campaign-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-ramadan-campaign-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-ramadan-campaign-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-ramadan-campaign-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-ramadan-campaign-s2.webp"
+    }
+  ],
+  "/assets/learn-ramadan-campaign-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-ramadan-campaign-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-ramadan-campaign-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-ramadan-campaign-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-ramadan-campaign-s3.webp"
+    }
+  ],
+  "/assets/learn-ramadan-campaign-s4.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-ramadan-campaign-s4-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-ramadan-campaign-s4-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-ramadan-campaign-s4-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-ramadan-campaign-s4.webp"
+    }
+  ],
+  "/assets/learn-reduce-cod-rto-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-reduce-cod-rto-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-reduce-cod-rto-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-reduce-cod-rto-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-reduce-cod-rto-s1.webp"
+    }
+  ],
+  "/assets/learn-reduce-cod-rto-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-reduce-cod-rto-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-reduce-cod-rto-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-reduce-cod-rto-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-reduce-cod-rto-s2.webp"
+    }
+  ],
+  "/assets/learn-reduce-cod-rto-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-reduce-cod-rto-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-reduce-cod-rto-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-reduce-cod-rto-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-reduce-cod-rto-s3.webp"
+    }
+  ],
+  "/assets/learn-reduce-cod-rto-s4.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-reduce-cod-rto-s4-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-reduce-cod-rto-s4-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-reduce-cod-rto-s4-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-reduce-cod-rto-s4.webp"
+    }
+  ],
+  "/assets/learn-whatsapp-instagram-selling-s1.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-whatsapp-instagram-selling-s1-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-whatsapp-instagram-selling-s1-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-whatsapp-instagram-selling-s1-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-whatsapp-instagram-selling-s1.webp"
+    }
+  ],
+  "/assets/learn-whatsapp-instagram-selling-s2.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-whatsapp-instagram-selling-s2-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-whatsapp-instagram-selling-s2-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-whatsapp-instagram-selling-s2-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-whatsapp-instagram-selling-s2.webp"
+    }
+  ],
+  "/assets/learn-whatsapp-instagram-selling-s3.webp": [
+    {
+      "w": 480,
+      "src": "/assets/learn-whatsapp-instagram-selling-s3-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/learn-whatsapp-instagram-selling-s3-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/learn-whatsapp-instagram-selling-s3-1200.webp"
+    },
+    {
+      "w": 1600,
+      "src": "/assets/learn-whatsapp-instagram-selling-s3.webp"
+    }
+  ],
+  "/assets/merchant-genova-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/merchant-genova-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/merchant-genova-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/merchant-genova-home.webp"
+    }
+  ],
+  "/assets/merchant-pixelprint-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/merchant-pixelprint-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/merchant-pixelprint-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/merchant-pixelprint-home.webp"
+    }
+  ],
+  "/assets/merchant-rabbit-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/merchant-rabbit-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/merchant-rabbit-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/merchant-rabbit-home.webp"
+    }
+  ],
+  "/assets/merchant-vionne-home.webp": [
+    {
+      "w": 480,
+      "src": "/assets/merchant-vionne-home-480.webp"
+    },
+    {
+      "w": 768,
+      "src": "/assets/merchant-vionne-home-768.webp"
+    },
+    {
+      "w": 1200,
+      "src": "/assets/merchant-vionne-home.webp"
     }
   ],
   "/assets/orders-workflow.webp": [

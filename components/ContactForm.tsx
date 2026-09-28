@@ -60,7 +60,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
   const timeSlots: { value: TimeSlot; label_en: string; label_ar: string }[] = [
     { value: 'today', label_en: 'Today', label_ar: 'النهاردة' },
     { value: 'tomorrow', label_en: 'Tomorrow', label_ar: 'بكرة' },
-    { value: 'this_week', label_en: 'This week', label_ar: 'هذا الأسبوع' },
+    { value: 'this_week', label_en: 'This week', label_ar: 'الأسبوع ده' },
     { value: 'anytime', label_en: 'Anytime', label_ar: 'في أي وقت' },
   ];
 

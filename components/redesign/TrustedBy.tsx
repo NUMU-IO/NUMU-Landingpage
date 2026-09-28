@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PARTNERS_WITH_MARKS } from './partners';
+import { PARTNERS, PARTNERS_WITH_MARKS } from './partners';
+import { toArabicDigits } from '../../lib/trialInfo';
 import PartnerLogo from './PartnerLogo';
 import { useBi } from './ui';
 import { Reveal } from './Reveal';
@@ -49,7 +50,8 @@ const TrustedBy: React.FC<{ className?: string }> = ({ className = '' }) => {
         </p>
 
         <ul className="flex flex-1 flex-wrap items-center justify-center gap-x-9 gap-y-6 sm:justify-start">
-          {PARTNERS_WITH_MARKS.map((p) => (
+          {/* The strip names the first ten; the full roster is one click away. */}
+          {PARTNERS_WITH_MARKS.slice(0, 10).map((p) => (
             <li key={p.name} className="flex items-center gap-2.5">
               <PartnerLogo partner={p} size={24} />
               <span className="text-sm font-semibold text-ink-soft/80">
@@ -66,7 +68,10 @@ const TrustedBy: React.FC<{ className?: string }> = ({ className = '' }) => {
             focus-visible:ring-saffron focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         >
           <span className="underline decoration-navy/30 underline-offset-4 group-hover:decoration-navy">
-            {b({ ar: 'كل التكاملات', en: 'All integrations' })}
+            {b({
+              ar: `كل التكاملات (${toArabicDigits(String(PARTNERS.length))})`,
+              en: `All integrations (${PARTNERS.length})`,
+            })}
           </span>
           <span aria-hidden="true" className="rtl:rotate-180">→</span>
         </Link>

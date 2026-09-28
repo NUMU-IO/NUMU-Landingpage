@@ -13,31 +13,28 @@
     "convert:logos": "node scripts/convert-logos.mjs",
     "gen:brand-icons": "node scripts/gen-brand-icons.mjs",
     "gen:image-variants": "node scripts/gen-image-variants.mjs",
-    "gen:font-css": "node scripts/fetch-font-css.mjs"
+    "gen:font-css": "node scripts/fetch-font-css.mjs",
+    "gen:og": "node scripts/gen-og.mjs"
   },
   "dependencies": {
     "@heronsignal/web": "^0.1.0",
     "@react-oauth/google": "^0.13.4",
     "@sentry/react": "^10.41.0",
     "@vercel/analytics": "^2.0.1",
-    "d3-geo": "^3.1.1",
     "lucide-react": "^1.34.0",
     "posthog-js": "^1.425.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.0",
-    "serve": "^14.2.4",
-    "three": "^0.185.1"
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "@sparticuz/chromium": "^131.0.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.11",
-    "@types/d3-geo": "^3.1.1",
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "@types/three": "^0.185.4",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.27",
     "lightningcss": "^1.32.0",

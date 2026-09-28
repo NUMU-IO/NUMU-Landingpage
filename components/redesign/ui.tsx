@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useSignupModal } from '../../contexts/SignupModalContext';
-import { useDemoModal } from '../../contexts/DemoModalContext';
 import { CTA, Bi, Lang, pick } from './copy';
 import { Reveal } from './Reveal';
 import { ASSETS, AssetKey, IS_DEV } from './assets';
@@ -81,19 +80,24 @@ export const PrimaryCta: React.FC<{
   );
 };
 
-/** Secondary conversion — always `شاهد الديمو`, always the demo flow. */
+/**
+ * Secondary conversion — always `استكشف لوحة التحكم`, always the product tour.
+ *
+ * Until 2026-09-25 this opened the 7-day demo-tenant modal. That door is
+ * closed: every "start" on the site now creates the real account with its
+ * trial, and the visitor who wants to look first gets `/product-tour`, which
+ * needs no account. The props are unchanged so no caller had to move.
+ */
 export const SecondaryCta: React.FC<{
   size?: CtaSize;
   onDark?: boolean;
   className?: string;
 }> = ({ size = 'lg', onDark = false, className = '' }) => {
   const { b } = useBi();
-  const { open } = useDemoModal();
 
   return (
-    <button
-      type="button"
-      onClick={open}
+    <Link
+      to="/product-tour"
       className={`inline-flex items-center gap-2 rounded-[4px] font-semibold border
         transition-all duration-200 ease-numu active:scale-[0.985] whitespace-nowrap
         ${onDark
@@ -101,8 +105,8 @@ export const SecondaryCta: React.FC<{
           : `border-navy/25 text-navy hover:bg-navy/[0.05] hover:border-navy/40 ${focusRing}`}
         ${sizeCls[size]} ${className}`}
     >
-      {b(CTA.secondary)}
-    </button>
+      {b(CTA.productTour)}
+    </Link>
   );
 };
 

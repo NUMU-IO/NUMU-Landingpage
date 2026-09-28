@@ -5,7 +5,7 @@ import CookieConsent from '../components/CookieConsent';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../lib/trialInfo';
-import PricingSection from '../components/PricingSection';
+import PricingPlans from '../components/redesign/PricingPlans';
 import FAQ from '../components/FAQ';
 import { PageClose } from '../components/redesign/PageShell';
 import { PrimaryCta, SecondaryCta } from '../components/redesign/ui';
@@ -14,10 +14,10 @@ import { PrimaryCta, SecondaryCta } from '../components/redesign/ui';
  * /pricing — "Plans, fees, limits, and terms."
  *
  * This is where the detail the homepage deliberately leaves out belongs:
- * every plan (not just the three homepage roles), annual billing, the launch
- * promo and the full FAQ. `PricingSection` is reused unchanged so the numbers
- * here and the numbers on the homepage come from the same admin-controlled
- * endpoint and cannot drift.
+ * every plan, yearly billing, the launch promo and the full FAQ.
+ * `PricingPlans` (2026-09-28) is the selling page the «الأسعار» link lands
+ * on; it reads the same admin-controlled endpoint as the homepage through
+ * `usePricing`, so the numbers cannot drift.
  *
  * Two changes from the previous version of this page:
  *
@@ -48,16 +48,14 @@ const Pricing: React.FC = () => {
       <Navbar />
 
       <main id="main" className="relative z-10">
-        <section className="bg-cream numu-dot-surface pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16">
-          <PricingSection />
-        </section>
+        <PricingPlans />
 
         <section className="py-14 sm:py-20 bg-paper border-t border-ink/10">
           <FAQ />
         </section>
 
         <PageClose
-          heading={{ ar: 'جاهز تفتح متجرك؟', en: 'Ready to open your store?' }}
+          heading={{ ar: 'يلا نبدأ؟ متجرك مستنيك.', en: 'Shall we? Your store is waiting.' }}
           support={{
             ar: 'ابدأ من غير بطاقة ائتمان، وغيّر باقتك في أي وقت.',
             en: 'Start with no credit card and change your plan whenever you like.',

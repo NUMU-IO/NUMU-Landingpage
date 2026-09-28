@@ -82,7 +82,7 @@ const NewsletterForm: React.FC<{ className?: string }> = ({ className = '' }) =>
     <form onSubmit={submit} className={`w-full ${className}`} noValidate>
       <label
         htmlFor={inputId}
-        className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft/60"
+        className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft/80"
       >
         <Mail aria-hidden="true" size={14} strokeWidth={2} className="shrink-0" />
         {b({ ar: 'أخبار نُمُو', en: 'numu updates' })}

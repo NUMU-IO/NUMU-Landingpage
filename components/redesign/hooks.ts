@@ -18,7 +18,7 @@ import { useEffect, useState, useRef, RefObject } from 'react';
  * visitor started downloading `hero-video-mobile.mp4`, then had the element
  * remounted under them and downloaded `hero-video.mp4` from scratch — two
  * fetches, and a visibly late start. It also caused a frame of the wrong
- * layout in the gallery and the globe.
+ * layout in the gallery.
  *
  * `false` is still the answer when there is no DOM, so prerender is safe.
  */
@@ -46,7 +46,7 @@ export function useMediaQuery(query: string): boolean {
 /**
  * `true` when the visitor has asked for reduced motion.
  *
- * Every animated surface on the page (hero video, Globe, Dither Reveal,
+ * Every animated surface on the page (hero video, Dither Reveal,
  * Interactive Grid) must fall back to a static state when this is true —
  * see `animations/originkit-placement.md` § "Global requirements".
  */

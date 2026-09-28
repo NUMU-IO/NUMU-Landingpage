@@ -5,6 +5,7 @@ import { AssetKey } from './assets';
 import { Section, SectionHead, AssetSlot, useBi } from './ui';
 import { Reveal } from './Reveal';
 import TrustedBy from './TrustedBy';
+import MerchantMarquee from './MerchantMarquee';
 
 /**
  * 02 — Merchant proof. `sections/02-merchant-proof.md`.
@@ -29,6 +30,13 @@ import TrustedBy from './TrustedBy';
  * The two supporting cards are product surfaces rather than second and third
  * merchants, for the same reason: one consented story beats three invented
  * ones.
+ *
+ * ─── The roster (added 2026-09-25, owner request) ─────────────────────────
+ * Above the story, `MerchantMarquee` shows every merchant the owner named —
+ * logo, category and a live link in one row, their home pages in a second
+ * row moving the other way. The roster is proof that the stores exist; the
+ * lead card below stays the one story told in full. Roster data and the
+ * pre-deploy consent note live in `merchants.ts`.
  */
 
 interface Story {
@@ -100,6 +108,8 @@ const MerchantProof: React.FC = () => {
         heading={merchantProof.heading}
         support={merchantProof.support}
       />
+
+      <MerchantMarquee className="mt-10" />
 
       <div className="mt-12 grid lg:grid-cols-[1.55fr_1fr] gap-5">
         <Reveal>

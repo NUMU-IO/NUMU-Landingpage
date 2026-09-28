@@ -23,7 +23,7 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
  *     than merely injected at runtime.
  *
  * Every consumer of `<GoogleLogin>` is behind a gate that renders nothing until
- * a person opens it — the sign-up modal, the demo modal and the `/login` route
+ * a person opens it — the sign-up modal and the `/login` route
  * all return `null` while closed. So the provider belongs *inside* them: a
  * visitor who never opens sign-in never loads Google, and one who does gets the
  * script at exactly the moment it becomes useful.

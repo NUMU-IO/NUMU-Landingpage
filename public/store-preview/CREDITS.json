@@ -1,0 +1,247 @@
+{
+  "fashion-banner.webp": {
+    "unsplash_id": "OYYE4g-I5ZQ",
+    "photographer": "Burgess Milner",
+    "url": "https://unsplash.com/photos/assorted-color-clothes-OYYE4g-I5ZQ",
+    "query": "clothing rack boutique",
+    "alt": "assorted-color clothes"
+  },
+  "fashion-p1.webp": {
+    "unsplash_id": "Mqxav2v_rJQ",
+    "photographer": "Aiony Haust",
+    "url": "https://unsplash.com/photos/woman-holding-camera-Mqxav2v_rJQ",
+    "query": "floral dress",
+    "alt": "woman holding camera"
+  },
+  "fashion-p2.webp": {
+    "unsplash_id": "xZSEvSlHRv8",
+    "photographer": "Khaled Ghareeb",
+    "url": "https://unsplash.com/photos/woman-in-white-hijab-and-white-long-sleeve-shirt-xZSEvSlHRv8",
+    "query": "hijab",
+    "alt": "woman in white hijab and white long sleeve shirt"
+  },
+  "fashion-p3.webp": {
+    "unsplash_id": "WWesmHEgXDs",
+    "photographer": "Anomaly",
+    "url": "https://unsplash.com/photos/man-wearing-white-crew-neck-t-shirts-WWesmHEgXDs",
+    "query": "white t-shirt",
+    "alt": "man wearing white crew-neck t-shirts"
+  },
+  "fashion-p4.webp": {
+    "unsplash_id": "E-0ON3VGrBc",
+    "photographer": "Mohammad Metri",
+    "url": "https://unsplash.com/photos/pair-of-blue-and-pink-floral-almond-toe-pumps-E-0ON3VGrBc",
+    "query": "high heels",
+    "alt": "pair of blue-and-pink floral almond-toe pumps"
+  },
+  "accessories-banner.webp": {
+    "unsplash_id": "VsnjiMUt7Cg",
+    "photographer": "kevs",
+    "url": "https://unsplash.com/photos/brown-leather-pouch-beside-black-sunglasses-VsnjiMUt7Cg",
+    "query": "handbag flat lay",
+    "alt": "brown leather pouch beside black sunglasses"
+  },
+  "accessories-p1.webp": {
+    "unsplash_id": "hWs4qKwJkD4",
+    "photographer": "Maryam Nemati",
+    "url": "https://unsplash.com/photos/black-sling-bag-on-white-surface-hWs4qKwJkD4",
+    "query": "crossbody bag",
+    "alt": "black sling bag on white surface"
+  },
+  "accessories-p2.webp": {
+    "unsplash_id": "FlP6C5pkMKs",
+    "photographer": "Annie Williams",
+    "url": "https://unsplash.com/photos/gray-sunglasses-with-white-frames-FlP6C5pkMKs",
+    "query": "sunglasses product",
+    "alt": "gray sunglasses with white frames"
+  },
+  "accessories-p3.webp": {
+    "unsplash_id": "vAYIS8-XBR8",
+    "photographer": "David Sykes",
+    "url": "https://unsplash.com/photos/a-diamond-engagement-ring-on-a-teal-background-vAYIS8-XBR8",
+    "query": "silver ring",
+    "alt": "A diamond engagement ring on a teal background"
+  },
+  "accessories-p4.webp": {
+    "unsplash_id": "u2glzQETDBw",
+    "photographer": "Fashion Needles",
+    "url": "https://unsplash.com/photos/a-luxurious-diamond-encrusted-watch-is-displayed-u2glzQETDBw",
+    "query": "wristwatch",
+    "alt": "A luxurious diamond-encrusted watch is displayed"
+  },
+  "beauty-banner.webp": {
+    "unsplash_id": "g6q3lFAe3kA",
+    "photographer": "ibnu ihza",
+    "url": "https://unsplash.com/photos/skincare-products-with-leaves-on-a-light-background-g6q3lFAe3kA",
+    "query": "skincare products",
+    "alt": "Skincare products with leaves on a light background"
+  },
+  "beauty-p1.webp": {
+    "unsplash_id": "phYKolpoQ9A",
+    "photographer": "Jacinta Christos",
+    "url": "https://unsplash.com/photos/pink-lipstick-on-white-surface-phYKolpoQ9A",
+    "query": "lipstick",
+    "alt": "pink lipstick on white surface"
+  },
+  "beauty-p2.webp": {
+    "unsplash_id": "XCoZgF_wT7A",
+    "photographer": "Sophie",
+    "url": "https://unsplash.com/photos/person-holding-white-and-purple-plastic-bottle-XCoZgF_wT7A",
+    "query": "body lotion",
+    "alt": "person holding white and purple plastic bottle"
+  },
+  "beauty-p3.webp": {
+    "unsplash_id": "f8hdkJz-m5w",
+    "photographer": "Sincerely Media",
+    "url": "https://unsplash.com/photos/white-cheese-on-white-textile-f8hdkJz-m5w",
+    "query": "handmade soap bar",
+    "alt": "white cheese on white textile"
+  },
+  "beauty-p4.webp": {
+    "unsplash_id": "MDMrNFnyFQk",
+    "photographer": "Muhammad Sulyman",
+    "url": "https://unsplash.com/photos/a-clear-glass-bottle-with-a-silver-top-MDMrNFnyFQk",
+    "query": "perfume bottle",
+    "alt": "A clear glass bottle with a silver top"
+  },
+  "electronics-banner.webp": {
+    "unsplash_id": "3jjgUHIibPs",
+    "photographer": "Workperch",
+    "url": "https://unsplash.com/photos/silver-imac-on-brown-wooden-desk-3jjgUHIibPs",
+    "query": "gadgets on desk",
+    "alt": "silver imac on brown wooden desk"
+  },
+  "electronics-p1.webp": {
+    "unsplash_id": "FQXbLmlmvWY",
+    "photographer": "Grysell Alvarez",
+    "url": "https://unsplash.com/photos/four-assorted-color-iphone-x-cases-FQXbLmlmvWY",
+    "query": "phone case",
+    "alt": "four assorted-color iPhone X cases"
+  },
+  "electronics-p2.webp": {
+    "unsplash_id": "r2uugFQvAZ0",
+    "photographer": "Stefan Riedl",
+    "url": "https://unsplash.com/photos/a-pair-of-headphones-on-a-white-surface-r2uugFQvAZ0",
+    "query": "headphones",
+    "alt": "a pair of headphones on a white surface"
+  },
+  "electronics-p3.webp": {
+    "unsplash_id": "5ByGxKD5Q8I",
+    "photographer": "Riekus",
+    "url": "https://unsplash.com/photos/black-laptop-computer-on-table-5ByGxKD5Q8I",
+    "query": "laptop stand",
+    "alt": "black laptop computer on table"
+  },
+  "electronics-p4.webp": {
+    "unsplash_id": "CY4mVpRvPxc",
+    "photographer": "gomi",
+    "url": "https://unsplash.com/photos/a-silver-electronic-device-sitting-on-top-of-a-white-table-CY4mVpRvPxc",
+    "query": "power bank",
+    "alt": "a silver electronic device sitting on top of a white table"
+  },
+  "food-banner.webp": {
+    "unsplash_id": "-JU0sqGjeC0",
+    "photographer": "Honey Fangs",
+    "url": "https://unsplash.com/photos/bunch-of-cinnamon-swirl-bread--JU0sqGjeC0",
+    "query": "bakery desserts",
+    "alt": "bunch of cinnamon swirl bread"
+  },
+  "food-p1.webp": {
+    "unsplash_id": "k6G3OFv4KIo",
+    "photographer": "Lara M",
+    "url": "https://unsplash.com/photos/a-chocolate-cake-topped-with-berries-and-powdered-sugar-k6G3OFv4KIo",
+    "query": "chocolate cake",
+    "alt": "a chocolate cake topped with berries and powdered sugar"
+  },
+  "food-p2.webp": {
+    "unsplash_id": "lUOMPM1w-pI",
+    "photographer": "Nick Harsell",
+    "url": "https://unsplash.com/photos/a-pile-of-coffee-beans-on-a-white-background-lUOMPM1w-pI",
+    "query": "coffee beans bag",
+    "alt": "a pile of coffee beans on a white background"
+  },
+  "food-p3.webp": {
+    "unsplash_id": "DoK5qEy2L60",
+    "photographer": "American Heritage Chocolate",
+    "url": "https://unsplash.com/photos/brown-cookies-on-blue-and-white-ceramic-plate-DoK5qEy2L60",
+    "query": "cookies",
+    "alt": "brown cookies on blue and white ceramic plate"
+  },
+  "food-p4.webp": {
+    "unsplash_id": "g0TrNRdwJQw",
+    "photographer": "Art Rachen",
+    "url": "https://unsplash.com/photos/clear-glass-jar-with-yellow-liquid-g0TrNRdwJQw",
+    "query": "honey jar",
+    "alt": "clear glass jar with yellow liquid"
+  },
+  "home-banner.webp": {
+    "unsplash_id": "Kh4tedFdHz4",
+    "photographer": "Spacejoy",
+    "url": "https://unsplash.com/photos/white-and-gray-sofa-chair-near-window-Kh4tedFdHz4",
+    "query": "cozy living room",
+    "alt": "white and gray sofa chair near window"
+  },
+  "home-p1.webp": {
+    "unsplash_id": "AgU9-qsNc1Y",
+    "photographer": "i m__Prakhar Kont",
+    "url": "https://unsplash.com/photos/a-white-table-lamp-sitting-on-top-of-a-wooden-table-AgU9-qsNc1Y",
+    "query": "table lamp",
+    "alt": "a white table lamp sitting on top of a wooden table"
+  },
+  "home-p2.webp": {
+    "unsplash_id": "iylxQ1e6sOA",
+    "photographer": "charlesdeluvio",
+    "url": "https://unsplash.com/photos/green-potted-cactus-iylxQ1e6sOA",
+    "query": "cactus pot",
+    "alt": "green potted cactus"
+  },
+  "home-p3.webp": {
+    "unsplash_id": "UfbHJLQbh7I",
+    "photographer": "New Flame",
+    "url": "https://unsplash.com/photos/a-white-cup-with-a-black-stripe-on-it-UfbHJLQbh7I",
+    "query": "scented candle",
+    "alt": "a white cup with a black stripe on it"
+  },
+  "home-p4.webp": {
+    "unsplash_id": "uvzjKrFX5ao",
+    "photographer": "Zulian Firmansyah",
+    "url": "https://unsplash.com/photos/a-cozy-bedroom-with-peach-colored-bedding-uvzjKrFX5ao",
+    "query": "bed linen",
+    "alt": "A cozy bedroom with peach-colored bedding"
+  },
+  "other-banner.webp": {
+    "unsplash_id": "f94JPVrDbnY",
+    "photographer": "Jess Bailey",
+    "url": "https://unsplash.com/photos/brown-gift-box-with-pink-ribbon-f94JPVrDbnY",
+    "query": "wrapped gifts",
+    "alt": "brown gift box with pink ribbon"
+  },
+  "other-p1.webp": {
+    "unsplash_id": "IOzk8YKDhYg",
+    "photographer": "Hope House Press - Leather Diary Studio",
+    "url": "https://unsplash.com/photos/filed-four-books-IOzk8YKDhYg",
+    "query": "stack of books",
+    "alt": "filed four books"
+  },
+  "other-p2.webp": {
+    "unsplash_id": "nRGiAlIjfgA",
+    "photographer": "Davide Carpani",
+    "url": "https://unsplash.com/photos/brown-bear-plush-toy-on-pink-chair-nRGiAlIjfgA",
+    "query": "teddy bear",
+    "alt": "brown bear plush toy on pink chair"
+  },
+  "other-p3.webp": {
+    "unsplash_id": "1azY1AWjDMQ",
+    "photographer": "Copper and Wild",
+    "url": "https://unsplash.com/photos/color-palette-1azY1AWjDMQ",
+    "query": "watercolor paint set",
+    "alt": "color palette"
+  },
+  "other-p4.webp": {
+    "unsplash_id": "LumWaD-gTLQ",
+    "photographer": "Baibhav Kumar",
+    "url": "https://unsplash.com/photos/mint-green-gift-box-with-roses-LumWaD-gTLQ",
+    "query": "gift box",
+    "alt": "A mint green gift box tied with twine beside a vase of roses"
+  }
+}

@@ -7,7 +7,7 @@
  *    (SEO descriptions, prerendered marketing strings). Update it here
  *    when the offer changes; one edit fixes every static mention.
  * 2. `useTrialMeta()` — runtime hook for INTERACTIVE surfaces (pricing
- *    cards, FAQ, demo modal). Reads the admin-controlled value from
+ *    cards, FAQ, sign-up modal). Reads the admin-controlled value from
  *    `GET /public/pricing-plans` (`data.trial`), cached in
  *    sessionStorage for 5 minutes, falling back to the constant.
  *

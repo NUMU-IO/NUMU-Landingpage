@@ -4,8 +4,8 @@ import { useInView, usePrefersReducedMotion } from './hooks';
 /**
  * Scroll reveal.
  *
- * The identity lock caps homepage motion at four large systems (hero video,
- * Dither Reveal, Globe, Interactive Grid) — this is deliberately not a fifth.
+ * The identity lock caps homepage motion at three large systems (hero video,
+ * Dither Reveal, Interactive Grid) — this is deliberately not a fourth.
  * It is entrance polish: content settles into place as it enters the viewport
  * and then stays put. Nothing moves on a loop, nothing is discoverable only
  * by scrolling, and no information lives inside the animation.

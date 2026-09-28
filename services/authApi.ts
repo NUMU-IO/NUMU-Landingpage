@@ -36,7 +36,7 @@ export interface AuthResponse {
   // The backend also returns the freshly-minted session tokens in the body
   // (in addition to setting httpOnly cookies). The landing uses these to
   // hand the new account off to the merchant hub via /token-handoff —
-  // the same cross-origin handoff the demo flow uses — instead of calling
+  // the cross-origin /token-handoff bridge — instead of calling
   // authenticated endpoints from the landing origin.
   tokens?: AuthTokens;
 }

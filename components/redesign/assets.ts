@@ -24,7 +24,20 @@ export interface AssetEntry {
 }
 
 export const ASSETS = {
-  /* ── Hero — derived from the supplied master `hero-video.mp4` ── */
+  /* ── Hero film — the owner's 48 s motion video (2026-09-27). Masters in
+     `docs/Plans/landing page updates/motion video i want to use it/`
+     (1080p60); these are 720p30 web cuts: VP9 + Opus WebM, H.264 + AAC MP4
+     for Safari. Posters are the 5.5 s frame (mark + «افتح متجرك»). ── */
+  heroFilm: { src: '/assets/hero-film.webm', delivered: true, owner: 'User/marketing' },
+  heroFilmMp4: { src: '/assets/hero-film.mp4', delivered: true, owner: 'User/marketing' },
+  heroFilmMobile: { src: '/assets/hero-film-mobile.webm', delivered: true, owner: 'User/marketing' },
+  heroFilmMobileMp4: { src: '/assets/hero-film-mobile.mp4', delivered: true, owner: 'User/marketing' },
+  heroFilmPoster: { src: '/assets/hero-film-poster.webp', delivered: true, owner: 'Developer' },
+  heroFilmPosterMobile: { src: '/assets/hero-film-poster-mobile.webp', delivered: true, owner: 'Developer' },
+
+  /* ── Previous hero footage — derived from the supplied master
+     `hero-video.mp4`. Not rendered since 2026-09-27 (the film above replaced
+     it); the files are kept so the owner can switch back. ── */
   heroVideo: { src: '/assets/hero-video.mp4', delivered: true, owner: 'User/marketing' },
   heroVideoWebm: { src: '/assets/hero-video.webm', delivered: true, owner: 'Developer' },
   heroVideoMobile: { src: '/assets/hero-video-mobile.mp4', delivered: true, owner: 'Developer' },
@@ -83,6 +96,51 @@ export const ASSETS = {
   exploreTools: { src: '/assets/explore-tools.webp', delivered: true, owner: 'Developer' },
   exploreLearn: { src: '/assets/explore-learn.webp', delivered: true, owner: 'Developer' },
   exploreDevelopers: { src: '/assets/explore-developers.webp', delivered: true, owner: 'Developer' },
+
+  /* ── Hub captures, 2026-09-25 — local sandbox stack (API :8001, hub :8080),
+     the test store, synthetic data. The store name, customer names, emails,
+     phone numbers and the one product name were substituted in the DOM
+     before each shot (`scripts/redact-and-capture.mjs`; the leak re-scan
+     came back empty), so no real merchant or shopper appears. Arabic UI,
+     1600×1000 at DPR 2, cropped to 16:10. Consumed by the sections that
+     follow (order pipeline, /features proof, onboarding chat); a key nothing
+     imports costs nothing at runtime. */
+  hubHome: { src: '/assets/hub-home.webp', delivered: true, owner: 'Product' },
+  hubOrders: { src: '/assets/hub-orders.webp', delivered: true, owner: 'Product' },
+  hubOrderDetail: { src: '/assets/hub-order-detail.webp', delivered: true, owner: 'Product' },
+  hubPaymentSetup: { src: '/assets/hub-payment-setup.webp', delivered: true, owner: 'Product' },
+  hubLogistics: { src: '/assets/hub-logistics.webp', delivered: true, owner: 'Product' },
+  hubSettingsMcp: { src: '/assets/hub-settings-mcp.webp', delivered: true, owner: 'Product' },
+  hubThemesMarketplace: { src: '/assets/hub-themes-marketplace.webp', delivered: true, owner: 'Product' },
+
+  /* ── Onboarding chat — the hub's setup wizard with the chat's answers
+     already selected, captured from the local stack (synthetic account, no
+     real merchant). Shown beside the chat on desktop. */
+  hubWizardPrefilled: { src: '/assets/hub-wizard-prefilled.webp', delivered: true, owner: 'Product' },
+
+  /* ── Merchant storefronts — the four live stores' home pages, for the
+     second row of the merchants marquee (`merchants.ts`). Public pages,
+     captured 2026-09-26 at 1280×800 with every tracker blocked; not
+     redacted, because each is the merchant's own public shopfront — which
+     is the point of showing it. Ships only after each merchant is asked. */
+  merchantVionneHome: { src: '/assets/merchant-vionne-home.webp', delivered: true, owner: 'Marketing' },
+  merchantGenovaHome: { src: '/assets/merchant-genova-home.webp', delivered: true, owner: 'Marketing' },
+  merchantPixelprintHome: { src: '/assets/merchant-pixelprint-home.webp', delivered: true, owner: 'Marketing' },
+  merchantRabbitHome: { src: '/assets/merchant-rabbit-home.webp', delivered: true, owner: 'Marketing' },
+
+  /* ── Illustrations — supplied by the owner on 2026-09-25
+     (`docs/Plans/landing page updates/imgs/`: six PNGs in the brand palette,
+     drawn characters, no real person or merchant). They set the mood where a
+     section or page had no visual; the hub captures stay the proof of the
+     product and none of them was removed or replaced by these. WebP masters
+     at ≤ 2000 px, q80, each under 170 KB. Placement and alt-text rules:
+     `docs/Plans/landing page updates/10-owner-illustrations.md`. */
+  illoOpenStore: { src: '/assets/illo-open-store.webp', delivered: true, owner: 'User/marketing' },
+  illoMerchantStore: { src: '/assets/illo-merchant-store.webp', delivered: true, owner: 'User/marketing' },
+  illoCodDecision: { src: '/assets/illo-cod-decision.webp', delivered: true, owner: 'User/marketing' },
+  illoConnectedTools: { src: '/assets/illo-connected-tools.webp', delivered: true, owner: 'User/marketing' },
+  illoInboxOnTheGo: { src: '/assets/illo-inbox-on-the-go.webp', delivered: true, owner: 'User/marketing' },
+  illoPackingOrders: { src: '/assets/illo-packing-orders.webp', delivered: true, owner: 'User/marketing' },
 } satisfies Record<string, AssetEntry>;
 
 export type AssetKey = keyof typeof ASSETS;

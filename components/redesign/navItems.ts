@@ -3,7 +3,7 @@ import { Bi } from './copy';
 /**
  * Header navigation.
  *
- * `page-architecture.md` fixes the header set: كيف تعمل · المميزات ·
+ * `page-architecture.md` fixes the header set: إزاي بيشتغل · المميزات ·
  * التكاملات · الأسعار · تواصل معنا. Items with `groups` open the full-width
  * mega panel, which is how the other secondary pages become reachable without
  * "exposing a long list of internal anchors" in the bar itself.
@@ -43,7 +43,7 @@ export const NAV_ITEMS: NavItem[] = [
   {
     key: 'how',
     to: '/product-tour',
-    label: { ar: 'كيف تعمل', en: 'How it works' },
+    label: { ar: 'إزاي بيشتغل', en: 'How it works' },
   },
   {
     key: 'features',
@@ -123,6 +123,11 @@ export const NAV_ITEMS: NavItem[] = [
             to: '/learn',
             label: { ar: 'أدلة', en: 'Guides' },
             desc: { ar: 'شروحات عملية للسوق المصري', en: 'Practical guides for Egypt' },
+          },
+          {
+            to: '/blog',
+            label: { ar: 'المدوّنة', en: 'Blog' },
+            desc: { ar: 'جديد نُمُو وكلام تجارة', en: 'numu news and commerce notes' },
           },
           {
             to: '/resources',

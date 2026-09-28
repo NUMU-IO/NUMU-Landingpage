@@ -380,7 +380,7 @@ const Tool: React.FC = () => {
           <div className="mt-5 flex items-center justify-between gap-3">
             <p className="font-mono text-[11px] text-ink-soft/60">
               {isAr
-                ? `${names.length} اسم — بتتغيّر كل ما تضغط شافل`
+                ? `${names.length} اسم — بتتغيّر كل ما تضغط شفّل`
                 : `${names.length} names — reshuffle for new ideas`}
             </p>
             <button
@@ -442,7 +442,7 @@ const Tool: React.FC = () => {
               : `${DEFAULT_TRIAL_DAYS}-day free trial. No card. Fully Arabic.`}
           </p>
           <Link
-            to="/?demo=1"
+            to="?signup=1"
             className="group inline-flex items-center justify-center gap-2 bg-cream text-navy font-semibold py-3 px-6 rounded-[4px] hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu"
           >
             <span>{isAr ? "ابدأ متجرك" : "Start your store"}</span>

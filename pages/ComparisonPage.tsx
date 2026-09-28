@@ -23,7 +23,7 @@ const rows: { criterion: Bi; numu: Bi }[] = [
   { criterion: { ar: 'السعر', en: 'Price' }, numu: { ar: 'ستارتر من 250 جنيه مصري شهريًا', en: 'Starter from 250 EGP/month' } },
   { criterion: { ar: 'حد الأوردرات', en: 'Order limit' }, numu: { ar: 'بلا حدود على الباقات التجارية', en: 'Unlimited on commercial plans' } },
   { criterion: { ar: 'التجربة', en: 'Trial' }, numu: { ar: '37 يوم من غير بطاقة', en: '37 days without a credit card' } },
-  { criterion: { ar: 'تكاملات مصر', en: 'Egypt integrations' }, numu: { ar: 'Paymob وفوري وKashier وإنستاباي وبوسطة وETA', en: 'Paymob, Fawry, Kashier, InstaPay, Bosta and ETA' } },
+  { criterion: { ar: 'تكاملات مصر', en: 'Egypt integrations' }, numu: { ar: 'Paymob وفوري وKashier وفواتيرك وإنستاباي والمحافظ، وبوسطة ومايلرز وJ&T، وETA', en: 'Paymob, Fawry, Kashier, Fawaterak, InstaPay and wallets; Bosta, Mylerz and J&T; ETA' } },
 ];
 
 const ComparisonPage: React.FC = () => {
@@ -53,7 +53,7 @@ const ComparisonPage: React.FC = () => {
           ))}
         </div>
         <div className="mx-auto mt-8 max-w-4xl prose-body text-ink-soft/80">
-          <p>{isAr ? 'إزاي عملنا المقارنة: حقائق نُمُو مأخوذة من كتالوج المنتج الفعلي. لم نفترض سعر أو ميزة عند المنافس؛ راجع موقعه الرسمي لأن الباقات والتكاملات تتغير.' : 'Method: NUMU facts come from the active product catalog. We do not assume a competitor price or feature; verify its official site because plans and integrations change.'}</p>
+          <p>{isAr ? 'إزاي عملنا المقارنة: حقائق نُمُو مأخوذة من كتالوج المنتج الفعلي. مفترضناش سعر أو ميزة عند المنافس؛ راجع موقعه الرسمي لأن الباقات والتكاملات تتغير.' : 'Method: NUMU facts come from the active product catalog. We do not assume a competitor price or feature; verify its official site because plans and integrations change.'}</p>
           <a href={alternative.official} rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-navy underline underline-offset-4">
             {isAr ? `الموقع الرسمي لـ${alternative.name}` : `${alternative.name} official website`}
           </a>

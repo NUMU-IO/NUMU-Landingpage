@@ -74,7 +74,7 @@ const TrustNetworkPage: React.FC = () => {
             <BodyHead
               heading={{ ar: 'إيه اللي بتشوفه بالظبط.', en: 'What you actually see.' }}
               support={{
-                ar: 'على أوردر الدفع عند الاستلام، بتلاقي إشارة بتلخّص إذا كان الأوردر ده محتاج نظرة تانية قبل الشحن ولا لأ.',
+                ar: 'على أوردر الدفع عند الاستلام، بتلاقي إشارة بتقولك لو الأوردر ده محتاج نظرة تانية قبل الشحن ولا لأ.',
                 en: 'On a cash-on-delivery order you find a signal summarising whether this order deserves a second look before you ship it.',
               }}
             />
@@ -95,6 +95,20 @@ const TrustNetworkPage: React.FC = () => {
                 </li>
               ))}
             </ol>
+
+            {/* Owner-supplied illustration (2026-09-25): the signal, the three
+                choices, the courier waiting. Mood beside the real screen. */}
+            <div className="mt-9 max-w-sm overflow-hidden rounded-[10px] border border-ink/10 bg-cream">
+              <AssetSlot
+                asset="illoCodDecision"
+                ratio={4 / 5}
+                sizes="(min-width: 1024px) 384px, 100vw"
+                alt={{
+                  ar: 'رسمة توضيحية: تاجرة ماسكة تابلت وقدامها أوردر عليه إشارة أمان وتلات اختيارات: شحن، عربون، أو رفض — والمندوب واقف بالطرد.',
+                  en: 'Illustration: a merchant holding a tablet with an order, a safety signal and three choices — ship, deposit or decline — while the courier waits with the parcel.',
+                }}
+              />
+            </div>
           </div>
 
           <div className="bg-navy-900 numu-navy-surface rounded-[4px] p-5 sm:p-7">

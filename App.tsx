@@ -4,7 +4,6 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { LandingConfigProvider } from './contexts/LandingConfigContext';
 import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
-import { DemoModalProvider } from './contexts/DemoModalContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from '@vercel/analytics/react';
@@ -13,7 +12,6 @@ import SignupModal from './components/SignupModal';
 import SignupRedirect from './components/SignupRedirect';
 import SignupUrlTrigger from './components/SignupUrlTrigger';
 import ContactModal from './components/ContactModal';
-import GlobalDemoModal from './components/GlobalDemoModal';
 import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
 import ScrollToTop from './components/ScrollToTop';
 import { captureAttribution } from './lib/attribution';
@@ -22,7 +20,7 @@ import { captureAttribution } from './lib/attribution';
    Google Identity Services used to be mounted here, at the app root, which
    fetched 99 KiB of third-party script and set nine Google cookies on every
    page view — including for visitors who never went near sign-in. It now
-   mounts inside the three surfaces that render a Google button. */
+   mounts inside the two surfaces that render a Google button. */
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
@@ -60,6 +58,8 @@ const About = lazy(() => import('./pages/About'));
 const Resources = lazy(() => import('./pages/Resources'));
 const Facts = lazy(() => import('./pages/Facts'));
 const LearnArticle = lazy(() => import('./pages/LearnArticle'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 const IntegrationDetail = lazy(() => import('./pages/IntegrationDetail'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 
@@ -89,6 +89,8 @@ const routeComponents = [
   ['tools/cod', ToolCod],
   ['learn', Learn],
   ['learn/:slug', LearnArticle],
+  ['blog', Blog],
+  ['blog/:slug', BlogPost],
   ['features', Features],
   ['integrations', IntegrationsPage],
   ['integrations/:slug', IntegrationDetail],
@@ -130,7 +132,6 @@ const RoutedApp: React.FC = () => {
         <ScrollToTop />
         <WaitlistModalProvider>
         <SignupModalProvider>
-        <DemoModalProvider>
         <ContactModalProvider>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -159,11 +160,9 @@ const RoutedApp: React.FC = () => {
         <SignupModal />
         <WaitlistModal />
         <ContactModal />
-        <GlobalDemoModal />
         <LiquidGlassDefs />
         <Analytics />
         </ContactModalProvider>
-        </DemoModalProvider>
         </SignupModalProvider>
         </WaitlistModalProvider>
     </LandingConfigProvider>

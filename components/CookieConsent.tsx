@@ -34,7 +34,7 @@ const CookieConsent: React.FC = () => {
         <div className="flex gap-2 shrink-0">
           <a
             href="/privacy"
-            className="text-xs text-white/40 hover:text-white/60 underline"
+            className="text-xs text-white/70 hover:text-white underline"
           >
             {isAr ? "الخصوصية" : "Privacy"}
           </a>
