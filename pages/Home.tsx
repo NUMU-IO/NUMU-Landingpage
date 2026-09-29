@@ -30,8 +30,15 @@ import { useSEO } from '../hooks/useSEO';
  *
  * Only the hero ships in the main chunk, so the headline and primary CTA
  * paint without waiting for anything below the fold.
+ *
+ * Amended by the owner's 2026-09-25 request (`docs/Plans/landing page
+ * updates/`): a guided chat sits between the hero and section 2 (1b),
+ * section 2 now opens with the merchants marquee, and section 5
+ * shows the order pipeline in place of the globe. The order above is
+ * otherwise unchanged.
  */
 
+const OnboardingChat = lazy(() => import('../components/redesign/OnboardingChat'));
 const MerchantProof = lazy(() => import('../components/redesign/MerchantProof'));
 const LocalCommerce = lazy(() => import('../components/redesign/LocalCommerce'));
 const ProductSystem = lazy(() => import('../components/redesign/ProductSystem'));
@@ -79,6 +86,9 @@ const Home: React.FC = () => {
         <HeroSection />
 
         <Suspense fallback={<SectionFallback />}>
+          {/* 1b — the onboarding chat: a few questions, then sign-up with the
+              answers carried into the hub's setup wizard. */}
+          <OnboardingChat />
           {/* 2 */}
           <MerchantProof />
           {/* 3 */}

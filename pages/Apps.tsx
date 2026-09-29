@@ -18,6 +18,10 @@ import {
   MessageCircle,
   Megaphone,
   ReceiptText,
+  Wallet,
+  Globe,
+  Upload,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
@@ -54,7 +58,7 @@ import {
  *
  * flaticon was the first choice but it refuses non-browser requests (403),
  * and its free tier requires a visible credit line on the site. lucide is a
- * consistent single-weight line set, tree-shaken so only these five glyphs
+ * consistent single-weight line set, tree-shaken so only these nine glyphs
  * reach the bundle, and it needs no credit.
  *
  * These are category signposts, not decoration: they help a merchant find the
@@ -63,26 +67,44 @@ import {
  */
 const CATEGORY_ICON: Record<PartnerCategory, LucideIcon> = {
   payments: CreditCard,
+  methods: CreditCard,
   shipping: Truck,
+  handoff: Truck,
   messaging: MessageCircle,
   marketing: Megaphone,
   tax: ReceiptText,
+  wallets: Wallet,
+  domains: Globe,
+  imports: Upload,
+  ai: Sparkles,
 };
 
 const CATEGORY_ACCENT: Record<PartnerCategory, string> = {
   payments: "bg-navy",
+  methods: "bg-navy",
   shipping: "bg-terracotta",
+  handoff: "bg-terracotta",
   messaging: "bg-sage",
   marketing: "bg-saffron",
   tax: "bg-navy",
+  wallets: "bg-navy",
+  domains: "bg-sage",
+  imports: "bg-saffron",
+  ai: "bg-terracotta",
 };
 
 const CATEGORY_ORDER: PartnerCategory[] = [
   "payments",
+  "methods",
   "shipping",
+  "handoff",
   "messaging",
   "marketing",
   "tax",
+  "wallets",
+  "domains",
+  "imports",
+  "ai",
 ];
 
 const Apps: React.FC = () => {
@@ -94,8 +116,8 @@ const Apps: React.FC = () => {
       ? "متجر تطبيقات نُمُو — التكاملات والشركاء"
       : "numu App Store — integrations and partners",
     description: isAr
-      ? "كل التكاملات الشغالة على نُمُو — بيموب، فوري، كاشير، إنستاباي، فواتيرك، بوسطة، Mylerz، J&T، واتساب، فيسبوك، إنستغرام، Meta، تيك توك، والفاتورة الإلكترونية."
-      : "Every integration running on numu today — Paymob, Fawry, Kashier, InstaPay, Fawaterak, Bosta, Mylerz, J&T, WhatsApp, Facebook, Instagram, Meta, TikTok and ETA e-invoicing.",
+      ? "كل التكاملات الشغالة على نُمُو — بوابات الدفع والمحافظ، شركات الشحن، واتساب وفيسبوك وإنستغرام، بيكسل Meta وتيك توك، الفاتورة الإلكترونية، الدومين الخاص، الاستيراد، وربط الذكاء الاصطناعي."
+      : "Every integration running on numu today — payment gateways and wallets, couriers, WhatsApp, Facebook and Instagram, the Meta and TikTok pixels, ETA e-invoicing, custom domains, imports and AI connections.",
     canonical: "https://numueg.app/apps",
   });
 

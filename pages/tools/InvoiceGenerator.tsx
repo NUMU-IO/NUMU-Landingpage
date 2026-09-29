@@ -713,7 +713,7 @@ const Tool: React.FC = () => {
               : "Not a PDF — a digitally submitted e-invoice to the Egyptian Tax Authority."}
           </p>
           <Link
-            to="/?demo=1"
+            to="?signup=1"
             className="group inline-flex items-center justify-center gap-2 bg-cream text-navy font-semibold py-3 px-6 rounded-[4px] hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu"
           >
             <span>{isAr ? "جرّب الأتمتة" : "Try automated invoicing"}</span>

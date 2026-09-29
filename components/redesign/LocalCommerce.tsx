@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { localCommerce, CTA } from './copy';
-import { Section, SectionHead, ContextLink, useBi } from './ui';
+import { Section, SectionHead, ContextLink, AssetSlot, useBi } from './ui';
 import { Reveal } from './Reveal';
+import { useInView } from './hooks';
 
 /**
  * 03 — Local commerce layer. `sections/03-local-commerce.md`.
@@ -53,15 +54,43 @@ const RailChip: React.FC<{ label: string }> = ({ label }) => (
 
 const LocalCommerce: React.FC = () => {
   const { b } = useBi();
+  // Section 03 sits inside the browser's lazy-load window on a phone, so a
+  // plain lazy <img> still downloads during the LCP window (measured: FCP
+  // 2.1 s → 3.4 s). Mount the illustration only once the block is near the
+  // viewport, with the box reserved so nothing shifts.
+  const illoRef = useRef<HTMLDivElement>(null);
+  const illoInView = useInView(illoRef, '200px');
 
   return (
     <Section id="local-commerce" surface="cream" labelledBy="local-commerce-heading">
-      <SectionHead
-        id="local-commerce-heading"
-        eyebrow={{ ar: 'السوق المصري', en: 'The Egyptian market' }}
-        heading={localCommerce.heading}
-        support={localCommerce.support}
-      />
+      <div className="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-16 items-center">
+        <SectionHead
+          id="local-commerce-heading"
+          eyebrow={{ ar: 'السوق المصري', en: 'The Egyptian market' }}
+          heading={localCommerce.heading}
+          support={localCommerce.support}
+        />
+
+        {/* Owner-supplied illustration (2026-09-25): a merchant in her own
+            shop, her storefront and the shipping and confirmation cards beside
+            her. Mood for a section that had no visual; the workflow rail below
+            stays the claim, and no provider is named in the drawing either. */}
+        <div ref={illoRef} className="overflow-hidden rounded-[10px] border border-ink/10 bg-paper">
+          {illoInView ? (
+            <AssetSlot
+              asset="illoMerchantStore"
+              ratio={16 / 9}
+              sizes="(min-width: 1024px) 600px, 100vw"
+              alt={{
+                ar: 'رسمة توضيحية: تاجرة واقفة في محلها، وجنبها شاشة متجرها الإلكتروني وبطاقات الشحن وتأكيد الأوردر.',
+                en: 'Illustration: a merchant standing in her shop, with her online storefront and the shipping and order-confirmation cards beside her.',
+              }}
+            />
+          ) : (
+            <div className="w-full" style={{ aspectRatio: '16 / 9' }} aria-hidden="true" />
+          )}
+        </div>
+      </div>
 
       {/* ── One connected workflow ── */}
       <div className="mt-14 sm:mt-16">

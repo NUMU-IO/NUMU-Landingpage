@@ -301,7 +301,7 @@ const Tools: React.FC = () => {
               : `numu bundles every tool — storefront, payments, shipping, invoices, AI — into one dashboard. Free for ${DEFAULT_TRIAL_DAYS} days.`}
           </p>
           <Link
-            to="/?demo=1"
+            to="?signup=1"
             className="group inline-flex items-center justify-center gap-2 bg-cream text-navy font-semibold py-3 px-6 rounded-[4px] hover:bg-cream/90 active:scale-[0.985] transition-all duration-200 ease-numu"
           >
             <span>{isAr ? "جرّب نُمُو مجاناً" : "Try numu free"}</span>

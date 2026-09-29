@@ -6,6 +6,8 @@ import CookieConsent from '../components/CookieConsent';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 import { guides } from './Learn';
+import { WALKTHROUGHS } from './learn/walkthroughs';
+import GuideWalkthrough from '../components/redesign/GuideWalkthrough';
 
 const REVIEWED = '2026-09-11';
 
@@ -31,6 +33,7 @@ const LearnArticle: React.FC = () => {
   const title = isAr ? guide.title_ar : guide.title_en;
   const body = isAr ? guide.body_ar : guide.body_en;
   const tip = isAr ? guide.tip_ar : guide.tip_en;
+  const walk = WALKTHROUGHS[guide.slug];
   const url = `https://numueg.app/${language}/learn/${guide.slug}`;
   const schema = {
     '@context': 'https://schema.org',
@@ -60,6 +63,18 @@ const LearnArticle: React.FC = () => {
           <p className="mt-7 rounded-[6px] border-s-4 border-saffron bg-paper p-5 prose-body text-ink font-semibold leading-8">
             {body[0]}
           </p>
+          {walk && (
+            <section aria-labelledby="walk-heading" className="mt-10">
+              <h2 id="walk-heading" className="font-display text-[22px]/[1.4] font-bold text-ink">
+                {isAr ? 'اعملها على نُمُو، خطوة بخطوة' : 'Do it on numu, step by step'}
+              </h2>
+              <GuideWalkthrough
+                className="mt-4"
+                steps={walk}
+                label={{ ar: `خطوات «${guide.title_ar}» على نُمُو`, en: `Steps for “${guide.title_en}” on numu` }}
+              />
+            </section>
+          )}
           <div className="mt-8 space-y-5">
             {body.slice(1).map((paragraph, index) => (
               <p key={index} className="prose-body text-ink/85 leading-8">{paragraph}</p>

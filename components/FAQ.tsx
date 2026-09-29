@@ -20,9 +20,9 @@ const items: FAQItem[] = [
     q_en: 'What payment gateways does numu support?',
     q_ar: 'إيه بوابات الدفع اللي نُمُو بيدعمها؟',
     a_en:
-      'numu natively integrates with Paymob and Fawry for card and wallet payments, and supports Cash on Delivery (COD) with advanced fee configuration for Egypt and the GCC. Kashier is also available for unified payments.',
+      'numu natively integrates with Paymob, Fawry, Kashier, Fawaterak and InstaPay for card, wallet and instalment payments, takes Vodafone Cash, WE Pay, Orange Cash and bank transfers with a receipt upload, and supports Cash on Delivery (COD) with advanced fee configuration for Egypt and the GCC.',
     a_ar:
-      'نُمُو متصل مباشرة بـ بيموب وفوري للدفع بالكروت والمحافظ، وبيدعم الدفع عند الاستلام مع إعدادات متقدمة للرسوم في مصر والخليج. Kashier كمان متاحة كبوابة موحّدة.',
+      'نُمُو متصل مباشرة بـ بيموب وفوري وكاشير وفواتيرك وإنستاباي للدفع بالكروت والمحافظ والتقسيط، وبيقبل فودافون كاش وWE Pay وأورنج كاش والتحويل البنكي برفع الإيصال، وبيدعم الدفع عند الاستلام مع إعدادات متقدمة للرسوم في مصر والخليج.',
   },
   {
     q_en: 'Does numu support Arabic storefronts?',
@@ -36,9 +36,9 @@ const items: FAQItem[] = [
     q_en: 'How does numu handle shipping in Egypt?',
     q_ar: 'إزاي نُمُو بيدير الشحن في مصر؟',
     a_en:
-      'numu integrates directly with Bosta for automated waybill generation and governorate-based shipping rates across Egypt. Merchants ship orders without touching a single form.',
+      'numu integrates directly with Bosta, Mylerz and J&T Express for automated waybills, tracking and governorate-based shipping rates across Egypt — or you ship with your own courier on a numu waybill. Merchants ship orders without touching a single form.',
     a_ar:
-      'نُمُو متصل مباشرة ببوسطة — بوالص تلقائية وأسعار بالمحافظة. التاجر مش هيلمس ورقة ولا يملأ فورم.',
+      'نُمُو متصل مباشرة ببوسطة ومايلرز وJ&T — بوالص تلقائية وتتبّع وأسعار بالمحافظة — أو تشحن بمندوبك الخاص على بوليصة من نُمُو. التاجر مش هيلمس ورقة ولا يملأ فورم.',
   },
   {
     q_en: 'Is numu compliant with Egyptian tax regulations?',

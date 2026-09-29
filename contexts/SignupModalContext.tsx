@@ -4,8 +4,9 @@ import React, { createContext, useContext, useState, useCallback, ReactNode } fr
  * Signup modal — the landing's primary conversion path. Replaces the
  * private-beta waitlist: any visitor can create a real account directly
  * (Google one-click or email/password), the same registration flow a
- * merchant gets from the invite email. Kept deliberately separate from the
- * "Try a Demo" modal (which provisions a throwaway demo tenant).
+ * merchant gets from the invite email. Since 2026-09-25 it is the only
+ * conversion modal on the site: the 7-day demo-tenant modal was retired so
+ * every "start" leads to the trial.
  *
  * `planIntent` carries which pricing card the visitor clicked before
  * opening the modal ("payg" | "starter" | "pro"). It's sent to the

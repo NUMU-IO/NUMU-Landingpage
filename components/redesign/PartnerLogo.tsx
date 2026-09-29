@@ -1,4 +1,5 @@
 import React from 'react';
+import { FileSpreadsheet, Globe, Landmark, Plug, Sparkles, Truck, type LucideIcon } from 'lucide-react';
 import BrandMark from './BrandMark';
 import type { Partner } from './partners';
 
@@ -10,13 +11,24 @@ import type { Partner } from './partners';
  *   1. `logoSrc`, a brand file shipped in `public/`. Egyptian partners
  *      (Paymob, Fawry, Kashier, InstaPay, Bosta) are only available this way.
  *   2. `brand`, the company's official mark from simple-icons.
- *   3. A connector glyph — identical for every partner that reaches it.
+ *   3. `glyph`, a numu pictogram for numu's OWN capabilities (bank transfer,
+ *      own courier, domain, file import, MCP, AI) — no company behind them.
+ *   4. A connector glyph — identical for every partner that reaches it.
  *
- * Step 3 is the important one. It is deliberately generic and deliberately
+ * Step 4 is the important one. It is deliberately generic and deliberately
  * the same everywhere, so it cannot be mistaken for a company's mark. It is
  * never that company's initial and never its name set in our typeface: both
  * of those read as a wordmark, which is the thing we must not fabricate.
  */
+
+const GLYPHS: Record<NonNullable<Partner['glyph']>, LucideIcon> = {
+  bank: Landmark,
+  courier: Truck,
+  domain: Globe,
+  sheet: FileSpreadsheet,
+  plug: Plug,
+  sparkles: Sparkles,
+};
 
 interface Props {
   partner: Partner;
@@ -42,6 +54,19 @@ const PartnerLogo: React.FC<Props> = ({ partner, size = 26, className = '' }) =>
 
   if (partner.brand) {
     return <BrandMark brand={partner.brand} size={size} className={className} />;
+  }
+
+  if (partner.glyph) {
+    const Icon = GLYPHS[partner.glyph];
+    return (
+      <span
+        aria-hidden="true"
+        className={`grid shrink-0 place-items-center rounded-[6px] bg-navy text-cream ${className}`}
+        style={{ width: size, height: size }}
+      >
+        <Icon style={{ width: Math.round(size * 0.58), height: Math.round(size * 0.58) }} strokeWidth={2} />
+      </span>
+    );
   }
 
   return (

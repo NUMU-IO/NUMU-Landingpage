@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageShell, PageSection, PageClose } from '../components/redesign/PageShell';
-import { PrimaryCta, SecondaryCta, AssetSlot, useBi } from '../components/redesign/ui';
+import { PrimaryCta, AssetSlot, useBi } from '../components/redesign/ui';
 import type { Bi } from '../components/redesign/copy';
 import type { AssetKey as Key } from '../components/redesign/assets';
 
@@ -148,12 +148,7 @@ const ProductTour: React.FC = () => {
           ar: 'ابدأ من غير بطاقة ائتمان، وامشي في نفس الخطوات دي على بياناتك.',
           en: 'Start with no credit card and walk the same steps on your own data.',
         }}
-        action={
-          <>
-            <PrimaryCta onDark />
-            <SecondaryCta onDark />
-          </>
-        }
+        action={<PrimaryCta onDark />}
       />
     </PageShell>
   );

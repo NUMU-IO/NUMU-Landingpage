@@ -18,6 +18,7 @@ const Footer: React.FC = () => {
     { key: 'footer.apps', href: '/apps' },
     { key: 'footer.tools', href: '/tools' },
     { key: 'footer.learn', href: '/learn' },
+    { key: 'footer.blog', href: '/blog' },
     { key: 'footer.developers', href: '/developers' },
     { key: 'footer.pricing', href: '/pricing' },
     { key: 'footer.privacy', href: '/privacy' },
@@ -162,7 +163,7 @@ const Footer: React.FC = () => {
 
           {/* Bottom rail — socials + copyright */}
           <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/60 order-2 sm:order-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/80 order-2 sm:order-1">
               {t('footer.copyright')}
             </p>
             <div className="flex gap-3 order-1 sm:order-2">

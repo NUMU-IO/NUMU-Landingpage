@@ -1,7 +1,8 @@
 import React from 'react';
 import { PageShell, PageSection, PageClose, BodyHead } from '../components/redesign/PageShell';
-import { PrimaryCta, SecondaryCta, useBi } from '../components/redesign/ui';
+import { PrimaryCta, SecondaryCta, AssetSlot, useBi } from '../components/redesign/ui';
 import { Bi } from '../components/redesign/copy';
+import type { AssetKey } from '../components/redesign/assets';
 
 /**
  * /features — "Explain capabilities by merchant job."
@@ -12,6 +13,10 @@ import { Bi } from '../components/redesign/copy';
  *
  * Every capability listed here is one the platform already ships and already
  * describes publicly. Nothing forward-looking or unreleased appears.
+ *
+ * Each group carries one of the owner-supplied illustrations (2026-09-25,
+ * `assets.ts` § Illustrations): drawn scenes of the job, not product screens,
+ * so the list stays the only place a capability is claimed.
  */
 
 interface Group {
@@ -19,11 +24,18 @@ interface Group {
   job: Bi;
   outcome: Bi;
   items: Bi[];
+  /** Owner-supplied illustration for the job — mood, never a capability claim. */
+  illo?: { asset: AssetKey; ratio: number; alt: Bi };
 }
 
 const GROUPS: Group[] = [
   {
     key: 'build',
+    illo: {
+      asset: 'illoOpenStore',
+      ratio: 3 / 2,
+      alt: { ar: 'رسمة توضيحية: تاجر على اللابتوب بيجهّز متجره الإلكتروني، ومنتجاته على الرف وراه.', en: 'Illustration: a merchant at a laptop setting up his online store, his products on the shelf behind him.' },
+    },
     job: { ar: 'ابني المتجر', en: 'Build the store' },
     outcome: {
       ar: 'متجر عربي شكله محترم من غير مصمم ومن غير مبرمج.',
@@ -34,10 +46,17 @@ const GROUPS: Group[] = [
       { ar: 'معاينة مباشرة لشكل المتجر قبل ما تنشره', en: 'Live preview of the storefront before you publish it' },
       { ar: 'اتجاه عربي من اليمين لليسار في كل الصفحات', en: 'Right-to-left Arabic across every page' },
       { ar: 'دومين خاص بيك', en: 'Your own domain' },
+      { ar: 'مدوّنة للمتجر وصفحات وقوائم وحقول مخصصة', en: 'A store blog, custom pages, menus and custom fields' },
+      { ar: 'أكتر من فرع ومخزن، ونقل مخزون بينهم', en: 'Several locations and warehouses, with stock transfers between them' },
     ],
   },
   {
     key: 'orders',
+    illo: {
+      asset: 'illoPackingOrders',
+      ratio: 1,
+      alt: { ar: 'رسمة توضيحية: تاجر بيغلّف أوردر في كرتونة، وقدامه اللابتوب مفتوح على قائمة الطلبات.', en: 'Illustration: a merchant packing an order into a box, his laptop open on the orders list.' },
+    },
     job: { ar: 'استقبل الطلبات', en: 'Receive orders' },
     outcome: {
       ar: 'كل أوردر بيوصلك في مكان واحد وانت عارف حالته.',
@@ -52,6 +71,11 @@ const GROUPS: Group[] = [
   },
   {
     key: 'pay-ship',
+    illo: {
+      asset: 'illoCodDecision',
+      ratio: 4 / 5,
+      alt: { ar: 'رسمة توضيحية: تاجرة ماسكة تابلت وقدامها أوردر عليه إشارة أمان وتلات اختيارات: شحن، عربون، أو رفض — والمندوب واقف بالطرد.', en: 'Illustration: a merchant holding a tablet with an order, a safety signal and three choices — ship, deposit or decline — while the courier waits with the parcel.' },
+    },
     job: { ar: 'اقبض واشحن', en: 'Collect payment and ship' },
     outcome: {
       ar: 'العميل بيدفع بالطريقة اللي تناسبه، والشحن بسعره الصح.',
@@ -59,13 +83,22 @@ const GROUPS: Group[] = [
     },
     items: [
       { ar: 'دفع عند الاستلام مظبوط للسوق المصري', en: 'Cash on delivery tuned for the Egyptian market' },
-      { ar: 'بوابات دفع محلية: بيموب، فوري، كاشير', en: 'Local payment gateways: Paymob, Fawry, Kashier' },
+      { ar: 'بوابات دفع محلية: بيموب، فوري، كاشير، فواتيرك، إنستاباي', en: 'Local payment gateways: Paymob, Fawry, Kashier, Fawaterak, InstaPay' },
+      { ar: 'محافظ: فودافون كاش، WE Pay، أورنج كاش، أو تحويل بنكي', en: 'Wallets: Vodafone Cash, WE Pay, Orange Cash, or bank transfer' },
+      { ar: 'عربون لتأكيد أوردر الدفع عند الاستلام', en: 'A deposit to confirm a cash-on-delivery order' },
       { ar: 'أسعار شحن حسب المحافظة', en: 'Shipping rates by governorate' },
-      { ar: 'شحن مع بوسطة وأرامكس', en: 'Shipping with Bosta and Aramex' },
+      { ar: 'شحن مع بوسطة ومايلرز وJ&T، أو مندوبك الخاص', en: 'Shipping with Bosta, Mylerz and J&T, or your own courier' },
+      { ar: 'طباعة البوالص بالجملة وتسوية الكاش مع شركة الشحن', en: 'Bulk shipping labels and cash reconciliation with the courier' },
+      { ar: 'COD Autopilot: تأكيد الشحن والتسليم على واتساب لوحده', en: 'COD Autopilot: shipping and delivery confirmations over WhatsApp, on their own' },
     ],
   },
   {
     key: 'understand',
+    illo: {
+      asset: 'illoMerchantStore',
+      ratio: 16 / 9,
+      alt: { ar: 'رسمة توضيحية: تاجرة في محلها وجنبها شاشة متجرها ورسم بياني للمبيعات.', en: 'Illustration: a merchant in her shop beside her storefront screen and a sales chart.' },
+    },
     job: { ar: 'افهم أداءك', en: 'Understand performance' },
     outcome: {
       ar: 'تعرف بتكسب منين، ومنتجاتك اللي ماشية أنهي.',
@@ -80,6 +113,11 @@ const GROUPS: Group[] = [
   },
   {
     key: 'grow',
+    illo: {
+      asset: 'illoConnectedTools',
+      ratio: 1,
+      alt: { ar: 'رسمة توضيحية: متجر في النص ومتوصل بيه بطاقة ومحفظة وشحن وتحليلات ومحادثات وإنستغرام.', en: 'Illustration: a store in the centre, wired to cards, a wallet, shipping, analytics, chat and Instagram.' },
+    },
     job: { ar: 'كبّر شغلك', en: 'Grow the business' },
     outcome: {
       ar: 'أدوات بتشتغل معاك لما المتجر يكبر، مش بتقف قدامك.',
@@ -90,6 +128,10 @@ const GROUPS: Group[] = [
       { ar: 'أعضاء فريق بصلاحيات', en: 'Staff members with permissions' },
       { ar: 'وصول API وويب هوكس', en: 'API access and webhooks' },
       { ar: 'تواصل مع العملاء على واتساب', en: 'Customer contact over WhatsApp' },
+      { ar: 'حملات وعروض وكوبونات وكروت هدايا', en: 'Campaigns, promotions, coupons and gift cards' },
+      { ar: 'مجموعات منتجات (bundles) وبيع إضافي', en: 'Product bundles and upsells' },
+      { ar: 'استيراد من إنستغرام وفيسبوك وملفات إكسل', en: 'Import from Instagram, Facebook and Excel files' },
+      { ar: 'اربط Claude أو ChatGPT بمتجرك (MCP)', en: 'Connect Claude or ChatGPT to your store (MCP)' },
     ],
   },
 ];
@@ -127,6 +169,16 @@ const Features: React.FC = () => {
                 {String(i + 1).padStart(2, '0')}
               </p>
               <BodyHead heading={group.job} support={group.outcome} />
+              {group.illo && (
+                <div className="mt-8 max-w-md overflow-hidden rounded-[10px] border border-ink/10 bg-cream">
+                  <AssetSlot
+                    asset={group.illo.asset}
+                    ratio={group.illo.ratio}
+                    alt={group.illo.alt}
+                    sizes="(min-width: 1024px) 440px, 100vw"
+                  />
+                </div>
+              )}
             </div>
 
             <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-4 lg:pt-14">

@@ -1,6 +1,6 @@
 # NUMU
 
-> NUMU (نمو) is an Arabic-first e-commerce platform built for merchants in Egypt, Saudi Arabia, the UAE, and the wider MENA region. It bundles native integrations with Egyptian payment gateways (Paymob, Fawry, Kashier), Bosta shipping, Egyptian Tax Authority (ETA) e-invoicing, and WhatsApp/Instagram/Facebook selling into a single bilingual dashboard.
+> NUMU (نمو) is an Arabic-first e-commerce platform built for merchants in Egypt, Saudi Arabia, the UAE, and the wider MENA region. It bundles native integrations with Egyptian payment gateways (Paymob, Fawry, Kashier, Fawaterak, InstaPay), mobile wallets (Vodafone Cash, WE Pay, Orange Cash) and bank transfer, shipping with Bosta, Mylerz and J&T Express (or the merchant's own courier), Egyptian Tax Authority (ETA) e-invoicing, and WhatsApp/Instagram/Facebook selling into a single bilingual dashboard.
 
 Launched to solve the pain points generic global platforms (Shopify, WooCommerce) leave for MENA merchants: no native Arabic RTL storefronts, no Paymob/Fawry/Bosta connectors, no ETA e-invoicing, and no Cash-on-Delivery (COD) fee management.
 
@@ -16,19 +16,20 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 
 ## Platform capabilities
 
-- Payment gateways: Paymob, Fawry, Kashier (cards, wallets, instalments)
-- Shipping: Bosta integration with automated waybill generation and governorate-based rates across Egypt
+- Payment gateways: Paymob, Fawry, Kashier, Fawaterak, InstaPay, and Moyasar for Saudi stores (Visa, Mastercard, Meeza, Apple Pay, valU instalments, wallets); one online gateway is live at a time, next to cash on delivery; manual wallets Vodafone Cash, WE Pay and Orange Cash, and bank transfer, all with receipt upload; an optional deposit to confirm a COD order
+- Shipping: Bosta, Mylerz and J&T Express integrations (waybills, tracking, returns), or the merchant's own courier on a NUMU waybill with a shopper tracking page; couriers without an API (Egypt Post, Cathedis, MCS, R2S, Xceed, EGL, Waselha, Flextock, Holy Ship, Barashout, Sprint) get the day's parcels as a CSV sheet plus a WhatsApp message, with outcomes imported back by file; governorate-based rates, bulk labels, COD reconciliation with the courier
 - Cash on Delivery (COD): configurable fees per governorate / tier
 - Tax compliance: automatic ETA (Egyptian Tax Authority) e-invoice generation per transaction
-- Storefront: 12 premium themes, native Arabic RTL rendering, custom domain
+- Storefront: 18 premium themes, native Arabic RTL rendering, custom domain with an automatically issued certificate, store blog
 - Multi-channel selling: website, WhatsApp Business, Instagram Shopping, Facebook Shops — one inventory
-- AI tooling: bilingual product description generation (Arabic + English)
-- Social import: pull existing products from Instagram/Facebook into the catalog
-- Staff seats, webhooks, discount codes on paid tiers
+- AI tooling: bilingual product description generation (Arabic + English); "Connect your AI" (MCP) to run the store from Claude, ChatGPT or Cursor
+- Imports: Instagram/Facebook catalogue import; CSV/Excel import of products, customers and orders
+- Staff seats and roles, API keys and webhooks, discount codes, campaigns, coupons, gift cards, bundles
 
 ## Core pages
 
 - [Home](https://numueg.app/en): the platform overview, pricing entry point and sign-up.
+- [Blog](https://numueg.app/en/blog): dated articles for Egyptian merchants — cash on delivery, couriers, wallets, custom domains, seasonal prep, AI.
 - [Official facts](https://numueg.app/en/about/facts): the canonical answers about pricing, order limits, trial length, and integrations.
 - [Pricing](https://numueg.app/en/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 37-day free trial.
 - [Contact](https://numueg.app/en/contact): sales and support enquiry form.

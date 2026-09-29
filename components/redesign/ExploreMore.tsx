@@ -33,7 +33,7 @@ import type { CoverflowItem } from './originkit/CoverflowGallery';
  * mobile bandwidth taken from the hero video, at the exact moment the
  * webfonts were still arriving. Mounting the gallery only once the section is
  * near the viewport keeps them out of the DOM entirely until then. Same
- * approach the Globe already uses in `ReliabilityGrowth.tsx`.
+ * approach the other below-the-fold sections share (`useInView` in `hooks.ts`).
  */
 
 const CoverflowGallery = lazy(() => import('./originkit/CoverflowGallery'));

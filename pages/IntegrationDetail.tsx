@@ -38,8 +38,8 @@ const IntegrationDetail: React.FC = () => {
             </div>
           </div>
           <h3 className="mt-8 font-display text-xl font-bold text-ink">{isAr ? 'إيه اللي محتاجه للتشغيل؟' : 'What do you need to enable it?'}</h3>
-          <p className="mt-3 prose-body text-ink-soft/85">{b(SETUP[partner.category])}</p>
-          <p className="mt-8 text-sm text-ink-soft/65">{isAr ? 'آخر تحقق من حالة التكامل: ١١ سبتمبر ٢٠٢٦.' : 'Integration status last verified: 11 September 2026.'}</p>
+          <p className="mt-3 prose-body text-ink-soft/85">{b(partner.setup ?? SETUP[partner.category])}</p>
+          <p className="mt-8 text-sm text-ink-soft/65">{isAr ? 'آخر تحقق من حالة التكامل: ٢٥ سبتمبر ٢٠٢٦.' : 'Integration status last verified: 25 September 2026.'}</p>
           <Link to="/integrations" className="mt-7 inline-flex font-semibold text-navy underline underline-offset-4">
             {isAr ? 'شوف كل التكاملات' : 'See all integrations'}
           </Link>

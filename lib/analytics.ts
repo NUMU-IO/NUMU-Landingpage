@@ -43,10 +43,10 @@ export type AnalyticsEvent =
   | "signup_submitted"
   | "signup_failed"
   | "signup_google_clicked"
-  | "demo_modal_opened"
-  | "demo_submitted"
-  | "demo_failed"
-  | "pricing_plan_clicked";
+  | "pricing_plan_clicked"
+  | "onboarding_chat_started"
+  | "onboarding_chat_answered"
+  | "onboarding_chat_completed";
 
 type Props = Record<string, string | number | boolean | null | undefined>;
 

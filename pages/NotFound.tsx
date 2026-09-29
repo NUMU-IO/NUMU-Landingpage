@@ -58,7 +58,7 @@ const NotFound: React.FC = () => {
         </h1>
         <p className="prose-body text-ink/75 mb-10">
           {isAr
-            ? 'الرابط ده مش شغّال أو الصفحة اتنقلت. ارجع للرئيسية وابدأ من هناك.'
+            ? 'الصفحة دي راحت في داهية، بس متجرك لسه مستنيك. ارجع للرئيسية وابدأ من هناك.'
             : "That link isn't valid or the page has moved. Head back to the homepage and start again."}
         </p>
         <Link

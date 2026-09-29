@@ -7,7 +7,7 @@
  * and route-specific JSON-LD are injected so that each URL is a distinct,
  * fully-indexable document — not a copy of the homepage shell.
  */
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
@@ -81,6 +81,19 @@ const LEARN_SLUGS = [
 const INTEGRATION_SLUGS = [
   'paymob', 'fawry', 'kashier', 'instapay', 'fawaterak', 'bosta', 'mylerz',
   'jt-express', 'whatsapp', 'facebook', 'instagram', 'meta', 'tiktok', 'eta',
+  'vodafone-cash', 'we-pay', 'orange-cash', 'bank-transfer', 'your-own-courier',
+  'custom-domain', 'instagram-facebook-import', 'csv-excel-import',
+  'connect-your-ai-mcp', 'ai-product-descriptions',
+  // Added 2026-09-28 with the full roster (keep in step with partners.tsx).
+  'moyasar', 'visa', 'apple-pay', 'mastercard', 'meeza', 'valu',
+  'egypt-post', 'cathedis', 'mcs', 'r2s', 'xceed', 'egl', 'waselha', 'flextock',
+  'holy-ship', 'barashout', 'sprint',
+];
+// Keep in step with pages/blog/posts.ts (a node script cannot import the TS).
+const BLOG_SLUGS = [
+  'cod-in-egypt-2026', 'shipping-companies-egypt-compared', 'wallet-payments-vodafone-cash-instapay',
+  'custom-domain-in-minutes', 'whatsapp-order-confirmation', 'ramadan-2027-prep',
+  'connect-chatgpt-to-your-store',
 ];
 const COMPARISON_SLUGS = [
   'numu-vs-shopify-egypt', 'numu-vs-woocommerce-egypt',
@@ -153,6 +166,10 @@ const BASE_ROUTES = [
   ...INTEGRATION_SLUGS.map((slug) => ({
     path: `/integrations/${slug}`,
     extraJsonLd: [crumb('Integrations', '/integrations', slug, `/integrations/${slug}`)],
+  })),
+  ...BLOG_SLUGS.map((slug) => ({
+    path: `/blog/${slug}`,
+    extraJsonLd: [crumb('Blog', '/blog', slug, `/blog/${slug}`)],
   })),
   ...COMPARISON_SLUGS.map((slug) => ({
     path: `/compare/${slug}`,
@@ -246,6 +263,7 @@ const BASE_ROUTES = [
     ['/themes', 'Themes'],
     ['/developers', 'Developers'],
     ['/learn', 'Learn'],
+    ['/blog', 'Blog'],
     ['/stores', 'Stores'],
     ['/partners', 'Hire an expert'],
   ].map(([path, name]) => ({ path, extraJsonLd: [crumb(name, path)] })),
@@ -566,6 +584,15 @@ async function main() {
   // parentheses, and with `shell: true` on Windows an unquoted path is split
   // by the shell, so `serve` never starts and every prerender fails with
   // ERR_CONNECTION_REFUSED.
+  // A preview server left over from an earlier run answers on this port with
+  // a DIFFERENT build (`serve` quietly picks another port when 4173 is taken,
+  // so ours would start elsewhere and every route would be captured from the
+  // stale bundle — new routes came out as 404 pages while "Prerender
+  // complete" still printed). Refuse to run rather than render the wrong site.
+  if (await fetch(`http://localhost:${PORT}/`).then(() => true, () => false)) {
+    throw new Error(`Port ${PORT} is already in use — a stale preview server is running. Stop it and retry.`);
+  }
+
   const distArg = process.platform === 'win32' ? `"${DIST}"` : DIST;
   const server = spawn('npx', ['serve', distArg, '-s', '-l', String(PORT)], {
     stdio: 'ignore',
@@ -600,6 +627,8 @@ async function main() {
       console.log(`Prerendering: ${route.path}`);
 
       const page = await browser.newPage();
+      // The pricing payload this page fetched, if any — baked into the HTML below.
+      let pricingData = null;
       await page.setRequestInterception(true);
       page.on('request', (req) => {
         const type = req.resourceType();
@@ -626,6 +655,9 @@ async function main() {
           fetchJsonForPage(apiTarget)
             .then((body) => {
               console.log(`  → API proxied: ${apiTarget} (${body.length}b)`);
+              if (/\/public\/pricing-plans/.test(apiTarget)) {
+                try { pricingData = JSON.stringify(JSON.parse(body).data ?? null); } catch { /* keep none */ }
+              }
               return req.respond({
                 status: 200,
                 contentType: 'application/json; charset=utf-8',
@@ -673,6 +705,23 @@ async function main() {
         );
       }
       await new Promise((r) => setTimeout(r, 100));
+      // The hero film mounts on the client after first paint. If the idle
+      // callback beat this capture, the served HTML would carry a
+      // `preload="auto"` <video> that starts a 2.4 MB download during parse.
+      await page.evaluate(() => document.querySelectorAll('video').forEach((v) => v.remove()));
+      // Bake the plans this page rendered into it (`usePricing` in
+      // lib/pricingFacts.ts reads them): the cards are there on first paint
+      // and stay there if the live request fails after hydration, instead of
+      // the page wiping them out. The live endpoint still refreshes them.
+      if (pricingData && pricingData !== 'null') {
+        await page.evaluate((json) => {
+          const s = document.createElement('script');
+          s.type = 'application/json';
+          s.id = 'numu-pricing';
+          s.textContent = json;
+          document.head.appendChild(s);
+        }, pricingData.replace(/</g, '\\u003c'));
+      }
 
       let html = await page.content();
       html = stripRuntimePreloads(html, templatePreloads);
@@ -688,8 +737,11 @@ async function main() {
       if (process.platform !== 'win32' && server.pid) {
         // Kill the whole process group (negative pid).
         process.kill(-server.pid, 'SIGTERM');
-      } else {
-        server.kill();
+      } else if (server.pid) {
+        // Windows: `server.kill()` stops only the shell wrapper and leaves the
+        // `serve` grandchild listening on the port for the next run to trip
+        // over (see the check above). Kill the whole tree.
+        spawnSync('taskkill', ['/PID', String(server.pid), '/T', '/F'], { stdio: 'ignore' });
       }
     } catch {
       // Already dead.

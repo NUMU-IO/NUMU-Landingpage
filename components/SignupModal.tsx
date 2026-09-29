@@ -10,6 +10,8 @@ import { googleLogin, register } from "../services/authApi";
 import { getAttribution } from "../lib/attribution";
 import { phoneError, toE164Eg } from "../lib/phone";
 import { identifySignup, track, trackAndLeave } from "../lib/analytics";
+import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
+import { clearPrefill, readPrefill } from "../lib/onboardingPrefill";
 
 const DASHBOARD_URL =
   import.meta.env.VITE_DASHBOARD_URL || "https://merchant.numueg.app";
@@ -18,12 +20,30 @@ const DASHBOARD_URL =
  * Signup modal — direct, no-beta-gate account creation. This is the landing's
  * primary CTA target, the same registration the invite email drops merchants
  * into: Google one-click, or full name + email + password. On success we hand
- * off to the merchant hub exactly like the demo flow does (cookies are set on
- * the shared .numueg.app parent domain).
+ * off to the merchant hub through `/token-handoff` (cookies are set on the
+ * shared .numueg.app parent domain).
  *
- * Deliberately distinct from <DemoStartModal/> — that one spins up a throwaway
- * 7-day demo tenant; this one creates the merchant's real account.
+ * This is the only door. The 7-day demo-tenant modal was retired on
+ * 2026-09-25: every "start" action on the site opens this modal, and the
+ * account it creates carries the trial (`useTrialMeta`, 37 days today).
  */
+/**
+ * "37-day trial · no card", with the day count from the admin-controlled
+ * pricing config. A child component rather than a hook in the modal itself:
+ * the modal is mounted on every page and this only renders while it is open,
+ * so the pricing-plans fetch never runs on a plain page view.
+ */
+const TrialBadge: React.FC<{ isAr: boolean }> = ({ isAr }) => {
+  const { days } = useTrialMeta();
+  return (
+    <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
+      {isAr
+        ? `تجربة ${toArabicDigits(String(days))} يوم · من غير بطاقة`
+        : `${days}-DAY TRIAL · NO CARD`}
+    </span>
+  );
+};
+
 const SignupModal: React.FC = () => {
   const { language, dir } = useLanguage();
   const isAr = language === "ar";
@@ -149,10 +169,10 @@ const SignupModal: React.FC = () => {
       }
       // The next statement navigates to the hub, which would abandon a
       // normal in-flight capture. sendBeacon survives the unload.
-      trackAndLeave("signup_submitted", { plan_intent: planIntent ?? null });
+      trackAndLeave("signup_submitted", { plan_intent: planIntent ?? null, chat_prefill: !!readPrefill() });
 
       // Hand the freshly-created account off to the merchant hub via the
-      // same /token-handoff bridge the demo flow uses, rather than calling
+      // /token-handoff bridge, rather than calling
       // authenticated endpoints (e.g. verify-email-code) from the landing
       // origin — those fail cross-origin. The hub then runs the canonical
       // email-verification + onboarding flow, exactly what an invite-email
@@ -162,11 +182,16 @@ const SignupModal: React.FC = () => {
         // Verify email first (required), on the merchant hub where the
         // verify flow reliably works. After verifying, the hub routes the
         // new merchant on to create-store → onboarding.
+        // The onboarding chat's answers ride along; the hub stores them for
+        // its setup wizard (see lib/onboardingPrefill.ts).
+        const prefill = readPrefill();
         handoff.hash = new URLSearchParams({
           access_token: res.tokens.access_token,
           refresh_token: res.tokens.refresh_token,
           redirect: "/verify-email",
+          ...(prefill ? { prefill } : {}),
         }).toString();
+        clearPrefill();
         window.location.href = handoff.toString();
         return;
       }
@@ -199,6 +224,9 @@ const SignupModal: React.FC = () => {
     >
       <div
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="signup-modal-title"
         className="relative w-full max-w-md rounded-[14px] bg-navy-900 border border-cream/10 shadow-modal-panel p-8 animate-modal-panel"
       >
         {/* Close button */}
@@ -217,16 +245,14 @@ const SignupModal: React.FC = () => {
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 bg-saffron/15 border border-saffron/40 rounded-[4px] px-3 py-1 mb-4">
             <span className="size-1.5 rounded-full bg-saffron animate-pulse" aria-hidden="true" />
-            <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
-              {isAr ? "تسجيل مجاني" : "FREE SIGN-UP"}
-            </span>
+            <TrialBadge isAr={isAr} />
           </div>
-          <h2 className="font-display text-2xl sm:text-[28px] font-bold text-cream tracking-tight">
+          <h2 id="signup-modal-title" className="font-display text-2xl sm:text-[28px] font-bold text-cream tracking-tight">
             {isAr ? "أنشئ متجرك دلوقتي" : "Create your store now"}
           </h2>
           <p className="prose-body-sm text-cream/70 mt-2">
             {isAr
-              ? "سجّل في أقل من دقيقة وابدأ بيع — مجانًا وبدون فيزا."
+              ? "الاسم والإيميل والموبايل والباسورد، وخلاص. من غير فيزا ومن غير مكالمات مبيعات."
               : "Sign up in under a minute and start selling — free, no card."}
           </p>
         </div>
@@ -249,11 +275,14 @@ const SignupModal: React.FC = () => {
                   const handoff = new URL("/token-handoff", DASHBOARD_URL);
                   // Root resolves accounts without a store to /create-store,
                   // where OAuth users must now provide their phone number.
+                  const prefill = readPrefill();
                   handoff.hash = new URLSearchParams({
                     access_token: res.tokens.access_token,
                     refresh_token: res.tokens.refresh_token,
                     redirect: "/",
+                    ...(prefill ? { prefill } : {}),
                   }).toString();
+                  clearPrefill();
                   window.location.href = handoff.toString();
                   return;
                 }
