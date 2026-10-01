@@ -24,7 +24,6 @@ import { captureAttribution } from './lib/attribution';
 
 const Home = lazy(() => import('./pages/Home'));
 const AuthLayout = lazy(() => import('./pages/AuthLayout'));
-const Login = lazy(() => import('./pages/Login'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 const Waitlist = lazy(() => import('./pages/Waitlist'));
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -106,6 +105,21 @@ const routeComponents = [
   ['partners/:id', Partners],
 ] as const;
 
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://merchant.numueg.app';
+
+/**
+ * Login and password reset live on the merchant hub only: one implementation,
+ * and the only one that handles two-factor sign-in. Landing links to /login
+ * keep working and arrive in the visitor's language.
+ */
+const HubAuthRedirect: React.FC<{ path: 'login' | 'forgot-password' }> = ({ path }) => {
+  const { language } = useLanguage();
+  useEffect(() => {
+    window.location.replace(`${DASHBOARD_URL}/${path}?lang=${language}`);
+  }, [path, language]);
+  return <LoadingFallback />;
+};
+
 const LegacyLocaleRedirect: React.FC = () => {
   const location = useLocation();
   const { language } = useLanguage();
@@ -146,8 +160,9 @@ const RoutedApp: React.FC = () => {
             )}
             {(['ar', 'en'] as const).flatMap((locale) => [
               <Route key={`${locale}-signup`} path={`/${locale}/signup`} element={<SignupRedirect />} />,
+              <Route key={`${locale}-login`} path={`/${locale}/login`} element={<HubAuthRedirect path="login" />} />,
+              <Route key={`${locale}-forgot`} path={`/${locale}/forgot-password`} element={<HubAuthRedirect path="forgot-password" />} />,
               <Route key={`${locale}-auth`} element={<AuthLayout />}>
-                <Route path={`/${locale}/login`} element={<Login />} />
                 <Route path={`/${locale}/verify-email`} element={<VerifyEmail />} />
               </Route>,
               <Route key={`${locale}-waitlist`} path={`/${locale}/waitlist`} element={<Waitlist />} />,

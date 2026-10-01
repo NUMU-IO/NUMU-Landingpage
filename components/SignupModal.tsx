@@ -1,14 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
 // Provider-carrying wrapper: Google Identity Services is fetched when this
 // modal opens, not on every page load. See components/GoogleAuthScope.tsx.
 import { GoogleSignInButton as GoogleLogin } from "./GoogleSignInButton";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSignupModal } from "../contexts/SignupModalContext";
-import { googleLogin, register } from "../services/authApi";
+import {
+  AuthError,
+  EMAIL_SHAPE,
+  authErrorMessage,
+  fieldErrorMessage,
+  googleLogin,
+  register,
+  type AuthField,
+} from "../services/authApi";
 import { getAttribution } from "../lib/attribution";
-import { phoneError, toE164Eg } from "../lib/phone";
+import { toE164 } from "../lib/phone";
 import { identifySignup, track, trackAndLeave } from "../lib/analytics";
 import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
 import { clearPrefill, readPrefill } from "../lib/onboardingPrefill";
@@ -44,11 +51,20 @@ const TrialBadge: React.FC<{ isAr: boolean }> = ({ isAr }) => {
   );
 };
 
+/** The API's whole policy: a length, plus a breached-password check that
+ *  only the server can run (it answers PASSWORD_BREACHED). */
+const PASSWORD_RULES: { ok: (p: string) => boolean; ar: string; en: string }[] = [
+  { ok: (p) => p.length >= 8, ar: "٨ حروف على الأقل، وأي حروف أو أرقام", en: "8+ characters, any letters or numbers" },
+];
+
+const LABEL = "block mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/60";
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
+
 const SignupModal: React.FC = () => {
   const { language, dir } = useLanguage();
   const isAr = language === "ar";
   const { isOpen, close, planIntent, referralCode } = useSignupModal();
-  const navigate = useNavigate();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -63,6 +79,10 @@ const SignupModal: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<AuthField, string>>>({});
+  // The typed email already has an account: offer the way back in instead
+  // of a dead end.
+  const [emailTaken, setEmailTaken] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -73,13 +93,31 @@ const SignupModal: React.FC = () => {
     track("signup_modal_opened", { plan_intent: planIntent ?? null });
   }, [isOpen, planIntent]);
 
-  // Lock scroll + Escape to close while open
+  // Lock scroll, move focus into the dialog, keep Tab inside it, Escape closes.
+  // The dialog itself takes focus, not the first input, so a phone keyboard
+  // doesn't cover the form the moment it opens.
   useEffect(() => {
     if (!isOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    modalRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
+      if (e.key !== "Tab" || !modalRef.current) return;
+      const items = modalRef.current.querySelectorAll<HTMLElement>(FOCUSABLE);
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === modalRef.current)) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first?.focus();
+      } else if (!modalRef.current.contains(active)) {
+        e.preventDefault();
+        first?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -92,40 +130,64 @@ const SignupModal: React.FC = () => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) close();
   };
 
+  // Errors sit under the field they belong to; focus goes to the first one
+  // once the inputs are enabled again.
+  useEffect(() => {
+    if (loading) return;
+    const first = (["name", "email", "phone", "password"] as const).find((f) => fieldErrors[f]);
+    if (first) document.getElementById(`signup-${first}`)?.focus();
+  }, [fieldErrors, loading]);
+
+  const fieldProps = (field: AuthField, hint?: string) => ({
+    id: `signup-${field}`,
+    "aria-invalid": fieldErrors[field] ? true : undefined,
+    "aria-describedby":
+      [fieldErrors[field] ? `signup-${field}-error` : "", hint ?? ""].filter(Boolean).join(" ") ||
+      undefined,
+  });
+
+  const fieldError = (field: AuthField) =>
+    fieldErrors[field] ? (
+      <p id={`signup-${field}-error`} className="mt-1.5 text-[12px] text-terracotta">
+        {fieldErrors[field]}
+      </p>
+    ) : null;
+
+  // Login and reset are the hub's; the typed email rides along so it is not
+  // asked for twice.
+  const goToLogin = (path: "login" | "forgot-password") => {
+    const url = new URL(`/${path}`, DASHBOARD_URL);
+    url.searchParams.set("lang", language);
+    if (email) url.searchParams.set("email", email);
+    window.location.href = url.toString();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setEmailTaken(false);
 
     // Split the full name into first/last — the register endpoint wants both,
     // each ≥2 chars (mirrors the merchant-hub register schema).
     const parts = fullName.trim().split(/\s+/).filter(Boolean);
     const firstName = parts[0] || "";
     const lastName = parts.slice(1).join(" ");
-    if (firstName.length < 2 || lastName.length < 2) {
-      setError(isAr ? "اكتب اسمك بالكامل (الاسم الأول واسم العائلة)." : "Please enter your full name (first and last).");
-      return;
-    }
-    const e164 = toE164Eg(phone);
-    if (!e164) {
-      setError(phoneError(isAr));
-      return;
-    }
+    const e164 = toE164(phone);
     // Only validated when they actually said the numbers differ; an
     // untouched field behind an unticked box is not an error.
-    const waE164 = waSame ? null : toE164Eg(waPhone);
-    if (!waSame && !waE164) {
-      setError(phoneError(isAr));
-      return;
-    }
-    if (password.length < 12) {
-      setError(isAr ? "كلمة المرور لازم تكون ١٢ حرف على الأقل." : "Password must be at least 12 characters.");
-      return;
-    }
+    const waE164 = waSame ? null : toE164(waPhone);
+    const errors: Partial<Record<AuthField, string>> = {};
+    if (firstName.length < 2 || lastName.length < 2) errors.name = fieldErrorMessage("name", isAr);
+    if (!EMAIL_SHAPE.test(email.trim())) errors.email = fieldErrorMessage("email", isAr);
+    if (!e164 || (!waSame && !waE164)) errors.phone = fieldErrorMessage("phone", isAr);
+    if (!PASSWORD_RULES.every((r) => r.ok(password))) errors.password = fieldErrorMessage("password", isAr);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
     setLoading(true);
     try {
       const res = await register({
-        email,
+        email: email.trim(),
         password,
         first_name: firstName,
         last_name: lastName,
@@ -198,18 +260,20 @@ const SignupModal: React.FC = () => {
       // Fallback: cookies were set on the shared parent domain, so a plain
       // redirect to the hub still carries the session.
       window.location.href = DASHBOARD_URL;
-    } catch (err: any) {
+    } catch (err) {
       // A failed signup is the most useful event on this page — it is the
       // difference between "nobody wants this" and "the form is broken".
-      // `reason` is our own server's message, never anything typed here.
-      track("signup_failed", {
-        reason: String(err?.message ?? "unknown").slice(0, 120),
-        plan_intent: planIntent ?? null,
-      });
-      setError(
-        err?.message ||
-          (isAr ? "حصل مشكلة، حاول تاني." : "Something went wrong, try again."),
-      );
+      // `reason` is the error code only: the server's message can carry the
+      // email that was typed.
+      const code = err instanceof AuthError ? err.code : "UNKNOWN";
+      track("signup_failed", { reason: code, plan_intent: planIntent ?? null });
+      const message = authErrorMessage(err, isAr);
+      if (err instanceof AuthError && err.field) {
+        setEmailTaken(code === "EMAIL_ALREADY_REGISTERED");
+        setFieldErrors({ [err.field]: message });
+      } else {
+        setError(message);
+      }
       setLoading(false);
     }
   };
@@ -218,7 +282,7 @@ const SignupModal: React.FC = () => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-ink/80 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[9999] flex overflow-y-auto bg-ink/80 backdrop-blur-md p-4"
       dir={dir}
       onClick={handleBackdropClick}
     >
@@ -226,8 +290,9 @@ const SignupModal: React.FC = () => {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        tabIndex={-1}
         aria-labelledby="signup-modal-title"
-        className="relative w-full max-w-md rounded-[14px] bg-navy-900 border border-cream/10 shadow-modal-panel p-8 animate-modal-panel"
+        className="relative m-auto w-full max-w-md focus:outline-none rounded-[14px] bg-navy-900 border border-cream/10 shadow-modal-panel p-8 animate-modal-panel"
       >
         {/* Close button */}
         <button
@@ -258,7 +323,7 @@ const SignupModal: React.FC = () => {
         </div>
 
         {/* Google — authenticate here, then let the hub resolve first-store onboarding. */}
-        <div className="flex justify-center">
+        <div className="flex justify-center text-cream/70">
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               if (!credentialResponse.credential) return;
@@ -266,11 +331,13 @@ const SignupModal: React.FC = () => {
               setLoading(true);
               setError("");
               try {
-                const res = await googleLogin(
-                  credentialResponse.credential,
-                  toE164Eg(phone) || undefined,
-                  getAttribution(),
-                );
+                const res = await googleLogin(credentialResponse.credential, {
+                  phone: toE164(phone) || undefined,
+                  attribution: getAttribution(),
+                  language: isAr ? "ar" : "en",
+                  plan_intent: planIntent ?? undefined,
+                  referral_code: referralCode ?? undefined,
+                });
                 if (res.tokens?.access_token) {
                   const handoff = new URL("/token-handoff", DASHBOARD_URL);
                   // Root resolves accounts without a store to /create-store,
@@ -287,8 +354,8 @@ const SignupModal: React.FC = () => {
                   return;
                 }
                 window.location.href = DASHBOARD_URL;
-              } catch (err: any) {
-                setError(err.message || (isAr ? "فشل تسجيل الدخول بجوجل" : "Google login failed"));
+              } catch (err) {
+                setError(authErrorMessage(err, isAr));
                 setLoading(false);
               }
             }}
@@ -296,7 +363,6 @@ const SignupModal: React.FC = () => {
               setError(isAr ? "فشل تسجيل الدخول بجوجل" : "Google sign-in failed")
             }
             size="large"
-            width="100%"
             text="signup_with"
             shape="pill"
             theme="filled_black"
@@ -316,40 +382,76 @@ const SignupModal: React.FC = () => {
         </div>
 
         {/* Email + password form */}
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            type="text"
-            required
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder={isAr ? "الاسم بالكامل" : "Full name"}
-            disabled={loading}
-            className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
-          />
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={isAr ? "بريدك الإلكتروني" : "Your email"}
-            disabled={loading}
-            className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
-            dir="ltr"
-          />
+        <form noValidate onSubmit={handleSubmit} className="space-y-3">
           <div>
+            <label htmlFor="signup-name" className={LABEL}>
+              {isAr ? "الاسم بالكامل" : "Full name"}
+            </label>
             <input
-              type="tel"
-              required
-              inputMode="tel"
-              autoComplete="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder={isAr ? "رقم الموبايل (واتساب)" : "Mobile number (WhatsApp)"}
+              {...fieldProps("name")}
+              type="text"
+              autoComplete="name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder={isAr ? "مثال: سارة أحمد" : "e.g. Sara Ahmed"}
+              disabled={loading}
+              className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+            />
+            {fieldError("name")}
+          </div>
+          <div>
+            <label htmlFor="signup-email" className={LABEL}>
+              {isAr ? "الإيميل" : "Email"}
+            </label>
+            <input
+              {...fieldProps("email")}
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@gmail.com"
               disabled={loading}
               className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
               dir="ltr"
             />
-            <p className="mt-1.5 font-mono text-[10px] text-cream/45 leading-relaxed">
+            {fieldError("email")}
+            {emailTaken && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => goToLogin("login")}
+                  className="h-9 px-3 rounded-[4px] bg-saffron text-ink text-xs font-semibold hover:bg-saffron/90 transition-colors"
+                >
+                  {isAr ? "سجّل دخول" : "Log in"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToLogin("forgot-password")}
+                  className="h-9 px-3 rounded-[4px] border border-cream/25 text-cream text-xs hover:border-saffron transition-colors"
+                >
+                  {isAr ? "نسيت الباسورد؟" : "Forgot password?"}
+                </button>
+              </div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="signup-phone" className={LABEL}>
+              {isAr ? "رقم الموبايل (واتساب)" : "Mobile number (WhatsApp)"}
+            </label>
+            <input
+              {...fieldProps("phone", "signup-phone-hint")}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="01001234567"
+              disabled={loading}
+              className="w-full h-12 px-4 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+              dir="ltr"
+            />
+            {fieldError("phone")}
+            <p id="signup-phone-hint" className="mt-1.5 font-mono text-[10px] text-cream/45 leading-relaxed">
               {isAr
                 ? "علشان نبعتلك تنبيهات المتجر ونساعدك على واتساب."
                 : "So we can send store alerts and help you on WhatsApp."}
@@ -371,8 +473,8 @@ const SignupModal: React.FC = () => {
             {!waSame && (
               <input
                 type="tel"
-                required
                 inputMode="tel"
+                aria-label={isAr ? "رقم الواتساب" : "WhatsApp number"}
                 value={waPhone}
                 onChange={(e) => setWaPhone(e.target.value)}
                 placeholder={isAr ? "رقم الواتساب" : "WhatsApp number"}
@@ -382,33 +484,55 @@ const SignupModal: React.FC = () => {
               />
             )}
           </div>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={isAr ? "كلمة المرور (١٢ حرف على الأقل)" : "Password (min 12 characters)"}
-              disabled={loading}
-              className="w-full h-12 px-4 pe-11 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
-              dir="ltr"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              className="absolute inset-y-0 end-3 flex items-center text-cream/50 hover:text-cream transition-colors"
-              aria-label={showPassword ? (isAr ? "إخفاء" : "Hide") : (isAr ? "إظهار" : "Show")}
-            >
-              {showPassword ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
-              )}
-            </button>
+          <div>
+            <label htmlFor="signup-password" className={LABEL}>
+              {isAr ? "الباسورد" : "Password"}
+            </label>
+            <div className="relative">
+              <input
+                {...fieldProps("password", "signup-password-rules")}
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                maxLength={128}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                className="w-full h-12 px-4 pe-11 rounded-[4px] bg-cream/5 border border-cream/15 text-cream placeholder-cream/40 focus:outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/20 transition-all text-sm"
+                dir="ltr"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute inset-y-0 end-3 flex items-center text-cream/50 hover:text-cream transition-colors"
+                aria-label={showPassword ? (isAr ? "إخفاء" : "Hide") : (isAr ? "إظهار" : "Show")}
+              >
+                {showPassword ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                )}
+              </button>
+            </div>
+            <ul id="signup-password-rules" className="mt-2 space-y-1">
+              {PASSWORD_RULES.map((rule) => {
+                const met = rule.ok(password);
+                return (
+                  <li
+                    key={rule.en}
+                    className={`font-mono text-[10px] flex items-center gap-1.5 ${met ? "text-sage" : "text-cream/50"}`}
+                  >
+                    <span aria-hidden="true">{met ? "✓" : "○"}</span>
+                    <span>{isAr ? rule.ar : rule.en}</span>
+                    <span className="sr-only">{met ? (isAr ? "(تمام)" : "(done)") : ""}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            {fieldError("password")}
           </div>
 
           {error && (
-            <p className="font-mono text-[11px] text-terracotta bg-terracotta/10 border border-terracotta/30 rounded-[4px] px-3 py-2">{error}</p>
+            <p role="alert" className="text-[12px] text-terracotta bg-terracotta/10 border border-terracotta/30 rounded-[4px] px-3 py-2">{error}</p>
           )}
 
           <button
@@ -428,16 +552,24 @@ const SignupModal: React.FC = () => {
               </>
             )}
           </button>
+          <p className="text-center text-[11px] text-cream/55 leading-relaxed">
+            {isAr ? "بإنشاء الحساب إنت موافق على " : "By creating an account you agree to the "}
+            <a href={`/${language}/terms`} target="_blank" rel="noopener" className="underline hover:text-saffron">
+              {isAr ? "الشروط" : "Terms"}
+            </a>
+            {isAr ? " و" : " and "}
+            <a href={`/${language}/privacy`} target="_blank" rel="noopener" className="underline hover:text-saffron">
+              {isAr ? "سياسة الخصوصية" : "Privacy Policy"}
+            </a>
+            .
+          </p>
         </form>
 
         <p className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-cream/50 mt-5">
           {isAr ? "عندك حساب؟" : "Already have an account?"}{" "}
           <button
             type="button"
-            onClick={() => {
-              close();
-              navigate("/login");
-            }}
+            onClick={() => goToLogin("login")}
             className="text-saffron hover:text-cream underline transition-colors"
           >
             {isAr ? "سجّل دخول" : "Log in"}

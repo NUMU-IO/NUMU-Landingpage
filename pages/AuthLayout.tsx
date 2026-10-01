@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 /**
- * AuthLayout — two-column shell for /login and /verify-email.
+ * AuthLayout — two-column shell for /verify-email.
  *
  * Layout: on large screens, a proper 50/50 split. Stacked on mobile.
  * Left (brand) panel gets the navy Ballpit animation + wordmark + tagline.
