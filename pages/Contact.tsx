@@ -53,7 +53,7 @@ const Contact: React.FC = () => {
           to="/"
           className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/80 hover:text-navy transition-colors"
         >
-          ← {isAr ? 'الرئيسية' : 'Home'}
+          {isAr ? '→ الرئيسية' : '← Home'}
         </Link>
       </nav>
 
