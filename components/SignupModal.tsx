@@ -241,6 +241,7 @@ const SignupModal: React.FC = () => {
       // signup lands in.
       if (res.tokens?.access_token) {
         const handoff = new URL("/token-handoff", DASHBOARD_URL);
+        handoff.searchParams.set("lang", language);
         // Verify email first (required), on the merchant hub where the
         // verify flow reliably works. After verifying, the hub routes the
         // new merchant on to create-store → onboarding.
@@ -340,6 +341,7 @@ const SignupModal: React.FC = () => {
                 });
                 if (res.tokens?.access_token) {
                   const handoff = new URL("/token-handoff", DASHBOARD_URL);
+                  handoff.searchParams.set("lang", language);
                   // Root resolves accounts without a store to /create-store,
                   // where OAuth users must now provide their phone number.
                   const prefill = readPrefill();
@@ -488,7 +490,8 @@ const SignupModal: React.FC = () => {
             <label htmlFor="signup-password" className={LABEL}>
               {isAr ? "الباسورد" : "Password"}
             </label>
-            <div className="relative">
+            {/* LTR like the input, so the eye button sits on the side its padding reserves. */}
+            <div className="relative" dir="ltr">
               <input
                 {...fieldProps("password", "signup-password-rules")}
                 type={showPassword ? "text" : "password"}

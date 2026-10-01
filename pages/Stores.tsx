@@ -112,7 +112,7 @@ const Stores: React.FC = () => {
         <div className="inline-flex items-center gap-2 bg-sage/15 border border-sage/40 rounded-[4px] px-3 py-1 mb-5">
           <span className="size-1.5 rounded-full bg-sage" aria-hidden="true" />
           <span className="font-mono text-[10px] font-semibold text-sage uppercase tracking-[0.18em]">
-            § LIVE STORES
+            {isAr ? "§ متاجر شغّالة" : "§ LIVE STORES"}
           </span>
         </div>
         <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-bold text-ink tracking-tight leading-[1.05] mb-5">
