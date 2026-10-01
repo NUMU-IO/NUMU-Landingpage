@@ -7,6 +7,7 @@ import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../../lib/trialInfo';
 import { clearPrefill, savePrefill, type OnboardingPrefill } from '../../lib/onboardingPrefill';
 import { useSignupModal } from '../../contexts/SignupModalContext';
 import { track } from '../../lib/analytics';
+import { toStoreSlug } from '../../lib/storeSlug';
 
 /**
  * 01b — "Describe your store" builder (W3; rebuilt 2026-09-28 on the owner's
@@ -521,6 +522,14 @@ const OnboardingChat: React.FC = () => {
                       className="min-w-0 flex-1 rounded-full border border-ink/15 bg-paper px-4 py-1.5 text-[14px] text-ink focus:border-navy focus:outline-none focus:ring-0"
                     />
                   </div>
+                  {/* The link they'd share, live as they type — the same suggestion
+                      the hub makes at create-store, Arabic names included. */}
+                  {toStoreSlug(name).length >= 3 && (
+                    <p className="text-[12.5px] text-ink/70" aria-live="polite">
+                      {b({ ar: 'رابط متجرك:', en: 'Your store link:' })}{' '}
+                      <span dir="ltr" className="font-mono font-semibold text-ink">{toStoreSlug(name)}.numueg.app</span>
+                    </p>
+                  )}
                   <div role="group" aria-label={b(C.pay.ask)} className="flex flex-wrap items-center gap-2">
                     <span className="me-1 text-[13.5px] font-bold text-ink">{b(C.pay.ask)}</span>
                     {C.pay.chips.map((c) => (
