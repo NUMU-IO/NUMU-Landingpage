@@ -147,26 +147,11 @@ export function trackAndLeave(event: AnalyticsEvent, props?: Props): void {
 }
 
 /**
- * Tie this browser to a merchant once they sign up.
- *
- * `$email`, `$name` and `phone` are PostHog's conventional keys for the
- * person's identity, and it renders them in place of the distinct id —
- * the difference between a list you can act on and a wall of UUIDs. A
- * signup we cannot put a name to is not much use to anyone: the point of
- * knowing someone abandoned setup is being able to call them.
- *
- * This is our own merchant's contact detail. Nothing about *their*
- * customers is here, and the landing page never sees any.
+ * Tie this browser to a merchant once they sign up: the account id and
+ * coarse context only. Email, name and phone stay in our own database —
+ * the id is enough to look the merchant up there when a funnel needs a
+ * name, and a third-party analytics tool never holds contact details.
  */
-export function identifySignup(
-  userId: string,
-  identity: { email?: string | null; name?: string | null; phone?: string | null },
-  props?: Props,
-): void {
-  client?.identify(userId, {
-    $email: identity.email ?? null,
-    $name: identity.name?.trim() || null,
-    phone: identity.phone ?? null,
-    ...props,
-  });
+export function identifySignup(userId: string, props?: Props): void {
+  client?.identify(userId, props);
 }
