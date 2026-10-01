@@ -79,16 +79,6 @@ const AuthLayout: React.FC = () => {
               )}
             </Link>
 
-            <div className="inline-flex items-center gap-2 bg-saffron/15 border border-saffron/40 rounded-[4px] px-3 py-1 mb-5">
-              <span
-                className="size-1.5 rounded-full bg-saffron animate-pulse"
-                aria-hidden="true"
-              />
-              <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
-                {language === 'ar' ? 'بيتا خاصة' : 'PRIVATE BETA'}
-              </span>
-            </div>
-
             <h1 className="font-display text-3xl sm:text-4xl lg:text-[52px] font-bold tracking-tight leading-[1.05] mb-4 text-cream">
               {t('auth.hero_title')}
             </h1>
@@ -96,32 +86,6 @@ const AuthLayout: React.FC = () => {
               {t('auth.hero_subtitle')}
             </p>
 
-            <div className="mt-8 lg:mt-12 hidden md:flex items-center gap-4 justify-center lg:justify-start">
-              <div className="flex -space-x-3 rtl:space-x-reverse">
-                {[
-                  'bg-terracotta text-cream',
-                  'bg-saffron text-ink',
-                  'bg-sage text-cream',
-                  'bg-navy text-cream',
-                ].map((palette, i) => (
-                  <div
-                    key={i}
-                    className={`size-9 rounded-full border-2 border-navy-900 flex items-center justify-center font-display text-xs font-bold ${palette}`}
-                    aria-hidden="true"
-                  >
-                    {['R', 'A', 'M', 'F'][i]}
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col text-start">
-                <span className="font-display font-semibold text-sm text-cream">
-                  {t('auth.joined_count')}
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cream/55">
-                  {t('auth.joined_text')}
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

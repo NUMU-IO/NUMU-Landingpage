@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import CookieConsent from '../components/CookieConsent';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
-import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../lib/trialInfo';
+import { DEFAULT_TRIAL_DAYS } from '../lib/trialInfo';
 import PricingPlans from '../components/redesign/PricingPlans';
 import FAQ from '../components/FAQ';
 import { PageClose } from '../components/redesign/PageShell';
@@ -35,10 +35,10 @@ const Pricing: React.FC = () => {
 
   useSEO({
     title: isAr
-      ? 'الباقات — نُمُو · اشتراك واضح و٠٪ عمولة على الأوردر'
-      : 'Pricing — numu · clear subscriptions and 0% per-order commission',
+      ? 'الباقات — نُمُو · باقات شهرية من غير عمولة، أو ادفع وأنت تنمو'
+      : 'Pricing — numu · commission-free monthly plans, or pay as you grow',
     description: isAr
-      ? `باقات شفّافة من نُمُو — منصة التجارة الإلكترونية عربي الأول لمصر والشرق الأوسط. اشتراك شهري بدون عمولة على الأوردرات، أو "ادفع وأنت تنمو" بدون اشتراك، وتجربة مجانية ${toArabicDigits(String(DEFAULT_TRIAL_DAYS))} يوم بدون بطاقة ائتمان.`
+      ? `باقات شفّافة من نُمُو — منصة التجارة الإلكترونية عربي الأول لمصر والشرق الأوسط. اشتراك شهري بدون عمولة على الأوردرات، أو "ادفع وأنت تنمو" بدون اشتراك، وتجربة مجانية ${DEFAULT_TRIAL_DAYS} يوم بدون بطاقة ائتمان.`
       : `Transparent plans for numu — Arabic-first commerce for Egypt & MENA. Zero-commission subscriptions or Pay as you Grow with no monthly fee, plus a ${DEFAULT_TRIAL_DAYS}-day free trial, no credit card.`,
     canonical: 'https://numueg.app/pricing',
   });

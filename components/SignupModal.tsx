@@ -17,7 +17,7 @@ import {
 import { getAttribution } from "../lib/attribution";
 import { toE164 } from "../lib/phone";
 import { identifySignup, track, trackAndLeave } from "../lib/analytics";
-import { toArabicDigits, useTrialMeta } from "../lib/trialInfo";
+import { useTrialMeta } from "../lib/trialInfo";
 import { clearPrefill, readPrefill } from "../lib/onboardingPrefill";
 
 const DASHBOARD_URL =
@@ -45,9 +45,20 @@ const TrialBadge: React.FC<{ isAr: boolean }> = ({ isAr }) => {
   return (
     <span className="font-mono text-[10px] font-semibold text-saffron uppercase tracking-[0.18em]">
       {isAr
-        ? `تجربة ${toArabicDigits(String(days))} يوم · من غير بطاقة`
+        ? `تجربة ${days} يوم · من غير بطاقة`
         : `${days}-DAY TRIAL · NO CARD`}
     </span>
+  );
+};
+
+const TrialAfterLine: React.FC<{ isAr: boolean }> = ({ isAr }) => {
+  const { days } = useTrialMeta();
+  return (
+    <p className="mt-1.5 text-[12px] leading-relaxed text-cream/55">
+      {isAr
+        ? `بعد ${days} يوم متجرك بيتقفل للزوار لحد ما تختار باقة، وكل حاجة عملتها بتفضل محفوظة.`
+        : `After ${days} days your store closes to visitors until you pick a plan; everything you built is kept.`}
+    </p>
   );
 };
 
@@ -321,6 +332,7 @@ const SignupModal: React.FC = () => {
               ? "الاسم والإيميل والموبايل والباسورد، وخلاص. من غير فيزا ومن غير مكالمات مبيعات."
               : "Sign up in under a minute and start selling — free, no card."}
           </p>
+          <TrialAfterLine isAr={isAr} />
         </div>
 
         {/* Google — authenticate here, then let the hub resolve first-store onboarding. */}
