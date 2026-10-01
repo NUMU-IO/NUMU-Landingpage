@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSignupModal } from '../contexts/SignupModalContext';
+import { useSignupModal, type PlanIntent } from '../contexts/SignupModalContext';
+
+const PLANS: PlanIntent[] = ['payg', 'starter', 'pro'];
 
 /**
  * Opens the sign-up modal from the URL, from anywhere in the app.
@@ -29,7 +31,9 @@ const SignupUrlTrigger: React.FC = () => {
     const wants = searchParams.get('signup') === '1' || Boolean(ref);
     if (!wants) return;
 
-    open(null, ref);
+    // `?plan=payg` from an Instagram bio or ad preselects the plan.
+    const plan = searchParams.get('plan') as PlanIntent;
+    open(PLANS.includes(plan) ? plan : null, ref);
 
     // `signup` is consumed — it has done its job and should not survive a
     // refresh. `ref` deliberately stays: the code is held in context now, but

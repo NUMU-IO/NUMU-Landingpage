@@ -62,7 +62,8 @@ const Stores: React.FC = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
       .then((json) => {
         if (cancelled) return;
-        setStores(json?.data?.stores ?? []);
+        // A card with no logo or description reads as an abandoned store.
+        setStores(((json?.data?.stores ?? []) as DirectoryStore[]).filter((s) => s.logo_url && s.description));
         setLoaded(true);
       })
       .catch((err) => {
