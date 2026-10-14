@@ -89,7 +89,7 @@ const GROUPS: Group[] = [
       { ar: 'أسعار شحن حسب المحافظة', en: 'Shipping rates by governorate' },
       { ar: 'شحن مع بوسطة ومايلرز وJ&T، أو مندوبك الخاص', en: 'Shipping with Bosta, Mylerz and J&T, or your own courier' },
       { ar: 'طباعة البوالص بالجملة وتسوية الكاش مع شركة الشحن', en: 'Bulk shipping labels and cash reconciliation with the courier' },
-      { ar: 'COD Autopilot: تأكيد الشحن والتسليم على واتساب لوحده', en: 'COD Autopilot: shipping and delivery confirmations over WhatsApp, on their own' },
+      { ar: 'COD Autopilot: تأكيد الشحن والتسليم على واتساب لوحده (مع إضافة واتساب)', en: 'COD Autopilot: shipping and delivery confirmations over WhatsApp, on their own (with the WhatsApp add-on)' },
     ],
   },
   {

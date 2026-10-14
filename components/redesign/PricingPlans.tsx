@@ -6,7 +6,7 @@ import { useBi } from './ui';
 import { Reveal } from './Reveal';
 import { useSignupModal, type PlanIntent } from '../../contexts/SignupModalContext';
 import { usePricing, type PublicPlan } from '../../lib/pricingFacts';
-import { DEFAULT_TRIAL_DAYS, toArabicDigits } from '../../lib/trialInfo';
+import { DEFAULT_TRIAL_DAYS, afterTrialLine, toLatinDigits } from '../../lib/trialInfo';
 
 /**
  * /pricing — the page a visitor lands on from «الأسعار» (owner request
@@ -69,10 +69,7 @@ export const PlansBody: React.FC = () => {
   const { open } = useSignupModal();
   const [annual, setAnnual] = useState(false);
 
-  const num = (n: number) => {
-    const s = n.toLocaleString('en-US');
-    return isAr ? toArabicDigits(s) : s;
-  };
+  const num = (n: number) => n.toLocaleString('en-US');
   const days = data?.trial?.days ?? DEFAULT_TRIAL_DAYS;
   const trialOn = data?.trial?.enabled !== false;
   const cards = CARD_KEYS.map((k) => data?.plans.find((p) => p.key === k)).filter(Boolean) as PublicPlan[];
@@ -96,7 +93,7 @@ export const PlansBody: React.FC = () => {
     { icon: 'card', text: { ar: 'من غير بطاقة ائتمان', en: 'No credit card' }, show: true },
     {
       icon: 'moneybag',
-      text: { ar: '٠٪ عمولة على الأوردر في الباقات الشهرية', en: '0% per-order commission on monthly plans' },
+      text: { ar: '0% عمولة على الأوردر في الباقات الشهرية', en: '0% per-order commission on monthly plans' },
       show: true,
     },
     { icon: 'banknote', text: { ar: 'الكاش عند الاستلام شغّال من أول يوم', en: 'Cash on delivery from day one' }, show: true },
@@ -153,7 +150,7 @@ export const PlansBody: React.FC = () => {
     {data?.promo && (
       <p className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full border border-dashed border-saffron bg-saffron/10 px-4 py-2 text-[14px] font-semibold text-ink">
         <Icon3D name="gift" size={22} />
-        {isAr ? data.promo.text_ar : data.promo.text_en}
+        {isAr ? toLatinDigits(data.promo.text_ar) : data.promo.text_en}
       </p>
     )}
 
@@ -207,7 +204,7 @@ export const PlansBody: React.FC = () => {
               )}
               <div className="flex items-center gap-3">
                 <Icon3D name={meta.icon} size={52} />
-                <h2 className={`font-display text-[22px] font-bold ${popular ? 'text-cream' : 'text-ink'}`}>{isAr ? plan.name_ar : plan.name_en}</h2>
+                <h2 className={`font-display text-[22px] font-bold ${popular ? 'text-cream' : 'text-ink'}`}>{isAr ? toLatinDigits(plan.name_ar) : plan.name_en}</h2>
               </div>
               <p className={`mt-3 text-[14.5px] leading-7 ${popular ? 'text-cream/80' : 'text-ink-soft/85'}`}>{b(meta.tagline)}</p>
 
@@ -243,7 +240,7 @@ export const PlansBody: React.FC = () => {
                       style={{ color: popular ? '#E8A430' : meta.accent }}
                       strokeWidth={2.6}
                     />
-                    <span>{isAr ? f.ar : f.en}</span>
+                    <span>{isAr ? toLatinDigits(f.ar) : f.en}</span>
                   </li>
                 ))}
               </ul>
@@ -273,8 +270,8 @@ export const PlansBody: React.FC = () => {
             <h2 className="mt-1 font-display text-xl font-bold text-ink">{isAr ? payg.name_ar : payg.name_en}</h2>
             <p className="prose-body-sm mt-1 text-ink-soft/85">
               {b({
-                ar: `من غير اشتراك شهري: بتدفع ${num(payg.commission_percent ?? 3)}٪ بس على كل أوردر مدفوع.`,
-                en: `No monthly fee: you pay ${payg.commission_percent ?? 3}% only on each paid order.`,
+                ar: `من غير اشتراك شهري. بتشحن محفظتك بالمبلغ اللي يناسبك، وبنخصم ${payg.commission_percent ?? 3}% من كل أوردر اتدفع (في الدفع عند الاستلام: لما يتسلّم).`,
+                en: `No monthly subscription. Top up your wallet with whatever suits you, and we deduct ${payg.commission_percent ?? 3}% from each paid order (for cash on delivery: once it is delivered).`,
               })}
             </p>
           </div>
@@ -293,14 +290,12 @@ export const PlansBody: React.FC = () => {
 };
 
 const PricingPlans: React.FC = () => {
-  const { b, isAr } = useBi();
+  const { b } = useBi();
   const data = usePricing();
-  const num = (n: number) => {
-    const s = n.toLocaleString('en-US');
-    return isAr ? toArabicDigits(s) : s;
-  };
+  const num = (n: number) => n.toLocaleString('en-US');
   const days = data?.trial?.days ?? DEFAULT_TRIAL_DAYS;
   const trialOn = data?.trial?.enabled !== false;
+  const paygPct = data?.plans.find((p) => p.key === 'payg')?.commission_percent;
 
   const steps: { icon: string; title: Bi; body: Bi }[] = [
     {
@@ -368,13 +363,14 @@ const PricingPlans: React.FC = () => {
               {b({ ar: 'باقة على قد مقاسك… وبتكبر معاك.', en: 'A plan that fits you now — and grows with you.' })}
             </h1>
             <p className="prose-body mx-auto mt-5 max-w-2xl text-ink-soft/85">
-              {trialOn
+              {paygPct != null
                 ? b({
-                    ar: `جرّب نُمُو ${num(days)} يوم ببلاش، وبعدها اختار اللي يريّحك — ومفيش رسوم مستخبية.`,
-                    en: `Try numu free for ${days} days, then pick what suits you — with no hidden fees.`,
+                    ar: `الباقات الشهرية من غير عمولة. أو ابدأ من غير اشتراك بـ ${paygPct}% على الأوردر المدفوع بس.`,
+                    en: `Monthly plans carry no commission. Or start with no subscription at ${paygPct}% on paid orders only.`,
                   })
-                : b({ ar: 'اختار اللي يريّحك — ومفيش رسوم مستخبية.', en: 'Pick what suits you — with no hidden fees.' })}
+                : b({ ar: 'الباقات الشهرية من غير عمولة.', en: 'Monthly plans carry no commission.' })}
             </p>
+            {trialOn && <p className="prose-body-sm mx-auto mt-3 max-w-2xl text-ink-soft/75">{b(afterTrialLine(days))}</p>}
           </header>
 
           <PlansBody />

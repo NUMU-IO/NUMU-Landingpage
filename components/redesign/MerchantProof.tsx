@@ -87,8 +87,8 @@ const SURFACES: { asset: AssetKey; title: Bi; body: Bi; alt: Bi }[] = [
       en: 'Talk to your customer from the same place.',
     },
     body: {
-      ar: 'تأكيد الأوردر وتحديث الشحن بيروحوا واتساب لوحدهم، وانت شايف كل رسالة راحت لمين.',
-      en: 'Order confirmations and shipping updates go out on WhatsApp on their own, and you see every message that went where.',
+      ar: 'تأكيد الأوردر وتحديث الشحن بيروحوا واتساب لوحدهم، وانت شايف كل رسالة راحت لمين. محتاجة تفعيل إضافة واتساب (اشتراك شهري منفصل).',
+      en: 'Order confirmations and shipping updates go out on WhatsApp on their own, and you see every message that went where. Needs the WhatsApp add-on (a separate monthly subscription).',
     },
     alt: {
       ar: 'شاشة واتساب بيزنس في نُمُو وعليها الرسائل المرسلة وحالتها.',

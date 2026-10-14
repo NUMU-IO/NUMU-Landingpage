@@ -62,7 +62,8 @@ const Stores: React.FC = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
       .then((json) => {
         if (cancelled) return;
-        setStores(json?.data?.stores ?? []);
+        // A card with no logo or description reads as an abandoned store.
+        setStores(((json?.data?.stores ?? []) as DirectoryStore[]).filter((s) => s.logo_url && s.description));
         setLoaded(true);
       })
       .catch((err) => {
@@ -104,7 +105,7 @@ const Stores: React.FC = () => {
           to="/"
           className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/80 hover:text-navy transition-colors"
         >
-          ← {isAr ? "الرئيسية" : "Home"}
+          {isAr ? "→ الرئيسية" : "← Home"}
         </Link>
       </nav>
 
@@ -112,7 +113,7 @@ const Stores: React.FC = () => {
         <div className="inline-flex items-center gap-2 bg-sage/15 border border-sage/40 rounded-[4px] px-3 py-1 mb-5">
           <span className="size-1.5 rounded-full bg-sage" aria-hidden="true" />
           <span className="font-mono text-[10px] font-semibold text-sage uppercase tracking-[0.18em]">
-            § LIVE STORES
+            {isAr ? "§ متاجر شغّالة" : "§ LIVE STORES"}
           </span>
         </div>
         <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] font-bold text-ink tracking-tight leading-[1.05] mb-5">

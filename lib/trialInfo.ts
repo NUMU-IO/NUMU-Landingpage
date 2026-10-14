@@ -39,6 +39,16 @@ const FALLBACK: TrialMeta = {
 export const toArabicDigits = (s: string): string =>
   s.replace(/[0-9]/g, (d) => String.fromCharCode(0x0660 + parseInt(d, 10)));
 
+/** Pricing and trial numbers use Latin digits in both languages, like the hub. */
+export const toLatinDigits = (s: string): string =>
+  s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+
+/** What happens when the trial ends, said before signup rather than only inside the product. */
+export const afterTrialLine = (days: number) => ({
+  ar: `${days} يوم مجانًا بكل المميزات. بعدها متجرك بيتقفل للزوار لحد ما تختار باقة — وكل حاجة عملتها محفوظة.`,
+  en: `${days} days free with every feature. After that your store closes to visitors until you pick a plan — everything you built is kept.`,
+});
+
 async function fetchTrialMeta(): Promise<TrialMeta> {
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);

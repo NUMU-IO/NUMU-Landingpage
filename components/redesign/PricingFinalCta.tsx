@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { pricing, finalCta, CTA } from './copy';
 import { Section, SectionHead, PrimaryCta, useBi } from './ui';
-import { useTrialMeta, toArabicDigits } from '../../lib/trialInfo';
+import { useTrialMeta } from '../../lib/trialInfo';
 import { ASSETS } from './assets';
 import BlurReveal from './originkit/BlurReveal';
 import { PlansBody } from './PricingPlans';
@@ -52,7 +52,7 @@ const PricingFinalCta: React.FC = () => {
               ? {
                   to: '/pricing',
                   label: {
-                    ar: `تجربة ${toArabicDigits(String(trial.days))} يوم مجانًا`,
+                    ar: `تجربة ${trial.days} يوم مجانًا`,
                     en: `${trial.days}-day free trial`,
                   },
                 }

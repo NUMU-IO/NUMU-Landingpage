@@ -15,9 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const translations: Record<string, string> = {
   // Auth
   'auth.hero_title': 'Launch your empire today.',
-  'auth.hero_subtitle': 'Join the fastest growing commerce platform in the Middle East. Start selling in minutes, not months.',
-  'auth.joined_count': '10k+ Merchants',
-  'auth.joined_text': 'Growing their business with NUMU',
+  'auth.hero_subtitle': 'Start selling online in minutes — Arabic first, built for cash on delivery.',
   'auth.signup_title': 'Create Account',
   'auth.signup_subtitle': 'Start your 37-day free trial. No credit card required.',
   'auth.name': 'Full Name',
@@ -309,9 +307,7 @@ export const translations: Record<string, string> = {
 export const translationsAr: Record<string, string> = {
   // Auth
   'auth.hero_title': 'ابدأ إمبراطوريتك النهاردة.',
-  'auth.hero_subtitle': 'انضم لأسرع منصة تجارة إلكترونية بتكبر في الشرق الأوسط. ابدأ بيع في دقايق، مش شهور.',
-  'auth.joined_count': '+10 آلاف تاجر',
-  'auth.joined_text': 'بيكبروا شغلهم مع نمو',
+  'auth.hero_subtitle': 'ابدأ تبيع أونلاين في دقايق — عربي من الأول ومعمول للدفع عند الاستلام.',
   'auth.signup_title': 'اعمل حساب جديد',
   'auth.signup_subtitle': 'جرب المنصة ببلاش لمدة 37 يوم. من غير فيزا.',
   'auth.name': 'الاسم بالكامل',
