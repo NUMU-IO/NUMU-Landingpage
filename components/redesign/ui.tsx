@@ -185,7 +185,7 @@ export const Section: React.FC<{
     <section
       id={id}
       aria-labelledby={labelledBy}
-      className={`relative ${surfaceCls} ${textureCls} py-20 sm:py-24 lg:py-32 ${
+      className={`relative numu-below-fold ${surfaceCls} ${textureCls} py-20 sm:py-24 lg:py-32 ${
         stacked
           ? `-mt-8 sm:-mt-10 rounded-t-[32px] sm:rounded-t-[44px] border-t ${edgeCls}`
           : ''
@@ -306,6 +306,9 @@ export const AssetSlot: React.FC<{
       entry.src
     ];
     const srcSet = rungs?.map((r) => `${r.src} ${r.w}w`).join(', ');
+    // A screenshot fills its frame; an illustration is drawn whole inside it,
+    // with room around it, and is never cropped.
+    const fit = entry.src.endsWith('.svg') ? 'object-contain p-[7%]' : 'object-cover';
     return (
       <img
         src={entry.src}
@@ -314,7 +317,7 @@ export const AssetSlot: React.FC<{
         loading={lazy ? 'lazy' : 'eager'}
         decoding="async"
         style={{ aspectRatio: String(ratio) }}
-        className={`w-full h-full object-cover ${imgClassName} ${className}`}
+        className={`w-full h-full ${fit} ${imgClassName} ${className}`}
       />
     );
   }

@@ -83,7 +83,7 @@ const InboxAndMobile: React.FC = () => {
 
           {/* ── numu on the phone ── */}
           <Reveal delay={280} className="mt-10 rounded-[10px] border border-ink/12 bg-paper p-5 sm:p-6">
-            <div className="grid gap-5 sm:grid-cols-[1fr_8.5rem] sm:items-center">
+            <div className="grid gap-5 sm:grid-cols-[1fr_9.5rem] sm:items-center">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-navy">
                   {b({ ar: 'على الموبايل', en: 'On mobile' })}
@@ -93,8 +93,8 @@ const InboxAndMobile: React.FC = () => {
                 </h3>
                 <p className="prose-body-sm mt-2.5 text-ink-soft/80">
                   {b({
-                    ar: 'لوحة التحكم تطبيق ويب تقدّمي (PWA) — تثبّتها على شاشة الموبايل من المتصفح من غير ما تنزّل حاجة من أي متجر تطبيقات.',
-                    en: 'The dashboard is a progressive web app — install it to your home screen straight from the browser, with nothing to download from an app store.',
+                    ar: 'لوحة التحكم تطبيق ويب تقدّمي (PWA): تثبّتها على شاشة الموبايل من المتصفح من غير ما تنزّل حاجة من أي متجر تطبيقات.',
+                    en: 'The dashboard is a progressive web app: install it to your home screen straight from the browser, with nothing to download from an app store.',
                   })}
                 </p>
                 <ul className="mt-4 space-y-2.5">
@@ -107,17 +107,17 @@ const InboxAndMobile: React.FC = () => {
                 </ul>
               </div>
 
-              {/* Owner-supplied illustration (2026-09-25): a merchant on the
-                  move, the inbox in his hand. Mood, not proof — the real inbox
-                  is the screenshot beside this card. */}
-              <div className="w-32 sm:w-auto overflow-hidden rounded-[6px] border border-ink/10 bg-cream">
+              {/* Illustration (unDraw, see `assets.ts`): someone answering
+                  messages on the move. Mood, not proof — the real inbox is the
+                  screenshot beside this card. */}
+              <div className="w-36 sm:w-auto overflow-hidden rounded-[6px] border border-ink/10 bg-cream">
                 <AssetSlot
                   asset="illoInboxOnTheGo"
-                  ratio={9 / 16}
-                  sizes="136px"
+                  ratio={1}
+                  sizes="152px"
                   alt={{
-                    ar: 'رسمة توضيحية: تاجر ماشي في الشارع وبيرد على رسايل واتساب وإنستغرام وماسنجر من موبايله.',
-                    en: 'Illustration: a merchant walking down the street, answering WhatsApp, Instagram and Messenger messages from his phone.',
+                    ar: 'رسمة توضيحية: واحدة ماشية وبترد على رسايل العملاء من موبايلها.',
+                    en: 'Illustration: someone walking while answering customer messages on her phone.',
                   }}
                 />
               </div>

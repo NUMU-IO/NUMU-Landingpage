@@ -11,8 +11,13 @@
  * this page is judged on.
  *
  * Inlining collapses it: the @font-face rules are in the HTML, so the font files
- * are discovered during parse and fetched on the connection that is already
- * warm (preconnect to fonts.gstatic.com stays in index.html).
+ * are discovered during parse.
+ *
+ * The files themselves are self-hosted in `public/fonts/`. Served from
+ * fonts.gstatic.com they needed a second DNS lookup, TCP and TLS handshake
+ * before the first byte of the face the headline is set in; from this origin
+ * they ride the connection the page already has open. Each file keeps Google's
+ * version in its name, so it is safe to cache forever (`vercel.json`).
  *
  * Two reductions are applied on the way in:
  *
@@ -29,7 +34,7 @@
  * Run: node scripts/fetch-font-css.mjs
  * The block between the two markers in index.html is replaced in place.
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const URL_ =
@@ -59,7 +64,24 @@ const kept = blocks
   .filter(([, subset]) => KEEP.has(subset))
   .map(([, subset, rule]) => `/* ${subset} */\n${rule.trim()}`);
 
-const css = kept.join('\n');
+// Download each face once and point its rule at the local copy.
+const FONT_DIR = join(process.cwd(), 'public', 'fonts');
+mkdirSync(FONT_DIR, { recursive: true });
+const localUrl = new Map();
+for (const [, subset, rule] of blocks.filter(([, sub]) => KEEP.has(sub))) {
+  const remote = (rule.match(/url\((https:[^)]+)\)/) || [])[1];
+  if (!remote || localUrl.has(remote)) continue;
+  const [, family, version] = remote.match(/\/s\/([^/]+)\/(v\d+)\//) || [];
+  const weight = (rule.match(/font-weight:\s*(\d+)/) || [])[1];
+  if (!family || !weight) throw new Error('Unexpected font URL or rule: ' + remote);
+  const name = family + '-' + version + '-' + weight + '-' + subset + '.woff2';
+  const file = await fetch(remote);
+  if (!file.ok) throw new Error(remote + ' responded ' + file.status);
+  writeFileSync(join(FONT_DIR, name), Buffer.from(await file.arrayBuffer()));
+  localUrl.set(remote, '/fonts/' + name);
+}
+
+const css = kept.join('\n').replace(/url\((https:[^)]+)\)/g, (m, remote) => 'url(' + localUrl.get(remote) + ')');
 
 /**
  * Preload the two faces the hero itself is set in.
@@ -92,7 +114,7 @@ const preloads = PRELOAD.map(({ family, weight, subset }) => {
       rule.includes('font-weight: ' + weight + ';'),
   );
   if (!hit) throw new Error('No ' + family + ' ' + weight + ' (' + subset + ') face in the CSS');
-  const url = (hit[2].match(/url\(([^)]+)\)/) || [])[1];
+  const url = localUrl.get((hit[2].match(/url\(([^)]+)\)/) || [])[1]);
   if (!url) throw new Error('No src url for ' + family + ' ' + weight);
   return '<link rel="preload" as="font" type="font/woff2" href="' + url + '" crossorigin />';
 }).join('\n    ');
@@ -111,5 +133,6 @@ writeFileSync(path, next, 'utf-8');
 
 console.log(
   `Inlined ${kept.length}/${blocks.length} @font-face blocks ` +
-    `(${(css.length / 1024).toFixed(1)} KiB) + ${PRELOAD.length} preloads into index.html`,
+    `(${(css.length / 1024).toFixed(1)} KiB) + ${PRELOAD.length} preloads into index.html; ` +
+    `${localUrl.size} font files in public/fonts`,
 );

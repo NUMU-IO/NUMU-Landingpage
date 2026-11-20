@@ -17,7 +17,7 @@ import {
 import { getAttribution } from "../lib/attribution";
 import { toE164 } from "../lib/phone";
 import { identifySignup, track, trackAndLeave } from "../lib/analytics";
-import { useTrialMeta } from "../lib/trialInfo";
+import { useTrialMeta } from "../lib/pricingFacts";
 import { clearPrefill, readPrefill } from "../lib/onboardingPrefill";
 
 const DASHBOARD_URL =
@@ -32,10 +32,10 @@ const DASHBOARD_URL =
  *
  * This is the only door. The 7-day demo-tenant modal was retired on
  * 2026-09-25: every "start" action on the site opens this modal, and the
- * account it creates carries the trial (`useTrialMeta`, 37 days today).
+ * account it creates carries the trial (`useTrialMeta`, 14 days today).
  */
 /**
- * "37-day trial · no card", with the day count from the admin-controlled
+ * "14-day trial · no card", with the day count from the admin-controlled
  * pricing config. A child component rather than a hook in the modal itself:
  * the modal is mounted on every page and this only renders while it is open,
  * so the pricing-plans fetch never runs on a plain page view.

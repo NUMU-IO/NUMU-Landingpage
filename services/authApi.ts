@@ -196,6 +196,10 @@ async function postWithCsrf<T>(url: string, body: unknown): Promise<T> {
       throw new AuthError("NETWORK");
     });
 
+  // Fetched on first use rather than on every page view: most visitors never
+  // submit a form, and the page used to wait for this request before rendering.
+  if (!getCSRFToken()) await initCSRF();
+
   let res = await send();
 
   // Handle CSRF token expiry: refresh and retry once

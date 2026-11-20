@@ -24,7 +24,7 @@ interface Group {
   job: Bi;
   outcome: Bi;
   items: Bi[];
-  /** Owner-supplied illustration for the job — mood, never a capability claim. */
+  /** Illustration for the job (unDraw, see `assets.ts`) — mood, never a capability claim. */
   illo?: { asset: AssetKey; ratio: number; alt: Bi };
 }
 
@@ -34,7 +34,7 @@ const GROUPS: Group[] = [
     illo: {
       asset: 'illoOpenStore',
       ratio: 3 / 2,
-      alt: { ar: 'رسمة توضيحية: تاجر على اللابتوب بيجهّز متجره الإلكتروني، ومنتجاته على الرف وراه.', en: 'Illustration: a merchant at a laptop setting up his online store, his products on the shelf behind him.' },
+      alt: { ar: 'رسمة توضيحية: تاجرة بترتّب أقسام صفحة متجرها.', en: 'Illustration: a merchant arranging the sections of her store page.' },
     },
     job: { ar: 'ابني المتجر', en: 'Build the store' },
     outcome: {
@@ -54,8 +54,8 @@ const GROUPS: Group[] = [
     key: 'orders',
     illo: {
       asset: 'illoPackingOrders',
-      ratio: 1,
-      alt: { ar: 'رسمة توضيحية: تاجر بيغلّف أوردر في كرتونة، وقدامه اللابتوب مفتوح على قائمة الطلبات.', en: 'Illustration: a merchant packing an order into a box, his laptop open on the orders list.' },
+      ratio: 3 / 2,
+      alt: { ar: 'رسمة توضيحية: عامل بيزق عربية عليها كراتين الأوردرات.', en: 'Illustration: a worker pushing a trolley stacked with order boxes.' },
     },
     job: { ar: 'استقبل الطلبات', en: 'Receive orders' },
     outcome: {
@@ -73,8 +73,8 @@ const GROUPS: Group[] = [
     key: 'pay-ship',
     illo: {
       asset: 'illoCodDecision',
-      ratio: 4 / 5,
-      alt: { ar: 'رسمة توضيحية: تاجرة ماسكة تابلت وقدامها أوردر عليه إشارة أمان وتلات اختيارات: شحن، عربون، أو رفض — والمندوب واقف بالطرد.', en: 'Illustration: a merchant holding a tablet with an order, a safety signal and three choices — ship, deposit or decline — while the courier waits with the parcel.' },
+      ratio: 3 / 2,
+      alt: { ar: 'رسمة توضيحية: تاجر واقف قدام تلات اختيارات وبيختار واحد منهم.', en: 'Illustration: a merchant standing in front of three options, choosing one.' },
     },
     job: { ar: 'اقبض واشحن', en: 'Collect payment and ship' },
     outcome: {
@@ -96,8 +96,8 @@ const GROUPS: Group[] = [
     key: 'understand',
     illo: {
       asset: 'illoMerchantStore',
-      ratio: 16 / 9,
-      alt: { ar: 'رسمة توضيحية: تاجرة في محلها وجنبها شاشة متجرها ورسم بياني للمبيعات.', en: 'Illustration: a merchant in her shop beside her storefront screen and a sales chart.' },
+      ratio: 3 / 2,
+      alt: { ar: 'رسمة توضيحية: تاجرة شايلة كرتونة أوردرات قدام واجهة متجرها الإلكتروني.', en: 'Illustration: a merchant carrying a box of orders beside her online storefront.' },
     },
     job: { ar: 'افهم أداءك', en: 'Understand performance' },
     outcome: {
@@ -115,8 +115,8 @@ const GROUPS: Group[] = [
     key: 'grow',
     illo: {
       asset: 'illoConnectedTools',
-      ratio: 1,
-      alt: { ar: 'رسمة توضيحية: متجر في النص ومتوصل بيه بطاقة ومحفظة وشحن وتحليلات ومحادثات وإنستغرام.', en: 'Illustration: a store in the centre, wired to cards, a wallet, shipping, analytics, chat and Instagram.' },
+      ratio: 3 / 2,
+      alt: { ar: 'رسمة توضيحية: اتنين بيوصّلوا بطاقات وأدوات ببعض بخط واحد.', en: 'Illustration: two people linking cards and tools together with a single line.' },
     },
     job: { ar: 'كبّر شغلك', en: 'Grow the business' },
     outcome: {

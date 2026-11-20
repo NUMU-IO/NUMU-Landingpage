@@ -148,7 +148,7 @@ const NewsletterForm: React.FC<{ className?: string }> = ({ className = '' }) =>
           state === 'error' ? 'text-terracotta' : settled ? 'text-sage' : 'text-ink-soft/60'
         }`}
       >
-        {state === 'done' && b({ ar: 'تمام — إيميلك اتسجّل.', en: 'Done — you are on the list.' })}
+        {state === 'done' && b({ ar: 'تمام، إيميلك اتسجّل.', en: 'Done. You are on the list.' })}
         {state === 'already' && b({ ar: 'إيميلك مسجّل عندنا بالفعل.', en: 'You are already on the list.' })}
         {state === 'error' && message}
       </p>

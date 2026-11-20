@@ -56,8 +56,8 @@ const LEAD: Story = {
   name: 'Vionne',
   category: { ar: 'أوشحة وموضة محتشمة', en: 'Scarves & modest fashion' },
   body: {
-    ar: 'متجر أوشحة مبني على نُمُو وشغّال على دومينه الخاص — مودال وكتان وشيفون بأكتر من ٢٥٠ لون، توصيل لكل محافظات مصر، ودفع عند الاستلام.',
-    en: 'A scarf store built on numu and running on its own domain — modal, linen and chiffon in 250+ colours, delivery across Egypt, and cash on delivery.',
+    ar: 'متجر أوشحة مبني على نُمُو وشغّال على دومينه الخاص: مودال وكتان وشيفون بأكتر من ٢٥٠ لون، توصيل لكل محافظات مصر، ودفع عند الاستلام.',
+    en: 'A scarf store built on numu and running on its own domain: modal, linen and chiffon in 250+ colours, delivery across Egypt, and cash on delivery.',
   },
   asset: 'storeVionne',
   href: 'https://vionneeg.com',
@@ -69,7 +69,7 @@ const SURFACES: { asset: AssetKey; title: Bi; body: Bi; alt: Bi }[] = [
     asset: 'ordersWorkflow',
     title: {
       ar: 'الأوردرات قدامك، من غير لف ودوران.',
-      en: 'Your orders, in front of you — no run-around.',
+      en: 'Your orders, in front of you. No run-around.',
     },
     body: {
       ar: 'كل أوردر وحالته وعميله وشحنته في شاشة واحدة. مش ورقة وقلم ولا عشر تابات مفتوحة.',

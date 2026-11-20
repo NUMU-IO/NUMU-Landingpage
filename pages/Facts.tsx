@@ -45,7 +45,7 @@ const Facts: React.FC = () => {
       heading={{ ar: 'إجابات واضحة، من غير كلام متعارض.', en: 'Clear answers, without conflicting claims.' }}
       lead={{ ar: 'دي الصفحة المرجعية للأسعار والحدود والتجربة والتكاملات.', en: 'This is the reference page for pricing, limits, the trial, and integrations.' }}
       title={{ ar: 'حقائق نُمُو — الأسعار والحدود والتجربة', en: 'NUMU facts — pricing, limits and free trial' }}
-      description={{ ar: 'حقائق نُمُو الرسمية: تجربة 37 يوم، ستارتر من 250 جنيه، وأوردرات بلا حدود على الباقات التجارية.', en: 'Official NUMU facts: a 37-day free trial, Starter from 250 EGP, and unlimited orders on commercial plans.' }}
+      description={{ ar: 'حقائق نُمُو الرسمية: تجربة 14 يوم، ستارتر من 250 جنيه، وأوردرات بلا حدود على الباقات التجارية.', en: 'Official NUMU facts: a 14-day free trial, Starter from 250 EGP, and unlimited orders on commercial plans.' }}
     >
       <PageSection surface="paper">
         <dl className="mx-auto max-w-3xl divide-y divide-ink/10 border-y border-ink/10">

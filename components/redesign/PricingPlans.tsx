@@ -19,39 +19,22 @@ import { DEFAULT_TRIAL_DAYS, afterTrialLine, toLatinDigits } from '../../lib/tri
  * fails. Nothing here invents a price, a limit or a saving: the yearly saving
  * is computed from the two prices the admin set.
  *
- * Icons are Microsoft's Fluent Emoji 3D set (MIT, `public/emoji3d/LICENSE`,
- * fetched 2026-09-28) — the glossy 3D style the owner asked for. Motion is
- * the cards' fade-up and the recommended plan's slow breath; it stops under
- * `prefers-reduced-motion` (global rule in `index.css`).
+ * No pictures stand in for the plans: a plan is its name, its price and
+ * what it includes. Motion is the cards' fade-up and the recommended plan's
+ * slow breath; it stops under `prefers-reduced-motion` (global rule in
+ * `index.css`).
  */
 
-/** A Fluent Emoji 3D icon from `public/emoji3d/` (decorative). */
-const Icon3D: React.FC<{ name: string; size?: number }> = ({ name, size = 44 }) => (
-  <img
-    src={`/emoji3d/${name}.webp`}
-    alt=""
-    width={size}
-    height={size}
-    loading="lazy"
-    decoding="async"
-    className="shrink-0 select-none"
-    style={{ width: size, height: size }}
-  />
-);
-
-const PLAN_META: Record<string, { icon: string; accent: string; tagline: Bi }> = {
+const PLAN_META: Record<string, { accent: string; tagline: Bi }> = {
   starter: {
-    icon: 'seedling',
     accent: '#5F7D24',
     tagline: { ar: 'عشان تبدأ صح، من غير ما تشيل هم.', en: 'To start right, without the worry.' },
   },
   pro: {
-    icon: 'rocket',
     accent: '#4657B8',
     tagline: { ar: 'للي الأوردرات بقت بتجري وراه.', en: 'For when the orders start chasing you.' },
   },
   enterprise: {
-    icon: 'building',
     accent: '#A0489B',
     tagline: { ar: 'للبراندات الكبيرة اللي عايزة كل حاجة على مقاسها.', en: 'For big brands that want everything made to measure.' },
   },
@@ -88,16 +71,15 @@ export const PlansBody: React.FC = () => {
         ? { ar: 'شهرين ببلاش', en: '2 months free' }
         : { ar: `${num(monthsFree)} شهور ببلاش`, en: `${monthsFree} months free` };
 
-  const chips: { icon: string; text: Bi; show: boolean }[] = [
-    { icon: 'gift', text: { ar: `أول ${num(days)} يوم ببلاش`, en: `First ${days} days free` }, show: trialOn },
-    { icon: 'card', text: { ar: 'من غير بطاقة ائتمان', en: 'No credit card' }, show: true },
+  const chips: { text: Bi; show: boolean }[] = [
+    { text: { ar: `أول ${num(days)} يوم ببلاش`, en: `First ${days} days free` }, show: trialOn },
+    { text: { ar: 'من غير بطاقة ائتمان', en: 'No credit card' }, show: true },
     {
-      icon: 'moneybag',
       text: { ar: '0% عمولة على الأوردر في الباقات الشهرية', en: '0% per-order commission on monthly plans' },
       show: true,
     },
-    { icon: 'banknote', text: { ar: 'الكاش عند الاستلام شغّال من أول يوم', en: 'Cash on delivery from day one' }, show: true },
-    { icon: 'cycle', text: { ar: 'غيّر باقتك وقت ما تحب', en: 'Change plans whenever you like' }, show: true },
+    { text: { ar: 'الكاش عند الاستلام شغّال من أول يوم', en: 'Cash on delivery from day one' }, show: true },
+    { text: { ar: 'غيّر باقتك وقت ما تحب', en: 'Change plans whenever you like' }, show: true },
   ];
 
   const currency = (p: PublicPlan) => (p.currency === 'EGP' ? (isAr ? 'ج.م' : 'EGP') : p.currency);
@@ -139,17 +121,16 @@ export const PlansBody: React.FC = () => {
             key={c.text.en}
             as="li"
             delay={i * 70}
-            className="flex items-center gap-2 rounded-full border border-ink/10 bg-paper py-1.5 pe-4 ps-2 text-[13.5px] font-semibold text-ink shadow-[0_1px_2px_rgba(0,31,63,0.06)]"
+            className="flex items-center gap-2 rounded-full border border-ink/10 bg-paper py-1.5 pe-4 ps-3 text-[13.5px] font-semibold text-ink"
           >
-            <Icon3D name={c.icon} size={28} />
+            <Check aria-hidden="true" className="size-4 shrink-0 text-sage" strokeWidth={2.6} />
             {b(c.text)}
           </Reveal>
         ))}
     </ul>
 
     {data?.promo && (
-      <p className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full border border-dashed border-saffron bg-saffron/10 px-4 py-2 text-[14px] font-semibold text-ink">
-        <Icon3D name="gift" size={22} />
+      <p className="mx-auto mt-6 w-fit rounded-full border border-dashed border-saffron bg-saffron/10 px-4 py-2 text-center text-[14px] font-semibold text-ink">
         {isAr ? toLatinDigits(data.promo.text_ar) : data.promo.text_en}
       </p>
     )}
@@ -202,10 +183,7 @@ export const PlansBody: React.FC = () => {
                   {b({ ar: 'الأكتر اختيارًا', en: 'Most picked' })}
                 </span>
               )}
-              <div className="flex items-center gap-3">
-                <Icon3D name={meta.icon} size={52} />
-                <h2 className={`font-display text-[22px] font-bold ${popular ? 'text-cream' : 'text-ink'}`}>{isAr ? toLatinDigits(plan.name_ar) : plan.name_en}</h2>
-              </div>
+              <h2 className={`font-display text-[22px] font-bold ${popular ? 'text-cream' : 'text-ink'}`}>{isAr ? toLatinDigits(plan.name_ar) : plan.name_en}</h2>
               <p className={`mt-3 text-[14.5px] leading-7 ${popular ? 'text-cream/80' : 'text-ink-soft/85'}`}>{b(meta.tagline)}</p>
 
               <div className="mt-6 min-h-[82px]">
@@ -261,20 +239,17 @@ export const PlansBody: React.FC = () => {
     {/* Not ready to pick? Pay as you grow. */}
     {payg && (
       <Reveal className="mt-8 flex flex-col gap-5 rounded-[20px] border-2 border-dashed border-sage/50 bg-sage/[0.07] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
-        <div className="flex items-start gap-4">
-          <Icon3D name="chart" size={52} />
-          <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-terracotta">
-              {b({ ar: 'مش متأكد لسه؟', en: 'Not sure yet?' })}
-            </p>
-            <h2 className="mt-1 font-display text-xl font-bold text-ink">{isAr ? payg.name_ar : payg.name_en}</h2>
-            <p className="prose-body-sm mt-1 text-ink-soft/85">
-              {b({
-                ar: `من غير اشتراك شهري. بتشحن محفظتك بالمبلغ اللي يناسبك، وبنخصم ${payg.commission_percent ?? 3}% من كل أوردر اتدفع (في الدفع عند الاستلام: لما يتسلّم).`,
-                en: `No monthly subscription. Top up your wallet with whatever suits you, and we deduct ${payg.commission_percent ?? 3}% from each paid order (for cash on delivery: once it is delivered).`,
-              })}
-            </p>
-          </div>
+        <div>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-terracotta">
+            {b({ ar: 'مش متأكد لسه؟', en: 'Not sure yet?' })}
+          </p>
+          <h2 className="mt-1 font-display text-xl font-bold text-ink">{isAr ? payg.name_ar : payg.name_en}</h2>
+          <p className="prose-body-sm mt-1 text-ink-soft/85">
+            {b({
+              ar: `من غير اشتراك شهري. بتشحن محفظتك بالمبلغ اللي يناسبك، وبنخصم ${payg.commission_percent ?? 3}% من كل أوردر اتدفع (في الدفع عند الاستلام: لما يتسلّم).`,
+              en: `No monthly subscription. Top up your wallet with whatever suits you, and we deduct ${payg.commission_percent ?? 3}% from each paid order (for cash on delivery: once it is delivered).`,
+            })}
+          </p>
         </div>
         <button
           type="button"
@@ -297,14 +272,12 @@ const PricingPlans: React.FC = () => {
   const trialOn = data?.trial?.enabled !== false;
   const paygPct = data?.plans.find((p) => p.key === 'payg')?.commission_percent;
 
-  const steps: { icon: string; title: Bi; body: Bi }[] = [
+  const steps: { title: Bi; body: Bi }[] = [
     {
-      icon: 'memo',
       title: { ar: 'سجّل', en: 'Sign up' },
       body: { ar: 'الاسم والإيميل والموبايل والباسورد، وخلاص.', en: 'Name, email, phone and a password. That is it.' },
     },
     {
-      icon: 'party',
       title: { ar: 'جرّب ببلاش', en: 'Try it free' },
       body: {
         ar: `افتح متجرك وجرّبه ${num(days)} يوم، من غير بطاقة ائتمان.`,
@@ -312,11 +285,10 @@ const PricingPlans: React.FC = () => {
       },
     },
     {
-      icon: 'check',
       title: { ar: 'اختار باقتك', en: 'Pick your plan' },
       body: {
-        ar: 'لما تكون مرتاح، اختار الباقة اللي تناسبك — أو ادفع على قد ما بتبيع.',
-        en: 'When you are ready, pick the plan that fits — or pay only as you sell.',
+        ar: 'لما تكون مرتاح، اختار الباقة اللي تناسبك، أو ادفع على قد ما بتبيع.',
+        en: 'When you are ready, pick the plan that fits, or pay only as you sell.',
       },
     },
   ];
@@ -360,7 +332,7 @@ const PricingPlans: React.FC = () => {
               {b({ ar: 'الأسعار', en: 'Pricing' })}
             </p>
             <h1 className="mt-4 font-display font-bold text-ink text-[34px]/[1.25] sm:text-[48px]/[1.18] lg:text-[56px]/[1.12]">
-              {b({ ar: 'باقة على قد مقاسك… وبتكبر معاك.', en: 'A plan that fits you now — and grows with you.' })}
+              {b({ ar: 'باقة على قد مقاسك… وبتكبر معاك.', en: 'A plan that fits you now, and grows with you.' })}
             </h1>
             <p className="prose-body mx-auto mt-5 max-w-2xl text-ink-soft/85">
               {paygPct != null
@@ -386,10 +358,12 @@ const PricingPlans: React.FC = () => {
           <ol className="mt-10 grid gap-5 md:grid-cols-3">
             {steps.map((s, i) => (
               <Reveal key={s.title.en} as="li" delay={i * 110} className="rounded-[18px] border border-ink/10 bg-cream p-6">
-                <div className="flex items-center gap-3">
-                  <Icon3D name={s.icon} size={56} />
-                  <span className="font-mono text-[12px] font-bold text-ink-soft/70">{num(i + 1)}</span>
-                </div>
+                <span
+                  aria-hidden="true"
+                  className="grid size-11 place-items-center rounded-full bg-navy font-display text-lg font-bold text-cream"
+                >
+                  {num(i + 1)}
+                </span>
                 <h3 className="mt-4 font-display text-xl font-bold text-ink">{b(s.title)}</h3>
                 <p className="prose-body-sm mt-2 text-ink-soft/85">{b(s.body)}</p>
               </Reveal>
