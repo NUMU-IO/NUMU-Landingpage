@@ -96,16 +96,16 @@ const TrustNetworkPage: React.FC = () => {
               ))}
             </ol>
 
-            {/* Owner-supplied illustration (2026-09-25): the signal, the three
-                choices, the courier waiting. Mood beside the real screen. */}
+            {/* Illustration (unDraw, see `assets.ts`): three options and the
+                merchant choosing. Mood beside the real screen. */}
             <div className="mt-9 max-w-sm overflow-hidden rounded-[10px] border border-ink/10 bg-cream">
               <AssetSlot
                 asset="illoCodDecision"
-                ratio={4 / 5}
+                ratio={4 / 3}
                 sizes="(min-width: 1024px) 384px, 100vw"
                 alt={{
-                  ar: 'رسمة توضيحية: تاجرة ماسكة تابلت وقدامها أوردر عليه إشارة أمان وتلات اختيارات: شحن، عربون، أو رفض — والمندوب واقف بالطرد.',
-                  en: 'Illustration: a merchant holding a tablet with an order, a safety signal and three choices — ship, deposit or decline — while the courier waits with the parcel.',
+                  ar: 'رسمة توضيحية: تاجر واقف قدام تلات اختيارات وبيختار واحد منهم.',
+                  en: 'Illustration: a merchant standing in front of three options, choosing one.',
                 }}
               />
             </div>

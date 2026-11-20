@@ -1,18 +1,12 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, matchPath, useLocation } from 'react-router-dom';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import { LandingConfigProvider } from './contexts/LandingConfigContext';
-import { WaitlistModalProvider } from './contexts/WaitlistModalContext';
 import { SignupModalProvider } from './contexts/SignupModalContext';
-import { ContactModalProvider } from './contexts/ContactModalContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from '@vercel/analytics/react';
-import WaitlistModal from './components/WaitlistModal';
 import SignupModal from './components/SignupModal';
 import SignupRedirect from './components/SignupRedirect';
 import SignupUrlTrigger from './components/SignupUrlTrigger';
-import ContactModal from './components/ContactModal';
-import LiquidGlassDefs from './components/redesign/LiquidGlassDefs';
 import ScrollToTop from './components/ScrollToTop';
 import { captureAttribution } from './lib/attribution';
 
@@ -22,45 +16,70 @@ import { captureAttribution } from './lib/attribution';
    page view — including for visitors who never went near sign-in. It now
    mounts inside the two surfaces that render a Google button. */
 
-const Home = lazy(() => import('./pages/Home'));
-const AuthLayout = lazy(() => import('./pages/AuthLayout'));
-const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
-const Waitlist = lazy(() => import('./pages/Waitlist'));
-const Pricing = lazy(() => import('./pages/Pricing'));
-const Privacy = lazy(() => import('./pages/Privacy'));
-const Terms = lazy(() => import('./pages/Terms'));
-const DataDeletion = lazy(() => import('./pages/DataDeletion'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Refund = lazy(() => import('./pages/Refund'));
-const Apps = lazy(() => import('./pages/Apps'));
-const Developers = lazy(() => import('./pages/Developers'));
-const Themes = lazy(() => import('./pages/Themes'));
-const Tools = lazy(() => import('./pages/Tools'));
-const ToolStoreNames = lazy(() => import('./pages/tools/StoreNameGenerator'));
-const ToolProfitMargin = lazy(() => import('./pages/tools/ProfitMarginCalculator'));
-const ToolInvoice = lazy(() => import('./pages/tools/InvoiceGenerator'));
-const ToolAIDescription = lazy(() => import('./pages/tools/AIDescription'));
-const ToolVat = lazy(() => import('./pages/tools/VatCalculator'));
-const ToolCod = lazy(() => import('./pages/tools/CodCalculator'));
-const Learn = lazy(() => import('./pages/Learn'));
-const Stores = lazy(() => import('./pages/Stores'));
-const Partners = lazy(() => import('./pages/Partners'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+type PageModule = { default: React.ComponentType };
+
+/**
+ * A lazy route that can also be loaded ahead of its first render.
+ *
+ * `lazy` always suspends once, even when the chunk is already in memory, so a
+ * prerendered page was replaced by the Suspense spinner for a moment on every
+ * visit. A route that was preloaded renders its real component directly.
+ */
+function page(load: () => Promise<PageModule>) {
+  const Lazy = lazy(load);
+  let Loaded: React.ComponentType | undefined;
+  const Page = () => {
+    // Fixed for the life of this mount, so a later preload cannot swap the
+    // component type underneath a page that is already on screen.
+    const Component = useRef(Loaded ?? Lazy).current;
+    return <Component />;
+  };
+  Page.preload = () =>
+    load().then((m) => {
+      Loaded = m.default;
+    });
+  return Page;
+}
+
+const Home = page(() => import('./pages/Home'));
+const AuthLayout = page(() => import('./pages/AuthLayout'));
+const VerifyEmail = page(() => import('./pages/VerifyEmail'));
+const Waitlist = page(() => import('./pages/Waitlist'));
+const Pricing = page(() => import('./pages/Pricing'));
+const Privacy = page(() => import('./pages/Privacy'));
+const Terms = page(() => import('./pages/Terms'));
+const DataDeletion = page(() => import('./pages/DataDeletion'));
+const Contact = page(() => import('./pages/Contact'));
+const Refund = page(() => import('./pages/Refund'));
+const Apps = page(() => import('./pages/Apps'));
+const Developers = page(() => import('./pages/Developers'));
+const Themes = page(() => import('./pages/Themes'));
+const Tools = page(() => import('./pages/Tools'));
+const ToolStoreNames = page(() => import('./pages/tools/StoreNameGenerator'));
+const ToolProfitMargin = page(() => import('./pages/tools/ProfitMarginCalculator'));
+const ToolInvoice = page(() => import('./pages/tools/InvoiceGenerator'));
+const ToolAIDescription = page(() => import('./pages/tools/AIDescription'));
+const ToolVat = page(() => import('./pages/tools/VatCalculator'));
+const ToolCod = page(() => import('./pages/tools/CodCalculator'));
+const Learn = page(() => import('./pages/Learn'));
+const Stores = page(() => import('./pages/Stores'));
+const Partners = page(() => import('./pages/Partners'));
+const NotFound = page(() => import('./pages/NotFound'));
 
 /* Secondary pages introduced by the v1 redesign — `pages/other-pages.md`. */
-const Features = lazy(() => import('./pages/Features'));
-const IntegrationsPage = lazy(() => import('./pages/IntegrationsPage'));
-const ProductTour = lazy(() => import('./pages/ProductTour'));
-const TrustNetworkPage = lazy(() => import('./pages/TrustNetworkPage'));
-const Support = lazy(() => import('./pages/Support'));
-const About = lazy(() => import('./pages/About'));
-const Resources = lazy(() => import('./pages/Resources'));
-const Facts = lazy(() => import('./pages/Facts'));
-const LearnArticle = lazy(() => import('./pages/LearnArticle'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
-const IntegrationDetail = lazy(() => import('./pages/IntegrationDetail'));
-const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const Features = page(() => import('./pages/Features'));
+const IntegrationsPage = page(() => import('./pages/IntegrationsPage'));
+const ProductTour = page(() => import('./pages/ProductTour'));
+const TrustNetworkPage = page(() => import('./pages/TrustNetworkPage'));
+const Support = page(() => import('./pages/Support'));
+const About = page(() => import('./pages/About'));
+const Resources = page(() => import('./pages/Resources'));
+const Facts = page(() => import('./pages/Facts'));
+const LearnArticle = page(() => import('./pages/LearnArticle'));
+const Blog = page(() => import('./pages/Blog'));
+const BlogPost = page(() => import('./pages/BlogPost'));
+const IntegrationDetail = page(() => import('./pages/IntegrationDetail'));
+const ComparisonPage = page(() => import('./pages/ComparisonPage'));
 
 const LoadingFallback = () => (
   <div data-suspense-fallback className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark">
@@ -105,6 +124,17 @@ const routeComponents = [
   ['partners/:id', Partners],
 ] as const;
 
+/**
+ * Load the code for the page at `pathname` before React first renders, so the
+ * prerendered HTML stays on screen until the same page can be painted over it.
+ * Resolves straight away for paths that are not one of the content routes.
+ */
+export function preloadRoute(pathname: string): Promise<void> {
+  const path = pathname.replace(/^\/(ar|en)(?=\/|$)/, '').replace(/\/+$/, '') || '/';
+  const hit = routeComponents.find(([pattern]) => matchPath(`/${pattern}`, path));
+  return hit ? hit[1].preload() : Promise.resolve();
+}
+
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || 'https://merchant.numueg.app';
 
 /**
@@ -142,11 +172,8 @@ const RoutedApp: React.FC = () => {
   return (
     <ErrorBoundary>
     <LanguageProvider>
-      <LandingConfigProvider>
         <ScrollToTop />
-        <WaitlistModalProvider>
         <SignupModalProvider>
-        <ContactModalProvider>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             {(['ar', 'en'] as const).flatMap((locale) =>
@@ -170,17 +197,11 @@ const RoutedApp: React.FC = () => {
             <Route path="*" element={<LegacyLocaleRedirect />} />
           </Routes>
         </Suspense>
-        {/* Global modals — rendered once at root so any CTA can open them */}
+        {/* Global modal — rendered once at root so any CTA can open it */}
         <SignupUrlTrigger />
         <SignupModal />
-        <WaitlistModal />
-        <ContactModal />
-        <LiquidGlassDefs />
         <Analytics />
-        </ContactModalProvider>
         </SignupModalProvider>
-        </WaitlistModalProvider>
-    </LandingConfigProvider>
     </LanguageProvider>
     </ErrorBoundary>
   );

@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, Loader2, Search, ShoppingBag, User } from 'lucide-react';
+import {
+  Banknote, Brush, CakeSlice, Check, CircleCheck, Glasses, Loader2, Package, Search, Shirt, ShoppingBag,
+  Smartphone, Sofa, Truck, User, type LucideIcon,
+} from 'lucide-react';
 import { onboardingChat as C, type Bi, type ChatChip } from './copy';
 import { Section, SectionHead, AssetSlot, useBi } from './ui';
 import { usePrefersReducedMotion } from './hooks';
@@ -68,9 +71,9 @@ export const guessNiche = (text: string): ChatChip => {
 };
 
 /** Preview content per niche. Prices are sample prices for the preview only. */
-const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [string, Bi, number][] }> = {
+const NICHE: Record<string, { icon: LucideIcon; hue: string; hero: Bi; products: [string, Bi, number][] }> = {
   fashion: {
-    icon: 'dress',
+    icon: Shirt,
     hue: '#B94F62',
     hero: { ar: 'تشكيلة الصيف وصلت', en: 'The summer edit is in' },
     products: [
@@ -81,7 +84,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   accessories: {
-    icon: 'sunglasses',
+    icon: Glasses,
     hue: '#A67A22',
     hero: { ar: 'تفاصيل بتكمّل لوكك', en: 'Details that finish the look' },
     products: [
@@ -92,7 +95,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   beauty: {
-    icon: 'lipstick',
+    icon: Brush,
     hue: '#A0489B',
     hero: { ar: 'عناية تليق بيكي', en: 'Care that suits you' },
     products: [
@@ -103,7 +106,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   electronics: {
-    icon: 'phone',
+    icon: Smartphone,
     hue: '#4657B8',
     hero: { ar: 'إكسسوارات موبايلك بأحسن سعر', en: 'Phone accessories, best prices' },
     products: [
@@ -114,7 +117,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   food: {
-    icon: 'cake',
+    icon: CakeSlice,
     hue: '#5F7D24',
     hero: { ar: 'معمول في البيت بحب', en: 'Home-made, with love' },
     products: [
@@ -125,7 +128,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   home: {
-    icon: 'couch',
+    icon: Sofa,
     hue: '#BD6538',
     hero: { ar: 'بيتك يستاهل أحلى', en: 'Your home deserves better' },
     products: [
@@ -136,7 +139,7 @@ const NICHE: Record<string, { icon: string; hue: string; hero: Bi; products: [st
     ],
   },
   other: {
-    icon: 'package',
+    icon: Package,
     hue: '#5B6876',
     hero: { ar: 'حاجات حلوة وهدايا بتفرّح', en: 'Lovely things and gifts' },
     products: [
@@ -154,19 +157,6 @@ const BUILD_STEPS = (label: Bi): Bi[] => [
   { ar: 'بنظبط الشحن لكل المحافظات', en: 'Setting up shipping to every governorate' },
   { ar: 'بنرص المنتجات في الواجهة', en: 'Laying out the products' },
 ];
-
-const Icon3D: React.FC<{ name: string; size: number; className?: string }> = ({ name, size, className = '' }) => (
-  <img
-    src={`/emoji3d/${name}.webp`}
-    alt=""
-    width={size}
-    height={size}
-    loading="lazy"
-    decoding="async"
-    className={`shrink-0 select-none ${className}`}
-    style={{ width: size, height: size }}
-  />
-);
 
 const slugify = (name: string) =>
   name
@@ -304,10 +294,7 @@ const OnboardingChat: React.FC = () => {
                   {b({ ar: 'بنجهّز متجرك…', en: 'Building your store…' })}
                 </>
               ) : (
-                <>
-                  <Icon3D name="sparkles" size={20} />
-                  {b(C.composer.submit)}
-                </>
+                b(C.composer.submit)
               )}
             </button>
           </div>
@@ -318,7 +305,9 @@ const OnboardingChat: React.FC = () => {
           <div className="mt-5 rounded-[20px] border border-ink/10 bg-paper/80 p-3 sm:p-4">
             <p className="px-2 pb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft/80">{b(C.composer.presets)}</p>
             <div role="group" aria-label={b(C.choicesLabel)} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {C.niche.chips.map((c) => (
+              {C.niche.chips.map((c) => {
+                const { icon: Icon, hue } = NICHE[c.value] ?? NICHE.other;
+                return (
                 <button
                   key={c.value}
                   type="button"
@@ -329,15 +318,16 @@ const OnboardingChat: React.FC = () => {
                   className="group flex items-center gap-3 rounded-[14px] px-2.5 py-2.5 text-start transition-colors hover:bg-cream
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
                 >
-                  <span className="grid size-12 shrink-0 place-items-center rounded-[12px] bg-cream transition-transform group-hover:-translate-y-0.5">
-                    <Icon3D name={NICHE[c.value]?.icon ?? 'package'} size={34} />
+                  <span className="grid size-11 shrink-0 place-items-center rounded-[12px] bg-cream" style={{ color: hue }}>
+                    <Icon aria-hidden="true" className="size-[22px]" strokeWidth={1.8} />
                   </span>
                   <span className="min-w-0">
                     <span className="block text-[15px] font-bold text-ink">{b(c.label)}</span>
                     {c.desc && <span className="hidden truncate text-[12.5px] text-ink-soft/80 sm:block">{b(c.desc)}</span>}
                   </span>
                 </button>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -482,11 +472,11 @@ const OnboardingChat: React.FC = () => {
 
                   <div className="grid grid-cols-3 gap-2 border-t border-ink/10 bg-[#fafaf8] px-4 py-3 text-[11.5px] font-semibold sm:px-6">
                     <span className="flex items-center gap-1.5">
-                      <Icon3D name="truck" size={20} />
+                      <Truck aria-hidden="true" className="size-4 shrink-0 text-ink/60" />
                       {shipLabel && ship !== 'unknown' ? b({ ar: `شحن مع ${shipLabel.ar}`, en: `Ships with ${shipLabel.en}` }) : b({ ar: 'شحن لكل المحافظات', en: 'Ships nationwide' })}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Icon3D name="banknote" size={20} />
+                      <Banknote aria-hidden="true" className="size-4 shrink-0 text-ink/60" />
                       {b({ ar: 'الدفع عند الاستلام', en: 'Cash on delivery' })}
                     </span>
                     <span className="flex items-center justify-end gap-1.5">
@@ -551,7 +541,7 @@ const OnboardingChat: React.FC = () => {
                 {/* Ready */}
                 <div className="flex flex-col gap-3 border-t border-ink/10 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                   <p className="flex items-center gap-2 text-[14.5px] font-semibold text-ink">
-                    <Icon3D name="check" size={24} />
+                    <CircleCheck aria-hidden="true" className="size-5 shrink-0 text-sage" />
                     {b({ ar: `مسودة متجر «${niche.label.ar}» جاهزة.`, en: `Your ${niche.label.en.toLowerCase()} store draft is ready.` })}
                   </p>
                   <div className="flex flex-wrap items-center gap-2">
@@ -575,8 +565,8 @@ const OnboardingChat: React.FC = () => {
                 </div>
                 <p className="border-t border-ink/10 px-4 py-2.5 text-center text-[12px] text-ink-soft/80 sm:px-6">
                   {b({
-                    ar: `دي معاينة على قد وصفك — بعد التسجيل بتختار الثيم وتضيف منتجاتك الحقيقية. تجربة ${days} يوم ببلاش، من غير بطاقة ائتمان.`,
-                    en: `This is a preview from your description — after sign-up you pick the theme and add your real products. ${days}-day free trial, no credit card.`,
+                    ar: `دي معاينة على قد وصفك. بعد التسجيل بتختار الثيم وتضيف منتجاتك الحقيقية. تجربة ${days} يوم ببلاش، من غير بطاقة ائتمان.`,
+                    en: `This is a preview from your description. After sign-up you pick the theme and add your real products. ${days}-day free trial, no credit card.`,
                   })}
                 </p>
               </>

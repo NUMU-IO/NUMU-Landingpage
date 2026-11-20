@@ -1,9 +1,19 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CookieConsent from '../components/CookieConsent';
 import HeroSection from '../components/redesign/HeroSection';
+import OnboardingChat from '../components/redesign/OnboardingChat';
+import MerchantProof from '../components/redesign/MerchantProof';
+import LocalCommerce from '../components/redesign/LocalCommerce';
+import ProductSystem from '../components/redesign/ProductSystem';
+import ReliabilityGrowth from '../components/redesign/ReliabilityGrowth';
+import CodOperations from '../components/redesign/CodOperations';
+import InboxAndMobile from '../components/redesign/InboxAndMobile';
+import Ecosystem from '../components/redesign/Ecosystem';
+import PricingFinalCta from '../components/redesign/PricingFinalCta';
+import ExploreMore from '../components/redesign/ExploreMore';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 
@@ -28,8 +38,10 @@ import { useSEO } from '../hooks/useSEO';
  * catalogue. Those components still exist in `components/` and belong on
  * their own pages or in later experiments.
  *
- * Only the hero ships in the main chunk, so the headline and primary CTA
- * paint without waiting for anything below the fold.
+ * The whole page is one chunk. It is prerendered, so the headline and primary
+ * CTA are painted from HTML before any script runs; splitting each section
+ * into its own lazy chunk only meant the sections below the hero collapsed to
+ * an empty box, then came back, while React took over.
  *
  * Amended by the owner's 2026-09-25 request (`docs/Plans/landing page
  * updates/`): a guided chat sits between the hero and section 2 (1b),
@@ -37,22 +49,6 @@ import { useSEO } from '../hooks/useSEO';
  * shows the order pipeline in place of the globe. The order above is
  * otherwise unchanged.
  */
-
-const OnboardingChat = lazy(() => import('../components/redesign/OnboardingChat'));
-const MerchantProof = lazy(() => import('../components/redesign/MerchantProof'));
-const LocalCommerce = lazy(() => import('../components/redesign/LocalCommerce'));
-const ProductSystem = lazy(() => import('../components/redesign/ProductSystem'));
-const ReliabilityGrowth = lazy(() => import('../components/redesign/ReliabilityGrowth'));
-const CodOperations = lazy(() => import('../components/redesign/CodOperations'));
-const InboxAndMobile = lazy(() => import('../components/redesign/InboxAndMobile'));
-const Ecosystem = lazy(() => import('../components/redesign/Ecosystem'));
-const PricingFinalCta = lazy(() => import('../components/redesign/PricingFinalCta'));
-const ExploreMore = lazy(() => import('../components/redesign/ExploreMore'));
-
-/** Reserves height so the scroll position does not jump as chunks boot. */
-const SectionFallback: React.FC = () => (
-  <div className="min-h-[420px]" aria-hidden="true" />
-);
 
 const Home: React.FC = () => {
   const { language } = useLanguage();
@@ -85,36 +81,32 @@ const Home: React.FC = () => {
         {/* 1 */}
         <HeroSection />
 
-        <Suspense fallback={<SectionFallback />}>
-          {/* 1b — the onboarding chat: a few questions, then sign-up with the
-              answers carried into the hub's setup wizard. */}
-          <OnboardingChat />
-          {/* 2 */}
-          <MerchantProof />
-          {/* 3 */}
-          <LocalCommerce />
-          {/* 4 */}
-          <ProductSystem />
-          {/* 5 */}
-          <ReliabilityGrowth />
-          {/* 6 */}
-          <CodOperations />
-          {/* 6b — تواصل: the inbox, and numu on the phone. Sits with the
-              communication story rather than opening a new one. */}
-          <InboxAndMobile />
-          {/* 7 */}
-          <Ecosystem />
-          {/* 8 */}
-          <PricingFinalCta />
-        </Suspense>
+        {/* 1b — the onboarding chat: a few questions, then sign-up with the
+            answers carried into the hub's setup wizard. */}
+        <OnboardingChat />
+        {/* 2 */}
+        <MerchantProof />
+        {/* 3 */}
+        <LocalCommerce />
+        {/* 4 */}
+        <ProductSystem />
+        {/* 5 */}
+        <ReliabilityGrowth />
+        {/* 6 */}
+        <CodOperations />
+        {/* 6b — تواصل: the inbox, and numu on the phone. Sits with the
+            communication story rather than opening a new one. */}
+        <InboxAndMobile />
+        {/* 7 */}
+        <Ecosystem />
+        {/* 8 */}
+        <PricingFinalCta />
       </main>
 
       {/* Below the narrative, not inside it — see ExploreMore's header note. */}
-      <Suspense fallback={null}>
-        <ExploreMore />
-      </Suspense>
+      <ExploreMore />
 
-      <footer id="footer" className="relative bg-paper numu-dot-surface pt-8 pb-12 lg:pb-16">
+      <footer id="footer" className="relative numu-below-fold bg-paper numu-dot-surface pt-8 pb-12 lg:pb-16">
         <Footer />
       </footer>
 

@@ -128,19 +128,23 @@ export const ASSETS = {
   merchantPixelprintHome: { src: '/assets/merchant-pixelprint-home.webp', delivered: true, owner: 'Marketing' },
   merchantRabbitHome: { src: '/assets/merchant-rabbit-home.webp', delivered: true, owner: 'Marketing' },
 
-  /* ── Illustrations — supplied by the owner on 2026-09-25
-     (`docs/Plans/landing page updates/imgs/`: six PNGs in the brand palette,
-     drawn characters, no real person or merchant). They set the mood where a
-     section or page had no visual; the hub captures stay the proof of the
-     product and none of them was removed or replaced by these. WebP masters
-     at ≤ 2000 px, q80, each under 170 KB. Placement and alt-text rules:
-     `docs/Plans/landing page updates/10-owner-illustrations.md`. */
-  illoOpenStore: { src: '/assets/illo-open-store.webp', delivered: true, owner: 'User/marketing' },
-  illoMerchantStore: { src: '/assets/illo-merchant-store.webp', delivered: true, owner: 'User/marketing' },
-  illoCodDecision: { src: '/assets/illo-cod-decision.webp', delivered: true, owner: 'User/marketing' },
-  illoConnectedTools: { src: '/assets/illo-connected-tools.webp', delivered: true, owner: 'User/marketing' },
-  illoInboxOnTheGo: { src: '/assets/illo-inbox-on-the-go.webp', delivered: true, owner: 'User/marketing' },
-  illoPackingOrders: { src: '/assets/illo-packing-orders.webp', delivered: true, owner: 'User/marketing' },
+  /* ── Illustrations — unDraw (https://undraw.co), drawn by Katerina
+     Limpitsouni, downloaded 2026-11-20 with the site's own "Download SVG"
+     button. They replaced six image-generator pictures the owner no longer
+     wanted on the site ("dont want them to look like ai").
+     License (https://undraw.co/license): free for commercial use, no
+     attribution required, modification allowed; not to be redistributed as a
+     pack or used to build a competing library.
+     Recoloured into the numu palette by `scripts/recolor-illustrations.mjs`,
+     which also records which unDraw file each one came from. They set the
+     mood where a section or page had no visual; the hub captures stay the
+     proof of the product. */
+  illoOpenStore: { src: '/assets/illo-open-store.svg', delivered: true, owner: 'unDraw' },
+  illoMerchantStore: { src: '/assets/illo-merchant-store.svg', delivered: true, owner: 'unDraw' },
+  illoCodDecision: { src: '/assets/illo-cod-decision.svg', delivered: true, owner: 'unDraw' },
+  illoConnectedTools: { src: '/assets/illo-connected-tools.svg', delivered: true, owner: 'unDraw' },
+  illoInboxOnTheGo: { src: '/assets/illo-inbox-on-the-go.svg', delivered: true, owner: 'unDraw' },
+  illoPackingOrders: { src: '/assets/illo-packing-orders.svg', delivered: true, owner: 'unDraw' },
 } satisfies Record<string, AssetEntry>;
 
 export type AssetKey = keyof typeof ASSETS;

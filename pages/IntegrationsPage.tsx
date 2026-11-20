@@ -134,11 +134,11 @@ const IntegrationsPage: React.FC = () => {
           <div className="overflow-hidden rounded-[10px] border border-ink/10 bg-cream">
             <AssetSlot
               asset="illoConnectedTools"
-              ratio={1}
+              ratio={4 / 3}
               sizes="(min-width: 1024px) 480px, 100vw"
               alt={{
-                ar: 'رسمة توضيحية: تاجر على اللابتوب ومتجره في النص، ومتوصل بيه بطاقة ومحفظة وشحن وتحليلات ومحادثات وإنستغرام.',
-                en: 'Illustration: a merchant at a laptop with his store in the centre, connected to cards, a wallet, shipping, analytics, chat and Instagram.',
+                ar: 'رسمة توضيحية: اتنين بيوصّلوا بطاقات وأدوات ببعض بخط واحد.',
+                en: 'Illustration: two people linking cards and tools together with a single line.',
               }}
             />
           </div>

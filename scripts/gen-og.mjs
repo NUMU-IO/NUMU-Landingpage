@@ -34,7 +34,7 @@ for (let i = 2; i < process.argv.length; i += 1) {
 
 // Same day count the static marketing copy uses (`lib/trialInfo.ts`).
 const trialDays =
-  /DEFAULT_TRIAL_DAYS\s*=\s*(\d+)/.exec(readFileSync(resolve(ROOT, 'lib/trialInfo.ts'), 'utf8'))?.[1] ?? '37';
+  /DEFAULT_TRIAL_DAYS\s*=\s*(\d+)/.exec(readFileSync(resolve(ROOT, 'lib/trialInfo.ts'), 'utf8'))?.[1] ?? '14';
 const arabicDigits = (s) => s.replace(/[0-9]/g, (d) => String.fromCharCode(0x0660 + Number(d)));
 
 const title = args.title ?? 'افتح متجرك وابدأ البيع من غير تعقيد.';
@@ -79,6 +79,9 @@ const html = `<!doctype html>
   .sub { margin: 22px 0 0; font-size: 28px; line-height: 1.55; color: rgba(245, 239, 230, 0.78); max-width: 960px; }
   .foot { display: flex; justify-content: space-between; align-items: flex-end;
     font-family: 'JetBrains Mono', monospace; font-size: 19px; letter-spacing: 0.14em; text-transform: uppercase; color: #E8A430; }
+  /* Arabic is cursive: tracking pulls its joined letters apart, and the mono
+     face has no Arabic glyphs at all. Same rule the site applies to labels. */
+  .foot .ar { font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 22px; letter-spacing: 0; }
 </style>
 </head>
 <body>
@@ -86,7 +89,7 @@ const html = `<!doctype html>
   <div class="bar"></div>
   <div class="brand"><img src="data:image/webp;base64,${mark}" alt=""><span>نُمُو</span></div>
   <div><h1>${esc(title)}</h1><p class="sub">${esc(sub)}</p></div>
-  <div class="foot"><span>تجربة ${arabicDigits(trialDays)} يوم · من غير بطاقة</span><span dir="ltr">numueg.app</span></div>
+  <div class="foot"><span class="ar">تجربة ${arabicDigits(trialDays)} يوم · من غير بطاقة</span><span dir="ltr">numueg.app</span></div>
 </div>
 </body>
 </html>`;

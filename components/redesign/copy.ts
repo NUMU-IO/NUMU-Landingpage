@@ -117,13 +117,13 @@ export const onboardingChat = {
       { ar: 'محل هدوم في المنصورة وعايز أبيع أونلاين…', en: 'A clothes shop in Mansoura that wants to sell online…' },
     ] as Bi[],
     submit: { ar: 'ابني متجري', en: 'Build my store' },
-    hint: { ar: 'اكتب بالعامي عادي — أو اختار من تحت', en: 'Type it plainly — or pick one below' },
+    hint: { ar: 'اكتب بالعامي عادي، أو اختار من تحت', en: 'Type it plainly, or pick one below' },
     presets: { ar: 'الأكتر اختيارًا', en: 'Most picked' },
   },
   choicesLabel: { ar: 'اختار إجابة', en: 'Pick an answer' },
   niche: {
     ask: {
-      ar: 'أهلًا! أنا نُمُو. مش هاخد من وقتك أكتر من كوباية شاي — كام سؤال ونبدأ. بتبيع إيه؟',
+      ar: 'أهلًا! أنا نُمُو. مش هاخد من وقتك أكتر من كوباية شاي. كام سؤال ونبدأ. بتبيع إيه؟',
       en: "Hi, I'm numu. A few quick questions and we start. What do you sell?",
     },
     chips: [
@@ -152,7 +152,7 @@ export const onboardingChat = {
     ask: { ar: 'وبيجيلك كام أوردر في الشهر تقريبًا؟', en: 'Roughly how many orders a month?' },
     notYet: {
       ar: 'ولا يهمك، كلنا بدأنا من أول أوردر. أول أوردر عليك، والباقي علينا.',
-      en: 'No problem — everyone starts from order one.',
+      en: 'No problem, everyone starts from order one.',
     },
     notYetLabel: { ar: 'لسه', en: 'Not yet' },
     chips: [
@@ -312,8 +312,8 @@ export const localCommerce = {
     en: 'Your commerce runs with the market you sell in.',
   },
   support: {
-    ar: 'الدفع والشحن وواتساب والدفع عند الاستلام — الحاجات اللي بتفتح لها خمس تابات كل يوم، في تاب واحدة.',
-    en: 'Local payments, shipping that fits, WhatsApp, and cash on delivery — the essentials for an Egyptian merchant in one place.',
+    ar: 'الدفع والشحن وواتساب والدفع عند الاستلام: الحاجات اللي بتفتح لها خمس تابات كل يوم، في تاب واحدة.',
+    en: 'Local payments, shipping that fits, WhatsApp, and cash on delivery: the essentials for an Egyptian merchant in one place.',
   },
   blocks: [
     {
@@ -324,8 +324,8 @@ export const localCommerce = {
         en: 'Let the customer pay the way that suits them.',
       },
       body: {
-        ar: 'كارت، فودافون كاش أو أي محفظة، إنستاباي، أو دفع عند الاستلام — العميل بيختار، والأوردر بيوصلك بنفس الشكل.',
-        en: 'Card, Vodafone Cash or any wallet, InstaPay, or cash on delivery — the customer chooses, and the order reaches you the same way.',
+        ar: 'كارت، فودافون كاش أو أي محفظة، إنستاباي، أو دفع عند الاستلام. العميل بيختار، والأوردر بيوصلك بنفس الشكل.',
+        en: 'Card, Vodafone Cash or any wallet, InstaPay, or cash on delivery. The customer chooses, and the order reaches you the same way.',
       },
     },
     {
@@ -367,8 +367,8 @@ export const localCommerce = {
    ============================================================ */
 export const productSystem = {
   heading: {
-    ar: 'من شكل المتجر لقرارات البيع — كل حاجة قدامك.',
-    en: 'From how the store looks to how you decide — all in front of you.',
+    ar: 'من شكل المتجر لقرارات البيع، كل حاجة قدامك.',
+    en: 'From how the store looks to how you decide, all in front of you.',
   },
   support: {
     ar: 'اختار شكل عربي احترافي، أضف منتجاتك، وبعدها تابع الطلبات والمبيعات من لوحة تحكم واحدة.',
@@ -390,8 +390,8 @@ export const productSystem = {
       key: 'orders',
       label: { ar: 'الطلبات', en: 'Orders' },
       body: {
-        ar: 'الطلبات الجديدة، حالة كل أوردر، والشحنات — كلها في شاشة واحدة تفتحها الصبح وتعرف تشتغل منها.',
-        en: 'New orders, the status of each one, and shipments — all on one screen you can open and work from.',
+        ar: 'الطلبات الجديدة، حالة كل أوردر، والشحنات: كلها في شاشة واحدة تفتحها الصبح وتعرف تشتغل منها.',
+        en: 'New orders, the status of each one, and shipments: all on one screen you can open and work from.',
       },
     },
     {
@@ -553,12 +553,12 @@ export const cod = {
    ============================================================ */
 export const ecosystem = {
   heading: {
-    ar: 'الأدوات اللي بتبيع بيها، بتكلّم بعض — من غير ما تكون إنت الوسيط.',
-    en: 'The tools you sell with, talking to each other — without you in the middle.',
+    ar: 'الأدوات اللي بتبيع بيها بتكلّم بعض، من غير ما تكون إنت الوسيط.',
+    en: 'The tools you sell with talk to each other, without you in the middle.',
   },
   support: {
-    ar: 'اربط الدفع والمحافظ، الشحن، واتساب، الدومين، الاستيراد، والذكاء الاصطناعي — وخلي نُمُو يجمعلك التشغيل في مكان واحد.',
-    en: 'Connect payments and wallets, shipping, WhatsApp, your domain, imports and AI — and let numu bring the operation together in one place.',
+    ar: 'اربط الدفع والمحافظ، الشحن، واتساب، الدومين، الاستيراد، والذكاء الاصطناعي، وخلي نُمُو يجمعلك التشغيل في مكان واحد.',
+    en: 'Connect payments and wallets, shipping, WhatsApp, your domain, imports and AI, and let numu bring the operation together in one place.',
   },
 };
 

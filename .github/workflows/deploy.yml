@@ -73,8 +73,12 @@ jobs:
           sitemap=$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors https://numueg.app/sitemap.xml)
           echo "$pricing" | grep -qi 'canonical" href="https://numueg.app/en/pricing' \
             || { echo "::error::English pricing canonical is missing"; exit 1; }
-          echo "$pricing" | grep -qi '37-day' \
-            || { echo "::error::37-day trial is missing from English pricing"; exit 1; }
+          # The trial length the static copy states, from the one constant it
+          # follows. This used to look for a literal "37-day", which would have
+          # failed every release after the offer changed.
+          days=$(grep -oE 'DEFAULT_TRIAL_DAYS = [0-9]+' lib/trialInfo.ts | grep -oE '[0-9]+$')
+          echo "$pricing" | grep -qi "${days}-day" \
+            || { echo "::error::${days}-day trial is missing from English pricing"; exit 1; }
           echo "$facts" | grep -qi 'unlimited orders' \
             || { echo "::error::Official facts do not state unlimited orders"; exit 1; }
           echo "$sitemap" | grep -q '<loc>https://numueg.app/ar/learn/open-store-egypt</loc>' \

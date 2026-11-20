@@ -22,7 +22,7 @@ const rows: { criterion: Bi; numu: Bi }[] = [
   { criterion: { ar: 'السوق الأساسي', en: 'Primary market' }, numu: { ar: 'مصر، بواجهة عربية من الأساس', en: 'Egypt, with Arabic-first storefronts' } },
   { criterion: { ar: 'السعر', en: 'Price' }, numu: { ar: 'ستارتر من 250 جنيه مصري شهريًا', en: 'Starter from 250 EGP/month' } },
   { criterion: { ar: 'حد الأوردرات', en: 'Order limit' }, numu: { ar: 'بلا حدود على الباقات التجارية', en: 'Unlimited on commercial plans' } },
-  { criterion: { ar: 'التجربة', en: 'Trial' }, numu: { ar: '37 يوم من غير بطاقة', en: '37 days without a credit card' } },
+  { criterion: { ar: 'التجربة', en: 'Trial' }, numu: { ar: '14 يوم من غير بطاقة', en: '14 days without a credit card' } },
   { criterion: { ar: 'تكاملات مصر', en: 'Egypt integrations' }, numu: { ar: 'Paymob وفوري وKashier وفواتيرك وإنستاباي والمحافظ، وبوسطة ومايلرز وJ&T، وETA', en: 'Paymob, Fawry, Kashier, Fawaterak, InstaPay and wallets; Bosta, Mylerz and J&T; ETA' } },
 ];
 

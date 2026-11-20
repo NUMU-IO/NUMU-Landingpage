@@ -8,21 +8,25 @@ import { useMediaQuery, usePrefersReducedMotion } from './hooks';
 /**
  * 01 — Hero. `sections/01-hero.md`.
  *
- * Full-bleed: numu's own 48-second motion film fills the first viewport as
- * the background, and the headline, CTAs and reassurance sit over it on the
- * start side — the owner's call (2026-09-28), with the 16:9 cut from 768 px up
- * and the 9:16 cut below. Masters: `docs/Plans/landing page updates/motion
- * video i want to use it/`.
+ * Copy on the start side, numu's own 48-second motion film beside it in its
+ * own frame — the 16:9 cut from 768 px up, the 9:16 cut below. Masters:
+ * `docs/Plans/landing page updates/motion video i want to use it/`.
  *
- * The film carries titles of its own, so legibility is handled by a scrim
- * that is heavy under the copy and clears over the far side (three layers,
- * below). A small button pauses and resumes it — a 48-second moving
- * background needs one (WCAG 2.2.2). Under `prefers-reduced-motion` or
- * Save-Data it does not start by itself and loads nothing until played.
+ * The film is shown as it was made, with nothing over it (owner, 2026-11-20).
+ * It used to fill the whole hero behind the headline, and because it carries
+ * titles of its own it had to sit under a navy scrim heavy enough to keep the
+ * headline readable — which washed the film out. Side by side, neither one
+ * has to give way to the other.
+ *
+ * A small button pauses and resumes it — a 48-second moving image needs one
+ * (WCAG 2.2.2). Under `prefers-reduced-motion`, Save-Data or a 2G-class
+ * connection it does not start by itself and loads nothing until played.
  *
  * The hero paints without the film: the poster is up immediately and the
  * headline and primary CTA never wait on a network fetch.
  */
+
+type Connection = { saveData?: boolean; effectiveType?: string };
 
 const HeroSection: React.FC = () => {
   const { b } = useBi();
@@ -31,12 +35,18 @@ const HeroSection: React.FC = () => {
   const [failed, setFailed] = useState(false);
   const [paused, setPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  // Off screen the film is only decoding frames nobody sees, on the same
+  // thread the rest of the page scrolls on.
+  const [onScreen, setOnScreen] = useState(true);
 
-  // Reduced motion or Save-Data: nothing plays or loads until the visitor asks.
-  const quiet =
-    reduced ||
-    (typeof navigator !== 'undefined' &&
-      !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+  // Reduced motion, Save-Data or a very slow link: nothing plays or loads
+  // until the visitor asks.
+  const connection =
+    typeof navigator !== 'undefined'
+      ? (navigator as Navigator & { connection?: Connection }).connection
+      : undefined;
+  const quiet = reduced || !!connection?.saveData || /2g/.test(connection?.effectiveType ?? '');
 
   /**
    * Hold the <video> back until the page has loaded: the film is the biggest
@@ -66,6 +76,14 @@ const HeroSection: React.FC = () => {
     if (quiet) setPaused(true);
   }, [quiet]);
 
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const obs = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const showVideo = !failed && videoArmed;
 
   // Play as early as the browser allows; the `loadeddata` retry covers a
@@ -73,7 +91,7 @@ const HeroSection: React.FC = () => {
   useEffect(() => {
     const el = videoRef.current;
     if (!el || !showVideo) return;
-    if (paused) {
+    if (paused || !onScreen) {
       el.pause();
       return;
     }
@@ -91,116 +109,111 @@ const HeroSection: React.FC = () => {
       cancelled = true;
       el.removeEventListener('loadeddata', play);
     };
-  }, [showVideo, isDesktop, paused]);
+  }, [showVideo, isDesktop, paused, onScreen]);
 
   return (
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative isolate min-h-[640px] h-[100svh] max-h-[920px] w-full overflow-hidden bg-navy-900"
+      className="relative isolate w-full overflow-hidden bg-navy-900 numu-navy-surface numu-soft-navy
+        pt-24 pb-20 sm:pt-28 sm:pb-24 lg:pt-32 lg:pb-28"
     >
-      {/* ── Film ── */}
-      <div className="absolute inset-0 -z-10">
-        {/*
-          The poster is a real <picture>, always in the markup: `<source
-          media>` picks the cut during HTML parse, so each form factor
-          downloads one poster — the right one — before any script runs.
-        */}
-        <picture>
-          <source media="(min-width: 768px)" srcSet={ASSETS.heroFilmPoster.src} />
-          <img
-            src={ASSETS.heroFilmPosterMobile.src}
-            alt={b(hero.videoAlt)}
-            width={720}
-            height={1280}
-            className="absolute inset-0 h-full w-full object-cover"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </picture>
-
-        {showVideo && (
-          <video
-            // Remount on breakpoint change so the browser picks up the other cut.
-            key={isDesktop ? 'desktop' : 'mobile'}
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            preload={quiet ? 'none' : 'auto'}
-            // The URL the <picture> already chose, so it comes from the cache.
-            poster={isDesktop ? ASSETS.heroFilmPoster.src : ASSETS.heroFilmPosterMobile.src}
-            // The <picture> above carries the description; this is decoration.
-            aria-hidden="true"
-            onError={() => setFailed(true)}
-            className="absolute inset-0 h-full w-full object-cover"
+      <div
+        className="relative z-10 mx-auto grid max-w-[1560px] items-center gap-10 px-5 sm:px-8 lg:gap-12 lg:px-10
+          lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-16"
+      >
+        {/* ── Copy ── */}
+        <div className="text-start">
+          <h1
+            id="hero-heading"
+            className="font-display font-bold text-cream text-[34px]/[1.24] sm:text-[44px]/[1.2] xl:text-[54px]/[1.15]"
           >
-            <source src={isDesktop ? ASSETS.heroFilm.src : ASSETS.heroFilmMobile.src} type="video/webm" />
-            <source src={isDesktop ? ASSETS.heroFilmMp4.src : ASSETS.heroFilmMobileMp4.src} type="video/mp4" />
-          </video>
-        )}
-      </div>
+            {b(hero.headline)}
+          </h1>
 
-      {/* ── Scrim ──
-          1. an even wash, so the film's brightest (cream) scenes never wash
-             the type out;
-          2. a directional wash, heavy under the copy and clear over the far
-             side, where the film stays readable. The gradient starts dark on
-             the START side: `to right` in LTR, `to left` in RTL (the previous
-             hero had these swapped, so the wash sat opposite the copy);
-          3. a floor that holds the reassurance line and anchors the panel
-             that lifts over the hero. */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[rgba(0,31,63,0.22)]" />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(0,31,63,0.97)_0%,rgba(0,31,63,0.9)_34%,rgba(0,31,63,0.5)_56%,rgba(0,31,63,0.08)_80%,rgba(0,31,63,0)_100%)] rtl:bg-[linear-gradient(to_left,rgba(0,31,63,0.97)_0%,rgba(0,31,63,0.9)_34%,rgba(0,31,63,0.5)_56%,rgba(0,31,63,0.08)_80%,rgba(0,31,63,0)_100%)] max-md:bg-[linear-gradient(to_top,rgba(0,31,63,0.97)_0%,rgba(0,31,63,0.9)_42%,rgba(0,31,63,0.35)_68%,rgba(0,31,63,0.05)_88%)] max-md:rtl:bg-[linear-gradient(to_top,rgba(0,31,63,0.97)_0%,rgba(0,31,63,0.9)_42%,rgba(0,31,63,0.35)_68%,rgba(0,31,63,0.05)_88%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[linear-gradient(to_top,rgba(0,31,63,0.62)_0%,rgba(0,31,63,0.18)_55%,transparent_100%)]"
-      />
+          <p className="prose-body mt-5 sm:mt-6 max-w-xl text-cream/85">{b(hero.support)}</p>
 
-      {/* ── Copy ── */}
-      <div className="relative h-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-        <div className="flex h-full items-end pb-20 sm:items-center sm:pb-0 sm:pt-20">
-          <div className="max-w-2xl text-start">
-            <h1
-              id="hero-heading"
-              className="font-display font-bold text-cream text-[34px]/[1.24] sm:text-[48px]/[1.18] lg:text-[62px]/[1.12]"
-            >
-              {b(hero.headline)}
-            </h1>
-
-            <p className="prose-body mt-5 sm:mt-6 max-w-xl text-cream/85">{b(hero.support)}</p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <PrimaryCta size="lg" onDark />
-              <SecondaryCta size="lg" onDark />
-            </div>
-
-            <p className="mt-6 font-mono text-[11px] sm:text-xs uppercase tracking-[0.14em] text-cream/70">
-              {b(hero.reassurance)}
-            </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <PrimaryCta size="lg" onDark />
+            <SecondaryCta size="lg" onDark />
           </div>
+
+          <p className="mt-6 text-[13px]/[1.7] text-cream/70">{b(hero.reassurance)}</p>
+        </div>
+
+        {/* ── Film ── */}
+        <div className="mx-auto w-full max-w-[340px] md:max-w-none">
+          <div
+            ref={frameRef}
+            className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-navy
+              shadow-[0_0_0_1px_rgba(245,239,230,0.14),0_30px_60px_-28px_rgba(0,0,0,0.65)]
+              md:aspect-video"
+          >
+            {/*
+              The poster is a real <picture>, always in the markup: `<source
+              media>` picks the cut during HTML parse, so each form factor
+              downloads one poster — the right one — before any script runs.
+            */}
+            <picture>
+              <source media="(min-width: 768px)" srcSet={ASSETS.heroFilmPoster.src} />
+              <img
+                src={ASSETS.heroFilmPosterMobile.src}
+                alt={b(hero.videoAlt)}
+                width={720}
+                height={1280}
+                className="absolute inset-0 h-full w-full object-cover"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
+
+            {showVideo && (
+              <video
+                // Remount on breakpoint change so the browser picks up the other cut.
+                key={isDesktop ? 'desktop' : 'mobile'}
+                ref={videoRef}
+                muted
+                loop
+                playsInline
+                // Buffered as it plays rather than fetched whole up front.
+                preload={quiet ? 'none' : 'metadata'}
+                // The URL the <picture> already chose, so it comes from the cache.
+                poster={isDesktop ? ASSETS.heroFilmPoster.src : ASSETS.heroFilmPosterMobile.src}
+                // The <picture> above carries the description; this is decoration.
+                aria-hidden="true"
+                onError={() => setFailed(true)}
+                className="absolute inset-0 h-full w-full object-cover"
+              >
+                <source src={isDesktop ? ASSETS.heroFilm.src : ASSETS.heroFilmMobile.src} type="video/webm" />
+                <source src={isDesktop ? ASSETS.heroFilmMp4.src : ASSETS.heroFilmMobileMp4.src} type="video/mp4" />
+              </video>
+            )}
+          </div>
+
+          {/* ── Pause / play — under the frame, so nothing sits on the film ── */}
+          {!failed && (
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setVideoArmed(true);
+                  setPaused((p) => !p);
+                }}
+                className="inline-flex min-h-8 items-center gap-2 rounded-full border border-cream/20 px-3.5 py-1
+                  text-[12.5px] font-medium text-cream/75 transition-colors hover:border-cream/40 hover:text-cream
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
+              >
+                {paused ? (
+                  <Play aria-hidden="true" className="size-3.5" fill="currentColor" />
+                ) : (
+                  <Pause aria-hidden="true" className="size-3.5" fill="currentColor" />
+                )}
+                {paused ? b({ ar: 'شغّل الفيديو', en: 'Play the film' }) : b({ ar: 'وقّف الفيديو', en: 'Pause the film' })}
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* ── Pause / play ── */}
-      {!failed && (
-        <button
-          type="button"
-          onClick={() => {
-            setVideoArmed(true);
-            setPaused((p) => !p);
-          }}
-          aria-label={paused ? b({ ar: 'شغّل الفيديو', en: 'Play the film' }) : b({ ar: 'وقّف الفيديو', en: 'Pause the film' })}
-          className="absolute bottom-14 end-5 sm:bottom-16 sm:end-8 grid size-10 place-items-center rounded-full
-            border border-cream/25 bg-navy-900/55 text-cream backdrop-blur-sm transition-colors hover:bg-navy-900/80
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
-        >
-          {paused ? <Play className="size-4" fill="currentColor" /> : <Pause className="size-4" fill="currentColor" />}
-        </button>
-      )}
     </section>
   );
 };

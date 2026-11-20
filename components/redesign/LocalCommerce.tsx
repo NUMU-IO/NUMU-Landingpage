@@ -1,8 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { localCommerce, CTA } from './copy';
 import { Section, SectionHead, ContextLink, AssetSlot, useBi } from './ui';
 import { Reveal } from './Reveal';
-import { useInView } from './hooks';
 
 /**
  * 03 — Local commerce layer. `sections/03-local-commerce.md`.
@@ -54,13 +53,6 @@ const RailChip: React.FC<{ label: string }> = ({ label }) => (
 
 const LocalCommerce: React.FC = () => {
   const { b } = useBi();
-  // Section 03 sits inside the browser's lazy-load window on a phone, so a
-  // plain lazy <img> still downloads during the LCP window (measured: FCP
-  // 2.1 s → 3.4 s). Mount the illustration only once the block is near the
-  // viewport, with the box reserved so nothing shifts.
-  const illoRef = useRef<HTMLDivElement>(null);
-  const illoInView = useInView(illoRef, '200px');
-
   return (
     <Section id="local-commerce" surface="cream" labelledBy="local-commerce-heading">
       <div className="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-16 items-center">
@@ -71,24 +63,20 @@ const LocalCommerce: React.FC = () => {
           support={localCommerce.support}
         />
 
-        {/* Owner-supplied illustration (2026-09-25): a merchant in her own
-            shop, her storefront and the shipping and confirmation cards beside
-            her. Mood for a section that had no visual; the workflow rail below
-            stays the claim, and no provider is named in the drawing either. */}
-        <div ref={illoRef} className="overflow-hidden rounded-[10px] border border-ink/10 bg-paper">
-          {illoInView ? (
-            <AssetSlot
-              asset="illoMerchantStore"
-              ratio={16 / 9}
-              sizes="(min-width: 1024px) 600px, 100vw"
-              alt={{
-                ar: 'رسمة توضيحية: تاجرة واقفة في محلها، وجنبها شاشة متجرها الإلكتروني وبطاقات الشحن وتأكيد الأوردر.',
-                en: 'Illustration: a merchant standing in her shop, with her online storefront and the shipping and order-confirmation cards beside her.',
-              }}
-            />
-          ) : (
-            <div className="w-full" style={{ aspectRatio: '16 / 9' }} aria-hidden="true" />
-          )}
+        {/* Illustration (unDraw, see `assets.ts`): a merchant with her
+            storefront and a box of orders. Mood for a section with no screen
+            of its own; the workflow rail below stays the claim, and no
+            provider is named in the drawing either. */}
+        <div className="overflow-hidden rounded-[10px] border border-ink/10 bg-paper">
+          <AssetSlot
+            asset="illoMerchantStore"
+            ratio={16 / 10}
+            sizes="(min-width: 1024px) 600px, 100vw"
+            alt={{
+              ar: 'رسمة توضيحية: تاجرة شايلة كرتونة أوردرات قدام واجهة متجرها الإلكتروني.',
+              en: 'Illustration: a merchant carrying a box of orders beside her online storefront.',
+            }}
+          />
         </div>
       </div>
 

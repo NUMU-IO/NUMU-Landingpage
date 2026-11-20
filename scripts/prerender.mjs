@@ -195,7 +195,7 @@ const BASE_ROUTES = [
         offers: [
           {
             '@type': 'Offer',
-            name: '37-Day Free Trial',
+            name: '14-Day Free Trial',
             price: '0',
             priceCurrency: 'EGP',
             availability: 'https://schema.org/InStock',
@@ -438,18 +438,17 @@ async function resolveBrowser() {
  * Title / meta / canonical are already set by useSEO in each page component.
  */
 /**
- * Read the modulepreload hints Vite itself put in the built template.
- *
- * These are the entry chunk's STATIC dependencies — the handful of files the
+ * Read what Vite itself put in the built template: the entry script and the
+ * modulepreload hints for its STATIC dependencies — the handful of files the
  * browser genuinely needs before anything can run. Everything else that ends up
- * in the captured DOM was appended at runtime; see `stripRuntimePreloads`.
+ * in the captured DOM was appended at runtime; see `stripRuntimeTags`.
  */
-function templatePreloadHrefs() {
+function templateAssetUrls() {
   try {
     const tpl = readFileSync(join(DIST, 'index.html'), 'utf-8');
     return new Set(
-      [...tpl.matchAll(/<link[^>]+rel=["']modulepreload["'][^>]*>/gi)]
-        .map((m) => (m[0].match(/href=["']([^"']+)["']/i) || [])[1])
+      [...tpl.matchAll(/<(?:link[^>]+rel=["']modulepreload["']|script\b[^>]*\bsrc=)[^>]*>/gi)]
+        .map((m) => (m[0].match(/(?:href|src)=["']([^"']+)["']/i) || [])[1])
         .filter(Boolean),
     );
   } catch {
@@ -458,35 +457,37 @@ function templatePreloadHrefs() {
 }
 
 /**
- * Drop the `<link rel="modulepreload">` tags the APP added while puppeteer was
- * looking at it.
+ * Drop the `<link rel="modulepreload">` and `<script src>` tags the APP added
+ * while puppeteer was looking at it.
  *
  * `page.content()` serializes the live DOM, so anything the running app
- * appended to `<head>` is baked into the file we ship. Vite's `__vitePreload`
- * appends one of these for every dynamically-imported chunk it resolves — and
- * this page lazy-loads a component per homepage section — so the served HTML
- * carried **18** of them. That is 18 extra High-priority script requests fired
- * during HTML parse, competing for bandwidth with the two render-blocking
- * stylesheets that actually gate First Contentful Paint. Measured on the
- * desktop run: 21 scripts all queued at ~355 ms while `index.css` was still in
- * flight, and FCP landed at 2.1 s against a 240 ms TTFB.
+ * appended to `<head>` is baked into the file we ship.
  *
- * Removing them does not remove the chunks — the lazy imports still fetch them,
- * just after the entry has run, which is when they are first needed. Hydration
- * of below-the-fold sections happens a beat later; first paint happens a lot
- * sooner.
+ * Preloads: Vite's `__vitePreload` appends one for every dynamically-imported
+ * chunk it resolves, so the served HTML carried **18** of them. That is 18
+ * extra High-priority script requests fired during HTML parse, competing for
+ * bandwidth with the stylesheet that actually gates First Contentful Paint.
+ * Removing them does not remove the chunks — the imports still fetch them,
+ * just after the entry has run, which is when they are first needed.
  *
- * The template's own hints are preserved: those are the entry's static graph,
- * and dropping them would only trade this problem for a slower boot.
+ * Scripts: an SDK that loads itself by appending a `<script>` (PostHog's
+ * remote config, Vercel Analytics) marks it async through the DOM property,
+ * which does not serialize. Baked into static HTML the same tag is an ordinary
+ * parser-blocking script, so every page waited on a third-party host before
+ * its first paint (measured in production: 534 ms on a fast connection). The
+ * SDK appends it again at runtime, non-blocking, which is where it belongs.
+ *
+ * The template's own tags are preserved: those are the entry and its static
+ * graph, and dropping them would leave a page that never boots.
  */
-function stripRuntimePreloads(html, allowed) {
-  return html.replace(
-    /<link[^>]+rel=["']modulepreload["'][^>]*>\s*/gi,
-    (tag) => {
-      const href = (tag.match(/href=["']([^"']+)["']/i) || [])[1];
-      return href && allowed.has(href) ? tag : '';
-    },
-  );
+function stripRuntimeTags(html, allowed) {
+  const keep = (tag) => {
+    const url = (tag.match(/(?:href|src)=["']([^"']+)["']/i) || [])[1];
+    return url && allowed.has(url) ? tag : '';
+  };
+  return html
+    .replace(/<link[^>]+rel=["']modulepreload["'][^>]*>\s*/gi, keep)
+    .replace(/<script\b[^>]*\bsrc=[^>]*>\s*<\/script>\s*/gi, keep);
 }
 
 /** Keep crawlable internal links inside the language tree captured for this page. */
@@ -617,8 +618,8 @@ async function main() {
   // when rendering later routes, cross-contaminating the output.
   // Snapshot the template's own preload hints BEFORE the first capture — the
   // loop below overwrites dist/index.html with the prerendered `/`.
-  const templatePreloads = templatePreloadHrefs();
-  console.log(`  Template modulepreloads kept: ${templatePreloads.size}`);
+  const templateAssets = templateAssetUrls();
+  console.log(`  Template scripts and modulepreloads kept: ${templateAssets.size}`);
 
   const rendered = [];
   try {
@@ -627,6 +628,12 @@ async function main() {
       console.log(`Prerendering: ${route.path}`);
 
       const page = await browser.newPage();
+      // Tells the app it is being captured: `Reveal` keeps below-the-fold
+      // content visible instead of hiding it for a scroll animation that the
+      // static file can never play.
+      await page.evaluateOnNewDocument(() => {
+        window.__PRERENDER__ = true;
+      });
       // The pricing payload this page fetched, if any — baked into the HTML below.
       let pricingData = null;
       await page.setRequestInterception(true);
@@ -700,7 +707,10 @@ async function main() {
       await page.waitForFunction(() => !document.querySelector('[data-suspense-fallback]'), { timeout: 15000 });
       if (route.path === `/${route.locale}` || route.path.endsWith('/pricing')) {
         await page.waitForFunction(
-          () => document.body.innerText.includes('Starter') || document.body.innerText.includes('ستارتر'),
+          // `textContent`, not `innerText`: the plans sit in a section the
+          // browser skips rendering while it is off screen
+          // (`.numu-below-fold`), and `innerText` leaves skipped text out.
+          () => document.body.textContent.includes('Starter') || document.body.textContent.includes('ستارتر'),
           { timeout: 15000 },
         );
       }
@@ -724,7 +734,7 @@ async function main() {
       }
 
       let html = await page.content();
-      html = stripRuntimePreloads(html, templatePreloads);
+      html = stripRuntimeTags(html, templateAssets);
       html = localizeInternalLinks(html, route.locale);
       html = injectRouteMeta(html, route);
       rendered.push({ route, html });

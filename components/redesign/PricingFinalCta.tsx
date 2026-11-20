@@ -1,10 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { pricing, finalCta, CTA } from './copy';
-import { Section, SectionHead, PrimaryCta, useBi } from './ui';
-import { useTrialMeta } from '../../lib/trialInfo';
-import { ASSETS } from './assets';
-import BlurReveal from './originkit/BlurReveal';
+import { Section, SectionHead, PrimaryCta, AssetSlot, useBi } from './ui';
+import { useTrialMeta } from '../../lib/pricingFacts';
 import { PlansBody } from './PricingPlans';
 
 /**
@@ -84,7 +82,7 @@ const PricingFinalCta: React.FC = () => {
       <section
         id="final-cta"
         aria-labelledby="final-cta-heading"
-        className="relative bg-navy-900 numu-navy-surface numu-soft-navy py-20 sm:py-24 lg:py-28
+        className="relative numu-below-fold bg-navy-900 numu-navy-surface numu-soft-navy py-20 sm:py-24 lg:py-28
           -mt-8 sm:-mt-10 rounded-t-[32px] sm:rounded-t-[44px] border-t border-cream/12"
       >
         <div className="relative z-10 max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
@@ -113,24 +111,17 @@ const PricingFinalCta: React.FC = () => {
               </div>
             </div>
 
-            {/* Blur Reveal, as a contained aside rather than a section-wide
-                effect: the Trust Network screen sits behind a soft blur and a
-                lens on the pointer brings it into focus. It closes the page on
-                the thing merchants ask about most, and the ring is cream so the
-                lens stays inside the palette on this navy surface. Falls back
-                to the plain sharp screenshot on touch and reduced motion. */}
-            <aside
-              aria-hidden="false"
-              className="rounded-[14px] overflow-hidden border border-cream/15 aspect-[4/3] lg:aspect-[5/4]"
-            >
-              <BlurReveal
-                src={ASSETS.trustNetwork.src}
-                alt={b({
+            {/* The Trust Network screen, as it is. It closes the page on the
+                thing merchants ask about most. */}
+            <aside className="overflow-hidden rounded-[14px] border border-cream/15">
+              <AssetSlot
+                asset="trustNetwork"
+                ratio={16 / 10}
+                sizes="(min-width: 1024px) 520px, 100vw"
+                alt={{
                   ar: 'شاشة Trust Network في نُمُو: فحص الأوردر، إشارة الريسك، وإعدادات القرار.',
                   en: 'The numu Trust Network screen: order screening, the risk signal, and the decision settings.',
-                })}
-                className="w-full h-full"
-                size={190}
+                }}
               />
             </aside>
           </div>

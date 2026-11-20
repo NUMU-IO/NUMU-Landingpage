@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import { initCSRF } from './services/csrf';
+import App, { preloadRoute } from './App';
 import { initMonitoring } from './services/heronsignal';
 import { initAnalytics } from './lib/analytics';
 import './index.css';
 
-// Real-user monitoring starts before render (and before the CSRF round-trip)
-// so a failure in either one still lands in a session. The tracker itself is
-// injected asynchronously, so this costs nothing on the critical path.
+// Real-user monitoring starts before render so a failure during boot still
+// lands in a session. The tracker itself is injected asynchronously, so this
+// costs nothing on the critical path.
 initMonitoring();
 
 const rootElement = document.getElementById('root');
@@ -16,10 +15,11 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
-// Fetch CSRF token before rendering — non-blocking on failure
-initCSRF().finally(() => {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
+// The prerendered page is already on screen, so nothing is gained by rendering
+// early. Load this route's code first: React's first commit then paints the
+// same page, instead of replacing it with a spinner until the chunk arrives.
+preloadRoute(window.location.pathname).finally(() => {
+  ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <App />
     </React.StrictMode>

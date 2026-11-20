@@ -17,7 +17,7 @@ export const translations: Record<string, string> = {
   'auth.hero_title': 'Launch your empire today.',
   'auth.hero_subtitle': 'Start selling online in minutes — Arabic first, built for cash on delivery.',
   'auth.signup_title': 'Create Account',
-  'auth.signup_subtitle': 'Start your 37-day free trial. No credit card required.',
+  'auth.signup_subtitle': 'Start your 14-day free trial. No credit card required.',
   'auth.name': 'Full Name',
   'auth.name_placeholder': 'e.g. Ahmed Ali',
   'auth.email': 'Email Address',
@@ -63,7 +63,7 @@ export const translations: Record<string, string> = {
   'pricing.subtitle': 'We\'re preparing our pricing plans. Join the waitlist and be the first to know when we launch.',
   'pricing.coming_soon': 'Coming Soon',
   'pricing.notify': 'Get Notified at Launch',
-  'pricing.free_trial': '37-day free trial',
+  'pricing.free_trial': '14-day free trial',
   'pricing.no_card': 'No credit card required',
   'pricing.cancel': 'Cancel anytime',
 
@@ -246,7 +246,6 @@ export const translations: Record<string, string> = {
   'footer.contact': 'Contact',
   'footer.refund': 'Refund Policy',
   'footer.copyright': '© 2026 numu (NUMU). All rights reserved.',
-  'footer.legal': 'numu (NUMU) is the trade name of the platform operated by يحيى شريف ابراهيم محمد · Legal business name: يحيى شريف ابراهيم محمد · تقسيم ساميه الجمل، غرب المنصورة، 35511، Egypt',
   'legal.title': 'Legal information',
   'legal.text': 'Legal business name: يحيى شريف ابراهيم محمد. Trade name: numu (NUMU). Address: تقسيم ساميه الجمل، غرب المنصورة، 35511، Egypt. Website: numueg.app. numu (NUMU) is the trade name of the platform operated by يحيى شريف ابراهيم محمد.',
 
@@ -309,7 +308,7 @@ export const translationsAr: Record<string, string> = {
   'auth.hero_title': 'ابدأ إمبراطوريتك النهاردة.',
   'auth.hero_subtitle': 'ابدأ تبيع أونلاين في دقايق — عربي من الأول ومعمول للدفع عند الاستلام.',
   'auth.signup_title': 'اعمل حساب جديد',
-  'auth.signup_subtitle': 'جرب المنصة ببلاش لمدة 37 يوم. من غير فيزا.',
+  'auth.signup_subtitle': 'جرب المنصة ببلاش لمدة 14 يوم. من غير فيزا.',
   'auth.name': 'الاسم بالكامل',
   'auth.name_placeholder': 'مثال: أحمد علي',
   'auth.email': 'الإيميل',
@@ -355,7 +354,7 @@ export const translationsAr: Record<string, string> = {
   'pricing.subtitle': 'بنجهز خطط الأسعار. سجل في قايمة الانتظار وكن أول واحد يعرف لما ننطلق.',
   'pricing.coming_soon': 'قريباً',
   'pricing.notify': 'بلغني وقت الإطلاق',
-  'pricing.free_trial': 'تجربة مجانية 37 يوم',
+  'pricing.free_trial': 'تجربة مجانية 14 يوم',
   'pricing.no_card': 'مش محتاج بطاقة ائتمان',
   'pricing.cancel': 'إلغاء في أي وقت',
 
@@ -538,7 +537,6 @@ export const translationsAr: Record<string, string> = {
   'footer.contact': 'كلمونا',
   'footer.refund': 'سياسة الاسترجاع',
   'footer.copyright': '© 2026 نُمُو (NUMU). جميع الحقوق محفوظة.',
-  'footer.legal': 'نُمُو (NUMU) هو الاسم التجاري للمنصة اللي بيديرها يحيى شريف ابراهيم محمد · الاسم القانوني للنشاط: يحيى شريف ابراهيم محمد · تقسيم ساميه الجمل، غرب المنصورة، 35511، مصر',
   'legal.title': 'البيانات القانونية',
   'legal.text': 'الاسم القانوني للنشاط: يحيى شريف ابراهيم محمد. الاسم التجاري: نُمُو (NUMU). العنوان: تقسيم ساميه الجمل، غرب المنصورة، 35511، مصر. الموقع: numueg.app. نُمُو (NUMU) هو الاسم التجاري للمنصة اللي بيديرها يحيى شريف ابراهيم محمد.',
 

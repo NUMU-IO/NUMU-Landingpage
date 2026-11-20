@@ -1,46 +1,65 @@
 import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import NewsletterForm from './redesign/NewsletterForm';
 import BrandMark from './redesign/BrandMark';
 
+type Bi = { ar: string; en: string };
+
+/**
+ * Site footer: brand and newsletter on the start side, the site map in three
+ * columns beside it, and the copyright, policies and social accounts on a
+ * closing rail.
+ *
+ * Every public page is linked from here, which is what makes /stores (and
+ * through it every <sub>.numueg.app storefront) reachable by crawl rather
+ * than only from sitemap.xml.
+ */
+const COLUMNS: { title: Bi; links: { to: string; label: Bi }[] }[] = [
+  {
+    title: { ar: 'المنتج', en: 'Product' },
+    links: [
+      { to: '/features', label: { ar: 'المميزات', en: 'Features' } },
+      { to: '/pricing', label: { ar: 'الأسعار', en: 'Pricing' } },
+      { to: '/themes', label: { ar: 'القوالب', en: 'Themes' } },
+      { to: '/apps', label: { ar: 'متجر التطبيقات', en: 'App store' } },
+      { to: '/integrations', label: { ar: 'التكاملات', en: 'Integrations' } },
+      { to: '/stores', label: { ar: 'دليل المتاجر', en: 'Store directory' } },
+    ],
+  },
+  {
+    title: { ar: 'مصادر', en: 'Resources' },
+    links: [
+      { to: '/learn', label: { ar: 'الأكاديمية', en: 'Academy' } },
+      { to: '/blog', label: { ar: 'المدوّنة', en: 'Blog' } },
+      { to: '/tools', label: { ar: 'أدوات مجانية', en: 'Free tools' } },
+      { to: '/developers', label: { ar: 'المطورين', en: 'Developers' } },
+      { to: '/support', label: { ar: 'الدعم', en: 'Support' } },
+    ],
+  },
+  {
+    title: { ar: 'نُمُو', en: 'Company' },
+    links: [
+      { to: '/about', label: { ar: 'عن نُمُو', en: 'About' } },
+      { to: '/contact', label: { ar: 'كلمونا', en: 'Contact' } },
+      { to: '/partners', label: { ar: 'استعين بخبير', en: 'Hire an expert' } },
+    ],
+  },
+];
+
+const POLICIES: { to: string; label: Bi }[] = [
+  { to: '/privacy', label: { ar: 'الخصوصية', en: 'Privacy' } },
+  { to: '/terms', label: { ar: 'الشروط', en: 'Terms' } },
+  { to: '/refund', label: { ar: 'سياسة الاسترجاع', en: 'Refund policy' } },
+];
+
+const LINK_CLS =
+  'inline-flex min-h-6 items-center rounded-[2px] py-0.5 text-sm text-ink-soft/85 transition-colors hover:text-navy ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
+
 const Footer: React.FC = () => {
   const { t, language } = useLanguage();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const links = [
-    { key: 'footer.products', href: '/pricing', hash: 'preview' },
-    { key: 'footer.themes', href: '/themes' },
-    // Sitewide link so /stores is reachable by crawl, not just from sitemap.xml —
-    // it is in turn the only path Googlebot has to any <sub>.numueg.app storefront.
-    { key: 'footer.stores', href: '/stores' },
-    { key: 'footer.apps', href: '/apps' },
-    { key: 'footer.tools', href: '/tools' },
-    { key: 'footer.learn', href: '/learn' },
-    { key: 'footer.blog', href: '/blog' },
-    { key: 'footer.developers', href: '/developers' },
-    { key: 'footer.pricing', href: '/pricing' },
-    { key: 'footer.privacy', href: '/privacy' },
-    { key: 'footer.terms', href: '/terms' },
-    { key: 'footer.contact', href: '/contact' },
-    { key: 'footer.refund', href: '/refund' },
-  ];
-
-  const handleClick = (e: React.MouseEvent, link: typeof links[0]) => {
-    if (!link.hash) return;
-    e.preventDefault();
-    const scrollTo = () => {
-      const el = document.getElementById(link.hash!);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    };
-    if (location.pathname === '/') {
-      scrollTo();
-    } else {
-      navigate('/');
-      setTimeout(scrollTo, 100);
-    }
-  };
+  const b = (v: Bi) => v[language === 'ar' ? 'ar' : 'en'];
 
   /**
    * The four accounts numu actually runs.
@@ -92,103 +111,101 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto w-full px-4 py-8 md:py-12">
-      {/* Editorial panel — cream-paper bg, hairline border, square corners,
-          mono section marker peeking above the top edge */}
-      <div className="relative bg-paper border border-ink/10 rounded-[4px] px-6 sm:px-10 py-10 sm:py-12">
-        {/* § section marker — brand-kit signature */}
-        <span
-          className="absolute -top-3 start-6 bg-paper px-2 font-mono text-[11px] uppercase tracking-[0.18em] text-terracotta border border-terracotta/40 rounded-[2px]"
-          aria-hidden="true"
-        >
-          § numueg.app · cairo · 2026
-        </span>
-
-        <div className="flex flex-col items-center gap-8 sm:gap-10">
-          {/* N mark + Reem Kufi wordmark — Arabic glyph نُمُو when Arabic,
-              lowercase latin 'numu' otherwise (per brand kit) */}
+    <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-10">
+      <div className="grid gap-12 border-t border-ink/10 pt-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,2fr)] lg:gap-16">
+        {/* ── Brand and newsletter ── */}
+        <div>
+          {/* N mark + wordmark — Arabic glyph نُمُو when Arabic, lowercase
+              latin 'numu' otherwise (per brand kit) */}
           <Link
             to="/"
             aria-label={language === 'ar' ? 'نُمُو — الرئيسية' : 'numu — home'}
-            className="flex items-center gap-3"
+            className="inline-flex items-center gap-3"
           >
             <img
               src="/numu-mark-cream.webp"
               alt=""
-              className="h-11 sm:h-12 w-auto object-contain"
-              width="48"
-              height="48"
+              className="h-10 w-auto object-contain"
+              width="40"
+              height="43"
+              loading="lazy"
+              decoding="async"
             />
             {language === 'ar' ? (
-              <span className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
-                نُمُو
-              </span>
+              <span className="font-display text-3xl font-bold tracking-tight text-ink">نُمُو</span>
             ) : (
-              <span className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-ink lowercase">
-                numu
-              </span>
+              <span className="font-display text-2xl font-semibold tracking-tight text-ink lowercase">numu</span>
             )}
           </Link>
 
-          {/* Tagline */}
-          <p className="prose-body text-ink/75 text-center max-w-xl">
+          <p className="prose-body-sm mt-4 max-w-sm text-ink-soft/80">
             {language === 'ar'
-              ? 'منصة التجارة الإلكترونية للتجار في مصر والشرق الأوسط — ابدأ مجانًا.'
-              : 'The commerce platform for merchants in Egypt and MENA — start free.'}
+              ? 'منصة التجارة الإلكترونية للتجار في مصر والشرق الأوسط.'
+              : 'The commerce platform for merchants in Egypt and MENA.'}
           </p>
-
-          {/* Link row */}
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 sm:gap-x-8">
-            {links.map((link) => (
-              <Link
-                key={link.key}
-                to={link.hash ? '/' : link.href}
-                onClick={(e) => handleClick(e, link)}
-                className="inline-flex items-center min-h-6 py-1 font-medium text-sm text-ink-soft/80 hover:text-navy transition-colors"
-              >
-                {t(link.key)}
-              </Link>
-            ))}
-          </div>
-
-          {/* Hairline divider */}
-          <div className="w-full h-px bg-ink/10" />
 
           {/* Newsletter — see `NewsletterForm.tsx` for which list this is. */}
-          <div className="w-full max-w-md">
+          <div className="mt-7 max-w-sm">
             <NewsletterForm />
           </div>
+        </div>
 
-          <div className="w-full h-px bg-ink/10" />
-
-          {/* Bottom rail — socials + copyright */}
-          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft/80 order-2 sm:order-1">
-              {t('footer.copyright')}
-            </p>
-            <div className="flex gap-3 order-1 sm:order-2">
-              {socials.map(({ href, icon, brand, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  title={label}
-                  className="size-9 rounded-[4px] border border-ink/10 flex items-center justify-center
-                    text-ink-soft transition-colors hover:border-navy/30 hover:bg-navy/[0.03]
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron
-                    focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-                >
-                  {brand ? <BrandMark brand={brand} size={20} /> : icon}
-                </a>
-              ))}
+        {/* ── Site map ── */}
+        <nav
+          aria-label={language === 'ar' ? 'روابط الموقع' : 'Site links'}
+          className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3"
+        >
+          {COLUMNS.map((col) => (
+            <div key={col.title.en}>
+              <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink-soft/60">
+                {b(col.title)}
+              </h2>
+              <ul className="mt-4 space-y-2">
+                {col.links.map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to} className={LINK_CLS}>
+                      {b(link.label)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          ))}
+        </nav>
+      </div>
 
-          <p className="text-xs text-ink-soft/70 text-center max-w-2xl">
-            {t('footer.legal')}
-          </p>
+      {/* ── Closing rail: copyright, policies, socials ── */}
+      <div className="mt-12 flex flex-col gap-5 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+          <p className="text-[13px] text-ink-soft/70">{t('footer.copyright')}</p>
+          <ul className="flex flex-wrap gap-x-5 gap-y-1">
+            {POLICIES.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className={`${LINK_CLS} text-[13px]`}>
+                  {b(link.label)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex gap-2.5">
+          {socials.map(({ href, icon, brand, label }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              title={label}
+              className="size-9 rounded-[4px] border border-ink/10 flex items-center justify-center
+                text-ink-soft transition-colors hover:border-navy/30 hover:bg-navy/[0.03]
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron
+                focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            >
+              {brand ? <BrandMark brand={brand} size={20} /> : icon}
+            </a>
+          ))}
         </div>
       </div>
     </div>

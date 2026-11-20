@@ -78,6 +78,16 @@ for (const route of routes) {
   if (unlocalizedLinks.length) {
     errors.push(`${route}: ${unlocalizedLinks.length} internal link(s) escape the localized URL tree`);
   }
+
+  // Runtime state must not be baked into the static file. A serialized
+  // third-party <script src> blocks first paint, and a scroll-reveal captured
+  // before it played ships its content invisible until the scripts load.
+  if (/<script\b[^>]*\bsrc=["']https?:/i.test(html)) {
+    errors.push(`${route}: a third-party <script src> was baked in (it blocks first paint)`);
+  }
+  if (html.includes('opacity-0 translate-y-4')) {
+    errors.push(`${route}: scroll-reveal content was captured hidden`);
+  }
 }
 
 const sitemapFile = join(DIST, 'sitemap.xml');
@@ -98,10 +108,20 @@ if (!existsSync(releaseFile)) {
   if (typeof release.sha !== 'string' || !release.sha) errors.push('release.json: missing sha');
 }
 
+// The static trial copy must agree with the one constant it is meant to follow.
+// It drifted once: the offer became 14 days while the structured data in
+// index.html went on promising 37, and this check passed on the stale number.
+const trialDays = /DEFAULT_TRIAL_DAYS\s*=\s*(\d+)/.exec(
+  readFileSync(join(process.cwd(), 'lib', 'trialInfo.ts'), 'utf-8'),
+)?.[1];
+const arabicDigits = (s) => s.replace(/[0-9]/g, (d) => String.fromCharCode(0x0660 + Number(d)));
+if (!trialDays) errors.push('lib/trialInfo.ts: DEFAULT_TRIAL_DAYS not found');
+
 for (const locale of ['ar', 'en']) {
   const pricing = readFileSync(fileFor(`/${locale}/pricing`), 'utf-8');
-  if (!pricing.includes(locale === 'ar' ? '٣٧ يوم' : '37-day')) {
-    errors.push(`/${locale}/pricing: missing the 37-day trial`);
+  const expected = locale === 'ar' ? `${arabicDigits(trialDays ?? '')} يوم` : `${trialDays}-day`;
+  if (!pricing.includes(expected)) {
+    errors.push(`/${locale}/pricing: static copy does not state the ${trialDays}-day trial (looked for "${expected}")`);
   }
   const starter = pricing.match(/Starter[\s\S]{0,5000}?(?:Pro|Enterprise)/i)?.[0] ?? '';
   if (/50\s+(orders?|طلبات|اوردر|أوردر)/i.test(starter)) {

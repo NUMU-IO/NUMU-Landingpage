@@ -11,8 +11,8 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 - [Website](https://numueg.app/en)
 - Languages: Arabic (primary), English
 - Countries served: Egypt, Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman
-- Pricing: 37-day free trial (no credit card), Starter from 250 EGP/month, and Pay as you Grow with no monthly subscription. Full details: [pricing](https://numueg.app/en/pricing)
-- Order limits: Starter, Pro, Enterprise, and Pay as you Grow accept unlimited orders. The old 50-order figure is not a Starter-plan limit. The 37-day free trial currently includes 80 orders.
+- Pricing: 14-day free trial (no credit card), Starter from 250 EGP/month, and Pay as you Grow with no monthly subscription. Full details: [pricing](https://numueg.app/en/pricing)
+- Order limits: Starter, Pro, Enterprise, and Pay as you Grow accept unlimited orders. The old 50-order figure is not a Starter-plan limit. The 14-day free trial currently includes 80 orders.
 
 ## Platform capabilities
 
@@ -31,7 +31,7 @@ Launched to solve the pain points generic global platforms (Shopify, WooCommerce
 - [Home](https://numueg.app/en): the platform overview, pricing entry point and sign-up.
 - [Blog](https://numueg.app/en/blog): dated articles for Egyptian merchants — cash on delivery, couriers, wallets, custom domains, seasonal prep, AI.
 - [Official facts](https://numueg.app/en/about/facts): the canonical answers about pricing, order limits, trial length, and integrations.
-- [Pricing](https://numueg.app/en/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 37-day free trial.
+- [Pricing](https://numueg.app/en/pricing): plan tiers, EGP pricing, unlimited Starter orders, and the 14-day free trial.
 - [Contact](https://numueg.app/en/contact): sales and support enquiry form.
 - [Privacy policy](https://numueg.app/en/privacy): how merchant and shopper data is handled.
 - [Terms of service](https://numueg.app/en/terms): the merchant agreement.

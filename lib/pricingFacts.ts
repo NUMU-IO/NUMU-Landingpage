@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DEFAULT_TRIAL_DAYS } from './trialInfo';
+import { DEFAULT_TRIAL_DAYS, type TrialMeta } from './trialInfo';
 
 export interface PublicPlanFeature {
   en: string;
@@ -93,4 +93,13 @@ export function usePricing(): PricingData | null {
     };
   }, []);
   return data;
+}
+
+/**
+ * Admin-controlled trial info with a safe static fallback. Reads the same
+ * snapshot and the same single request as the plan cards, so a page never asks
+ * the API for this payload twice and the day count is right at first paint.
+ */
+export function useTrialMeta(): TrialMeta {
+  return { enabled: true, days: DEFAULT_TRIAL_DAYS, visible: true, ...usePricing()?.trial };
 }
