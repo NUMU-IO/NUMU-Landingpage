@@ -6,6 +6,8 @@ import { Section, SectionHead, AssetSlot, useBi } from './ui';
 import { Reveal } from './Reveal';
 import TrustedBy from './TrustedBy';
 import MerchantMarquee from './MerchantMarquee';
+import { PARTNERS_WITH_LOGOS } from './partners';
+import { THEMES } from './themesData';
 
 /**
  * 02 — Merchant proof. `sections/02-merchant-proof.md`.
@@ -63,6 +65,54 @@ const LEAD: Story = {
   href: 'https://vionneeg.com',
 };
 
+/**
+ * numu in numbers. Every figure is true and can be checked:
+ *   • products: rows in the production `products` table, non-demo tenants,
+ *     read 2026-11-22 (7,683), rounded down. Re-read before changing it.
+ *   • integrations and themes: counted from this site's own lists, so they
+ *     cannot drift from what the pages show.
+ * Orders, customers and sales are deliberately not here yet: see the rule at
+ * the top of this file. Add them when they are worth showing, as real figures.
+ */
+const NUMBERS: { value: string; label: Bi; icon: React.ReactNode }[] = [
+  {
+    value: '+7,600',
+    label: { ar: 'منتج معروض في متاجر نُمُو', en: 'products listed in numu stores' },
+    icon: (
+      <>
+        <path d="M3 9l1.5-5h15L21 9" />
+        <path d="M4 9v11h16V9" />
+        <path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0" />
+      </>
+    ),
+  },
+  {
+    value: String(PARTNERS_WITH_LOGOS.length),
+    label: { ar: 'تكامل دفع وشحن وقنوات بيع', en: 'payment, shipping and channel integrations' },
+    icon: (
+      <>
+        <path d="M9 7H6a3 3 0 000 6h3" />
+        <path d="M15 7h3a3 3 0 010 6h-3" />
+        <path d="M8 10h8" />
+      </>
+    ),
+  },
+  {
+    value: String(THEMES.length),
+    label: { ar: 'ثيم جاهز تبدأ بيه', en: 'ready themes to start from' },
+    icon: (
+      <>
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M3 9h18" />
+        <path d="M9 9v11" />
+      </>
+    ),
+  },
+];
+
+/** The colour block each screenshot stands on. */
+const STAGES = ['bg-navy', 'bg-saffron', 'bg-bone'] as const;
+
 /** The surfaces the merchant works in, in the order they meet them. */
 const SURFACES: { asset: AssetKey; title: Bi; body: Bi; alt: Bi }[] = [
   {
@@ -111,15 +161,36 @@ const MerchantProof: React.FC = () => {
 
       <MerchantMarquee className="mt-10" />
 
-      <div className="mt-12 grid lg:grid-cols-[1.55fr_1fr] gap-5">
+      <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+        {NUMBERS.map((n) => (
+          <div key={n.value} className="flex flex-col-reverse items-center rounded-[18px] bg-cream px-5 py-9 text-center">
+            <dt className="prose-body-sm mt-2 text-ink-soft/75">{b(n.label)}</dt>
+            <dd className="font-display text-[40px]/[1.1] font-bold text-ink tabular-nums">{n.value}</dd>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mb-5 size-7 text-navy"
+            >
+              {n.icon}
+            </svg>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-16 grid lg:grid-cols-[1.55fr_1fr] gap-x-8 gap-y-12">
         <Reveal>
           <LeadCard story={LEAD} />
         </Reveal>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-x-8 gap-y-10">
           {SURFACES.map((s, i) => (
             <Reveal key={s.asset} delay={90 + i * 90}>
-              <SurfaceCard surface={s} />
+              <SurfaceCard surface={s} stage={STAGES[(i + 1) % STAGES.length]} />
             </Reveal>
           ))}
         </div>
@@ -136,12 +207,39 @@ const MerchantProof: React.FC = () => {
   );
 };
 
+/**
+ * A screenshot on a colour block, inside a plain browser frame that runs off
+ * the bottom edge. The frame is three dots and an address line: enough to say
+ * "this is a web page", with no invented interface in it.
+ */
+const Staged: React.FC<{ stage: string; address?: string; children: React.ReactNode }> = ({
+  stage,
+  address,
+  children,
+}) => (
+  <div className={`overflow-hidden rounded-[20px] px-5 pt-6 sm:px-9 sm:pt-9 ${stage}`}>
+    <div className="overflow-hidden rounded-t-[12px] bg-paper numu-float-shadow">
+      <div dir="ltr" aria-hidden="true" className="flex items-center gap-1.5 bg-cream px-3 py-2">
+        <span className="size-2 rounded-full bg-ink/15" />
+        <span className="size-2 rounded-full bg-ink/15" />
+        <span className="size-2 rounded-full bg-ink/15" />
+        {address && (
+          <span className="ms-3 truncate rounded-full bg-paper px-3 py-0.5 font-mono text-[10px] text-ink-soft/60">
+            {address}
+          </span>
+        )}
+      </div>
+      {children}
+    </div>
+  </div>
+);
+
 const LeadCard: React.FC<{ story: Story }> = ({ story }) => {
   const { b } = useBi();
 
   return (
-    <figure className="h-full flex flex-col bg-cream border border-ink/10 rounded-[10px] overflow-hidden">
-      <div className="overflow-hidden border-b border-ink/10">
+    <figure className="h-full flex flex-col">
+      <Staged stage={STAGES[0]} address={story.href?.replace(/^https?:\/\//, '')}>
         <AssetSlot
           asset={story.asset}
           /* Measured: 429 CSS px on desktop, full width on a phone. */
@@ -152,17 +250,10 @@ const LeadCard: React.FC<{ story: Story }> = ({ story }) => {
             en: `The ${story.name} storefront — ${b(story.category)}`,
           }}
         />
-      </div>
+      </Staged>
 
-      <figcaption className="flex flex-col flex-1 p-5 sm:p-7">
-        <div className="flex items-center gap-2.5">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-sage" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-sage">
-            {b({ ar: 'متجر شغّال', en: 'Live store' })}
-          </span>
-        </div>
-
-        <h3 className="font-display text-[22px]/[1.34] sm:text-[26px]/[1.3] font-bold text-ink mt-3">
+      <figcaption className="flex flex-col flex-1 px-1 pt-6">
+        <h3 className="font-display text-[22px]/[1.34] sm:text-[26px]/[1.3] font-bold text-ink">
           {story.name}
         </h3>
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft/60 mt-1.5">
@@ -185,7 +276,7 @@ const LeadCard: React.FC<{ story: Story }> = ({ story }) => {
             rel="noopener noreferrer"
             className="group mt-auto pt-6 inline-flex items-center gap-1.5 min-h-6 text-sm font-semibold
               text-navy rounded-[2px] focus-visible:outline-none focus-visible:ring-2
-              focus-visible:ring-saffron focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+              focus-visible:ring-saffron focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
           >
             <span className="underline decoration-navy/30 underline-offset-4 group-hover:decoration-navy">
               {b({ ar: 'زور المتجر', en: 'Visit the store' })}
@@ -203,11 +294,11 @@ const LeadCard: React.FC<{ story: Story }> = ({ story }) => {
   );
 };
 
-const SurfaceCard: React.FC<{ surface: (typeof SURFACES)[number] }> = ({ surface }) => {
+const SurfaceCard: React.FC<{ surface: (typeof SURFACES)[number]; stage: string }> = ({ surface, stage }) => {
   const { b } = useBi();
   return (
-    <figure className="h-full flex flex-col bg-cream border border-ink/10 rounded-[10px] overflow-hidden">
-      <div className="overflow-hidden border-b border-ink/10">
+    <figure className="h-full flex flex-col">
+      <Staged stage={stage}>
         <AssetSlot
           asset={surface.asset}
           alt={surface.alt}
@@ -215,8 +306,8 @@ const SurfaceCard: React.FC<{ surface: (typeof SURFACES)[number] }> = ({ surface
           sizes="(min-width: 1024px) 680px, 100vw"
           ratio={16 / 9}
         />
-      </div>
-      <figcaption className="flex flex-col flex-1 p-5 sm:p-6">
+      </Staged>
+      <figcaption className="flex flex-col flex-1 px-1 pt-5">
         <h3 className="font-display text-[17px]/[1.42] font-bold text-ink">{b(surface.title)}</h3>
         <p className="prose-body-sm mt-2.5 text-ink-soft/80">{b(surface.body)}</p>
       </figcaption>
