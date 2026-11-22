@@ -566,6 +566,15 @@ html[dir="rtl"] .numu-capsule { letter-spacing: normal; }
 }
 .numu-mq:hover .numu-mq-track,
 .numu-mq:focus-within .numu-mq-track { animation-play-state: paused; }
+/* The logo banner has no tiles, so space does the separating. */
+.numu-mq-wide  { --numu-mq-gap: 2.75rem; }
+/* The storefront strip: room below for each picture's shadow. */
+.numu-mq-roomy { --numu-mq-gap: 2rem; padding-block: 0.5rem 2.25rem; }
+/* One soft, layered shadow for pictures that float instead of sitting in a box. */
+.numu-float-shadow {
+  box-shadow: 0 1px 1px rgba(15, 22, 36, 0.05), 0 8px 16px rgba(15, 22, 36, 0.07),
+    0 24px 44px -12px rgba(15, 22, 36, 0.22);
+}
 
 @keyframes numu-marquee {
   from { transform: translateX(0); }
